@@ -3,6 +3,14 @@
   <component name="CopilotDiffPersistence">
     <option name="pendingDiffs">
       <map>
+        <entry key="$PROJECT_DIR$/.gitignore">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/.gitignore" />
+              <option name="updatedContent" value="# Byte-compiled / optimized / DLL files&#10;__pycache__/&#10;*.py[cod]&#10;*$py.class&#10;&#10;# C extensions&#10;*.so&#10;&#10;# Distribution / packaging&#10;.Python&#10;env/&#10;build/&#10;develop-eggs/&#10;dist/&#10;downloads/&#10;eggs/&#10;.eggs/&#10;lib/&#10;lib64/&#10;parts/&#10;sdist/&#10;var/&#10;*.egg-info/&#10;.installed.cfg&#10;*.egg&#10;&#10;# Installer logs&#10;pip-log.txt&#10;pip-delete-this-directory.txt&#10;&#10;# Unit test / coverage reports&#10;htmlcov/&#10;.tox/&#10;.nox/&#10;.coverage&#10;.coverage.*&#10;.cache&#10;nosetests.xml&#10;coverage.xml&#10;*.cover&#10;.hypothesis/&#10;.pytest_cache/&#10;&#10;# Jupyter Notebook&#10;.ipynb_checkpoints&#10;&#10;# pyenv&#10;.python-version&#10;&#10;# mypy&#10;.mypy_cache/&#10;.dmypy.json&#10;&#10;# Pyre type checker&#10;.pyre/&#10;&#10;# VS Code&#10;.vscode/&#10;&#10;# OS generated files&#10;.DS_Store&#10;Thumbs.db&#10;&#10;# Virtual environments&#10;.venv/&#10;venv/&#10;ENV/&#10;&#10;# Logs&#10;*.log&#10;&#10;# Local env files&#10;.env&#10;.env.*&#10;&#10;# Misc&#10;*.bak&#10;*.swp&#10;*.swo&#10;&#10;# Ignore test images and outputs&#10;*.png&#10;*.jpg&#10;*.jpeg&#10;*.bmp&#10;*.gif&#10;*.tiff&#10;*.webp&#10;*.out&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/models/__init__.py">
           <value>
             <PendingDiffInfo>
