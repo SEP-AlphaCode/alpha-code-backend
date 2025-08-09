@@ -4,6 +4,7 @@ from fastapi.responses import RedirectResponse
 
 from routers.osmo_router import router as osmo_router
 from routers.audio_router import router as audio_router
+from routers.audio_parse_router import router as audio_parse_router
 
 from config.config import settings
 
@@ -31,6 +32,7 @@ app.add_middleware(
 
 app.include_router(osmo_router, prefix="/osmo", tags=["Osmo"])
 app.include_router(audio_router, prefix="/audio", tags=["Audio"])
+app.include_router(audio_parse_router, prefix="/audio-parse", tags=["Audio Parse"])
 
 @app.get("/", include_in_schema=False)
 async def root():
