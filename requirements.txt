@@ -4,5 +4,5 @@ pydantic
 opencv-python
 pillow
 pytesseract
-
-
+pydub
+python-dotenv
