@@ -1,0 +1,172 @@
+{
+  "id": "35d04a60-9e9c-4da4-bbfe-4265fa2f4660",
+  "name": "Auto-generated for demo-song.mp3",
+  "music_file": "demo-song.mp3",
+  "music_analysis_id": "demo-analysis",
+  "segments": [
+    {
+      "start_time": 0.0,
+      "end_time": 0.5,
+      "action": "arm_movement",
+      "parameters": {
+        "intensity": 0.7,
+        "ubx_action_id": "015"
+      },
+      "ubx_file": "015.ubx",
+      "energy_level": "medium",
+      "notes": "Opening: Welcome"
+    },
+    {
+      "start_time": 0.5,
+      "end_time": 1.5,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 1.0,
+        "ubx_action_id": "codemao9",
+        "action_name": "Sneeze",
+        "category": "expression",
+        "expected_duration": 1.5,
+        "sync_to_beat": true,
+        "tempo": 128.0
+      },
+      "ubx_file": "codemao9.ubx",
+      "energy_level": "high",
+      "notes": "UBX Action: Sneeze"
+    },
+    {
+      "start_time": 1.5,
+      "end_time": 2.5,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 1.0,
+        "ubx_action_id": "codemao9",
+        "action_name": "Sneeze",
+        "category": "expression",
+        "expected_duration": 1.5,
+        "sync_to_beat": true,
+        "tempo": 128.0
+      },
+      "ubx_file": "codemao9.ubx",
+      "energy_level": "high",
+      "notes": "UBX Action: Sneeze"
+    },
+    {
+      "start_time": 2.5,
+      "end_time": 3.5,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 1.0,
+        "ubx_action_id": "codemao9",
+        "action_name": "Sneeze",
+        "category": "expression",
+        "expected_duration": 1.5,
+        "sync_to_beat": true,
+        "tempo": 128.0
+      },
+      "ubx_file": "codemao9.ubx",
+      "energy_level": "high",
+      "notes": "UBX Action: Sneeze"
+    },
+    {
+      "start_time": 3.5,
+      "end_time": 4.5,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 1.0,
+        "ubx_action_id": "codemao9",
+        "action_name": "Sneeze",
+        "category": "expression",
+        "expected_duration": 1.5,
+        "sync_to_beat": true,
+        "tempo": 128.0
+      },
+      "ubx_file": "codemao9.ubx",
+      "energy_level": "high",
+      "notes": "UBX Action: Sneeze"
+    },
+    {
+      "start_time": 4.5,
+      "end_time": 5.5,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 1.0,
+        "ubx_action_id": "codemao9",
+        "action_name": "Sneeze",
+        "category": "expression",
+        "expected_duration": 1.5,
+        "sync_to_beat": true,
+        "tempo": 128.0
+      },
+      "ubx_file": "codemao9.ubx",
+      "energy_level": "high",
+      "notes": "UBX Action: Sneeze"
+    },
+    {
+      "start_time": 5.5,
+      "end_time": 6.5,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 1.0,
+        "ubx_action_id": "codemao9",
+        "action_name": "Sneeze",
+        "category": "expression",
+        "expected_duration": 1.5,
+        "sync_to_beat": true,
+        "tempo": 128.0
+      },
+      "ubx_file": "codemao9.ubx",
+      "energy_level": "high",
+      "notes": "UBX Action: Sneeze"
+    },
+    {
+      "start_time": 6.5,
+      "end_time": 7.5,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.7466666666666666,
+        "ubx_action_id": "codemao9",
+        "action_name": "Sneeze",
+        "category": "expression",
+        "expected_duration": 1.5,
+        "sync_to_beat": true,
+        "tempo": 128.0
+      },
+      "ubx_file": "codemao9.ubx",
+      "energy_level": "medium",
+      "notes": "UBX Action: Sneeze"
+    },
+    {
+      "start_time": 7.5,
+      "end_time": 9.5,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 1.0,
+        "ubx_action_id": "Surveillance_004",
+        "action_name": "Blow a kiss",
+        "category": "expression",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 128.0
+      },
+      "ubx_file": "Surveillance_004.ubx",
+      "energy_level": "high",
+      "notes": "UBX Action: Blow a kiss"
+    },
+    {
+      "start_time": 9.5,
+      "end_time": 12.5,
+      "action": "pose",
+      "parameters": {
+        "intensity": 0.5,
+        "ubx_action_id": "009"
+      },
+      "ubx_file": "009.ubx",
+      "energy_level": "low",
+      "notes": "Closing: Reset"
+    }
+  ],
+  "total_duration": 30.0,
+  "bpm": 128.0,
+  "created_at": "2025-08-07T22:20:15.445892",
+  "style_preferences": {}
+}

@@ -1,0 +1,240 @@
+{
+  "id": "f48e348e-bbaf-46fc-986d-f36990e03578",
+  "name": "Auto-generated for BẠC PHẬN - ICM x JACK - OFFICIAL MV (online-audio-converter.com) (2).wav",
+  "music_file": "BẠC PHẬN - ICM x JACK - OFFICIAL MV (online-audio-converter.com) (2).wav",
+  "music_analysis_id": "4ef01659-c887-4f4b-a758-5ad361cc5420",
+  "segments": [
+    {
+      "start_time": 0.0,
+      "end_time": 0.0,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.7,
+        "ubx_action_id": "codemao14"
+      },
+      "ubx_file": "codemao14.ubx",
+      "energy_level": "medium",
+      "notes": "Opening: Wake up"
+    },
+    {
+      "start_time": 0.0,
+      "end_time": 1.0216780045351475,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "codemao14",
+        "action_name": "Wake up",
+        "category": "expression",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "codemao14.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Wake up"
+    },
+    {
+      "start_time": 1.0216780045351475,
+      "end_time": 2.043356009070295,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "w_basic_0012_1",
+        "action_name": "Look up and down",
+        "category": "head",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "w_basic_0012_1.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Look up and down"
+    },
+    {
+      "start_time": 2.043356009070295,
+      "end_time": 3.0650340136054424,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "codemao17",
+        "action_name": "Depressed",
+        "category": "expression",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "codemao17.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Depressed"
+    },
+    {
+      "start_time": 3.0650340136054424,
+      "end_time": 4.08671201814059,
+      "action": "arm_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "Surveillance_001",
+        "action_name": "Say hi",
+        "category": "greeting",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "Surveillance_001.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Say hi"
+    },
+    {
+      "start_time": 4.08671201814059,
+      "end_time": 5.108390022675737,
+      "action": "arm_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "017",
+        "action_name": "Raise both hands",
+        "category": "arm",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "017.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Raise both hands"
+    },
+    {
+      "start_time": 5.108390022675737,
+      "end_time": 6.130068027210885,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "emo_028",
+        "action_name": "Cover up the face",
+        "category": "expression",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "emo_028.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Cover up the face"
+    },
+    {
+      "start_time": 6.130068027210885,
+      "end_time": 7.151746031746032,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "codemao7",
+        "action_name": "Strange",
+        "category": "expression",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "codemao7.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Strange"
+    },
+    {
+      "start_time": 7.151746031746032,
+      "end_time": 8.17342403628118,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "037",
+        "action_name": "Shake the head",
+        "category": "head",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "037.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Shake the head"
+    },
+    {
+      "start_time": 8.17342403628118,
+      "end_time": 9.195102040816327,
+      "action": "dance",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "action_015",
+        "action_name": "Wiggle the hips",
+        "category": "dance",
+        "expected_duration": 2.5,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "action_015.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Wiggle the hips"
+    },
+    {
+      "start_time": 9.195102040816327,
+      "end_time": 10.216780045351474,
+      "action": "arm_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "Surveillance_001",
+        "action_name": "Say hi",
+        "category": "greeting",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "Surveillance_001.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Say hi"
+    },
+    {
+      "start_time": 10.216780045351474,
+      "end_time": 11.23845804988662,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "emo_010",
+        "action_name": "Shy",
+        "category": "expression",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "emo_010.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Shy"
+    },
+    {
+      "start_time": 11.23845804988662,
+      "end_time": 13.23845804988662,
+      "action": "arm_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "Surveillance_003",
+        "action_name": "Shake hands",
+        "category": "arm",
+        "expected_duration": 2.5,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "Surveillance_003.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Shake hands"
+    },
+    {
+      "start_time": 13.23845804988662,
+      "end_time": 16.23845804988662,
+      "action": "arm_movement",
+      "parameters": {
+        "intensity": 0.5,
+        "ubx_action_id": "action_016"
+      },
+      "ubx_file": "action_016.ubx",
+      "energy_level": "low",
+      "notes": "Closing: Say goodbye"
+    }
+  ],
+  "total_duration": 256.20897959183674,
+  "bpm": 117.45383522727273,
+  "created_at": "2025-08-07T22:47:38.402113",
+  "style_preferences": {}
+}

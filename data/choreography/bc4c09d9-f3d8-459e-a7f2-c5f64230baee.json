@@ -1,0 +1,5769 @@
+{
+  "id": "bc4c09d9-f3d8-459e-a7f2-c5f64230baee",
+  "music_analysis_id": "5ba219da-0afb-432c-8919-ffa8238c5bcf",
+  "filename": "BẠC PHẬN - ICM x JACK - OFFICIAL MV (online-audio-converter.com) (2).wav",
+  "duration": 256.20897959183674,
+  "style": "ai_generated",
+  "created_at": "2025-08-08T11:23:11.895021",
+  "metadata": {
+    "emotion_analysis": {
+      "primary_emotion": "excited",
+      "energy_score": 0.376094251871109,
+      "spectral_brightness": 0.7452240342759271,
+      "tempo": 117.45383522727273,
+      "tempo_category": "moderate",
+      "emotion_weights": {
+        "energetic": 0.06733083291024539,
+        "happy": 0.12632251189448998,
+        "calm": 0.08159041618346158,
+        "powerful": 0.03804974369033478,
+        "gentle": 0.06312102268281038,
+        "excited": 0.13869369269905935,
+        "peaceful": 0.0662780485571387,
+        "playful": 0.07849374020578516,
+        "confident": 0.05486233528567882,
+        "graceful": 0.06456307431590584,
+        "athletic": 0.029594245092482603,
+        "friendly": 0.10117076637314516,
+        "balanced": 0.08992957010946237
+      }
+    },
+    "total_segments": 123,
+    "total_actions": 406
+  },
+  "segments": [
+    {
+      "start_time": 4.527891156462585,
+      "end_time": 8.544943310657596,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 4.527891156462585,
+          "duration": 4.01705215419501,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 4.527891156462585,
+          "duration": 2.008526077097505,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "w_stand_0003",
+          "start_time": 6.5364172335600905,
+          "duration": 2.008526077097505,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Stretching",
+            "category": "basic_action",
+            "emotion": "calm"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 4.927891156462586,
+          "duration": 2.008526077097505,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 6.548027210884354,
+      "end_time": 10.541859410430838,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 6.548027210884354,
+          "duration": 3.9938321995464845,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 6.548027210884354,
+          "duration": 3.9938321995464845,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 6.948027210884354,
+          "duration": 1.9969160997732422,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 8.544943310657596,
+      "end_time": 12.561995464852608,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 8.544943310657596,
+          "duration": 4.017052154195012,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 8.544943310657596,
+          "duration": 2.008526077097506,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "019",
+          "start_time": 10.5534693877551,
+          "duration": 2.008526077097506,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Raise left leg",
+            "category": "basic_action",
+            "emotion": "balanced"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 8.944943310657596,
+          "duration": 2.008526077097506,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 10.541859410430838,
+      "end_time": 14.55891156462585,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 10.541859410430838,
+          "duration": 4.017052154195012,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 10.541859410430838,
+          "duration": 2.008526077097506,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "010",
+          "start_time": 12.550385487528345,
+          "duration": 2.008526077097506,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Laughing",
+            "category": "emotion",
+            "emotion": "happy"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 10.941859410430839,
+          "duration": 2.008526077097506,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 12.561995464852608,
+      "end_time": 16.555827664399093,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 12.561995464852608,
+          "duration": 3.9938321995464854,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 12.561995464852608,
+          "duration": 3.9938321995464854,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 12.961995464852608,
+          "duration": 1.9969160997732427,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 14.55891156462585,
+      "end_time": 18.552743764172334,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 14.55891156462585,
+          "duration": 3.9938321995464836,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 14.55891156462585,
+          "duration": 3.9938321995464836,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 14.95891156462585,
+          "duration": 1.9969160997732418,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 16.555827664399093,
+      "end_time": 20.54965986394558,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 16.555827664399093,
+          "duration": 3.9938321995464854,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 16.555827664399093,
+          "duration": 3.9938321995464854,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 16.95582766439909,
+          "duration": 1.9969160997732427,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 18.552743764172334,
+      "end_time": 22.54657596371882,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 18.552743764172334,
+          "duration": 3.9938321995464854,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 18.552743764172334,
+          "duration": 3.9938321995464854,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 18.952743764172332,
+          "duration": 1.9969160997732427,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 20.54965986394558,
+      "end_time": 24.56671201814059,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 20.54965986394558,
+          "duration": 4.01705215419501,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 20.54965986394558,
+          "duration": 2.008526077097505,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "015",
+          "start_time": 22.558185941043085,
+          "duration": 2.008526077097505,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Welcome",
+            "category": "greeting",
+            "emotion": "friendly"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 20.949659863945577,
+          "duration": 2.008526077097505,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 22.54657596371882,
+      "end_time": 26.540408163265305,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 22.54657596371882,
+          "duration": 3.9938321995464854,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 22.54657596371882,
+          "duration": 3.9938321995464854,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 22.946575963718818,
+          "duration": 1.9969160997732427,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 24.56671201814059,
+      "end_time": 28.560544217687074,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 24.56671201814059,
+          "duration": 3.9938321995464854,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 24.56671201814059,
+          "duration": 3.9938321995464854,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 24.966712018140587,
+          "duration": 1.9969160997732427,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 26.540408163265305,
+      "end_time": 30.55746031746032,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 26.540408163265305,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 26.540408163265305,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "018",
+          "start_time": 28.54893424036281,
+          "duration": 2.008526077097507,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Raise your right leg",
+            "category": "basic_action",
+            "emotion": "balanced"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 26.940408163265303,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 28.560544217687074,
+      "end_time": 32.55437641723356,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 28.560544217687074,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 28.560544217687074,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 28.960544217687072,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 30.55746031746032,
+      "end_time": 34.5512925170068,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 30.55746031746032,
+          "duration": 3.993832199546482,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 30.55746031746032,
+          "duration": 3.993832199546482,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 30.957460317460317,
+          "duration": 1.996916099773241,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 32.55437641723356,
+      "end_time": 36.548208616780045,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 32.55437641723356,
+          "duration": 3.993832199546482,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 32.55437641723356,
+          "duration": 3.993832199546482,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 32.95437641723356,
+          "duration": 1.996916099773241,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 34.5512925170068,
+      "end_time": 38.54512471655329,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 34.5512925170068,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 34.5512925170068,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 34.9512925170068,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 36.548208616780045,
+      "end_time": 40.56526077097506,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 36.548208616780045,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 36.548208616780045,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 38.55673469387755,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 36.94820861678004,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 38.54512471655329,
+      "end_time": 42.5621768707483,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 38.54512471655329,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 38.54512471655329,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "random_short3",
+          "start_time": 40.553650793650796,
+          "duration": 2.008526077097507,
+          "intensity": "low",
+          "parameters": {
+            "description": "Waving left hand",
+            "category": "greeting",
+            "emotion": "friendly"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 38.94512471655329,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 40.56526077097506,
+      "end_time": 44.55909297052154,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 40.56526077097506,
+          "duration": 3.993832199546482,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 40.56526077097506,
+          "duration": 3.993832199546482,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 40.96526077097506,
+          "duration": 1.996916099773241,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 42.5621768707483,
+      "end_time": 46.556009070294785,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 42.5621768707483,
+          "duration": 3.993832199546482,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 42.5621768707483,
+          "duration": 3.993832199546482,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 42.9621768707483,
+          "duration": 1.996916099773241,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 44.55909297052154,
+      "end_time": 48.55292517006803,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 44.55909297052154,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 44.55909297052154,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 44.95909297052154,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 46.556009070294785,
+      "end_time": 50.54984126984127,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 46.556009070294785,
+          "duration": 3.993832199546482,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 46.556009070294785,
+          "duration": 3.993832199546482,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 46.95600907029478,
+          "duration": 1.996916099773241,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 48.55292517006803,
+      "end_time": 52.54675736961451,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 48.55292517006803,
+          "duration": 3.993832199546482,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 48.55292517006803,
+          "duration": 3.993832199546482,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 48.95292517006803,
+          "duration": 1.996916099773241,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 50.54984126984127,
+      "end_time": 54.56689342403628,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 50.54984126984127,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 50.54984126984127,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "018",
+          "start_time": 52.55836734693877,
+          "duration": 2.008526077097507,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Raise your right leg",
+            "category": "basic_action",
+            "emotion": "balanced"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 50.949841269841265,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 52.54675736961451,
+      "end_time": 56.563809523809525,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 52.54675736961451,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 52.54675736961451,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "010",
+          "start_time": 54.55528344671202,
+          "duration": 2.008526077097507,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Laughing",
+            "category": "emotion",
+            "emotion": "happy"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 52.94675736961451,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 54.56689342403628,
+      "end_time": 58.56072562358277,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 54.56689342403628,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 54.56689342403628,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 54.96689342403628,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 56.563809523809525,
+      "end_time": 60.55764172335601,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 56.563809523809525,
+          "duration": 3.993832199546482,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 56.563809523809525,
+          "duration": 3.993832199546482,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 56.96380952380952,
+          "duration": 1.996916099773241,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 58.56072562358277,
+      "end_time": 62.55455782312925,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 58.56072562358277,
+          "duration": 3.993832199546482,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 58.56072562358277,
+          "duration": 3.993832199546482,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 58.96072562358277,
+          "duration": 1.996916099773241,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 60.55764172335601,
+      "end_time": 64.55147392290249,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 60.55764172335601,
+          "duration": 3.993832199546482,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 60.55764172335601,
+          "duration": 3.993832199546482,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 60.957641723356005,
+          "duration": 1.996916099773241,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 62.55455782312925,
+      "end_time": 66.54839002267573,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 62.55455782312925,
+          "duration": 3.993832199546482,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 62.55455782312925,
+          "duration": 3.993832199546482,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 62.95455782312925,
+          "duration": 1.996916099773241,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 64.55147392290249,
+      "end_time": 68.54530612244898,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 64.55147392290249,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 64.55147392290249,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 64.9514739229025,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 66.54839002267573,
+      "end_time": 70.56544217687075,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 66.54839002267573,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 66.54839002267573,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "w_stand_0003",
+          "start_time": 68.55691609977325,
+          "duration": 2.008526077097507,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Stretching",
+            "category": "basic_action",
+            "emotion": "calm"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 66.94839002267574,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 68.54530612244898,
+      "end_time": 72.56235827664399,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 68.54530612244898,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 68.54530612244898,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "010",
+          "start_time": 70.55383219954649,
+          "duration": 2.008526077097507,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Laughing",
+            "category": "emotion",
+            "emotion": "happy"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 68.94530612244898,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 70.56544217687075,
+      "end_time": 74.55927437641724,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 70.56544217687075,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 70.56544217687075,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 70.96544217687075,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 72.56235827664399,
+      "end_time": 76.55619047619048,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 72.56235827664399,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 72.56235827664399,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 72.962358276644,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 74.55927437641724,
+      "end_time": 78.55310657596372,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 74.55927437641724,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 74.55927437641724,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 74.95927437641724,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 76.55619047619048,
+      "end_time": 80.55002267573695,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 76.55619047619048,
+          "duration": 3.9938321995464747,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 76.55619047619048,
+          "duration": 3.9938321995464747,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 76.95619047619049,
+          "duration": 1.9969160997732374,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 78.55310657596372,
+      "end_time": 82.5469387755102,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 78.55310657596372,
+          "duration": 3.9938321995464747,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 78.55310657596372,
+          "duration": 3.9938321995464747,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 78.95310657596373,
+          "duration": 1.9969160997732374,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 80.55002267573695,
+      "end_time": 84.56707482993197,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 80.55002267573695,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 80.55002267573695,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 82.55854875283447,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 80.95002267573696,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 82.5469387755102,
+      "end_time": 86.54077097505669,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 82.5469387755102,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 82.5469387755102,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 82.9469387755102,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 84.56707482993197,
+      "end_time": 88.56090702947846,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 84.56707482993197,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 84.56707482993197,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 84.96707482993197,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 86.54077097505669,
+      "end_time": 90.5578231292517,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 86.54077097505669,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 86.54077097505669,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "010",
+          "start_time": 88.5492970521542,
+          "duration": 2.008526077097507,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Laughing",
+            "category": "emotion",
+            "emotion": "happy"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 86.9407709750567,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 88.56090702947846,
+      "end_time": 92.55473922902495,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 88.56090702947846,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 88.56090702947846,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 88.96090702947846,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 90.5578231292517,
+      "end_time": 94.55165532879819,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 90.5578231292517,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 90.5578231292517,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 90.95782312925171,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 92.55473922902495,
+      "end_time": 96.54857142857144,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 92.55473922902495,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 92.55473922902495,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 92.95473922902495,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 94.55165532879819,
+      "end_time": 98.56870748299319,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 94.55165532879819,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 94.55165532879819,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 96.56018140589569,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 94.9516553287982,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 96.54857142857144,
+      "end_time": 100.54240362811791,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 96.54857142857144,
+          "duration": 3.9938321995464747,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 96.54857142857144,
+          "duration": 3.9938321995464747,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 96.94857142857144,
+          "duration": 1.9969160997732374,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 98.56870748299319,
+      "end_time": 102.56253968253968,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 98.56870748299319,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 98.56870748299319,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 98.9687074829932,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 100.54240362811791,
+      "end_time": 104.55945578231292,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 100.54240362811791,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 100.54240362811791,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "w_stand_0003",
+          "start_time": 102.55092970521542,
+          "duration": 2.008526077097507,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Stretching",
+            "category": "basic_action",
+            "emotion": "calm"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 100.94240362811792,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 102.56253968253968,
+      "end_time": 106.55637188208617,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 102.56253968253968,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 102.56253968253968,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 102.96253968253968,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 104.55945578231292,
+      "end_time": 108.55328798185941,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 104.55945578231292,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 104.55945578231292,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 104.95945578231293,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 106.55637188208617,
+      "end_time": 110.55020408163266,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 106.55637188208617,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 106.55637188208617,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 106.95637188208617,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 108.55328798185941,
+      "end_time": 112.5471201814059,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 108.55328798185941,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 108.55328798185941,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 108.95328798185942,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 110.55020408163266,
+      "end_time": 114.56725623582767,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 110.55020408163266,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 110.55020408163266,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "w_stand_0009",
+          "start_time": 112.55873015873016,
+          "duration": 2.008526077097507,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Tickle",
+            "category": "basic_action",
+            "emotion": "happy"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 110.95020408163266,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 112.5471201814059,
+      "end_time": 116.54095238095238,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 112.5471201814059,
+          "duration": 3.9938321995464747,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 112.5471201814059,
+          "duration": 3.9938321995464747,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 112.94712018140591,
+          "duration": 1.9969160997732374,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 114.56725623582767,
+      "end_time": 118.56108843537415,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 114.56725623582767,
+          "duration": 3.9938321995464747,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 114.56725623582767,
+          "duration": 3.9938321995464747,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 114.96725623582768,
+          "duration": 1.9969160997732374,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 116.54095238095238,
+      "end_time": 120.55800453514739,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 116.54095238095238,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 116.54095238095238,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "027",
+          "start_time": 118.54947845804989,
+          "duration": 2.008526077097507,
+          "intensity": "low",
+          "parameters": {
+            "description": "Sit down",
+            "category": "basic_action",
+            "emotion": "calm"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 116.94095238095238,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 118.56108843537415,
+      "end_time": 122.55492063492063,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 118.56108843537415,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 118.56108843537415,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 118.96108843537415,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 120.55800453514739,
+      "end_time": 124.55183673469388,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 120.55800453514739,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 120.55800453514739,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 120.9580045351474,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 122.55492063492063,
+      "end_time": 126.54875283446712,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 122.55492063492063,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 122.55492063492063,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 122.95492063492064,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 124.55183673469388,
+      "end_time": 128.54566893424035,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 124.55183673469388,
+          "duration": 3.9938321995464747,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 124.55183673469388,
+          "duration": 3.9938321995464747,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 124.95183673469388,
+          "duration": 1.9969160997732374,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 126.54875283446712,
+      "end_time": 130.56580498866214,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 126.54875283446712,
+          "duration": 4.017052154195014,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 126.54875283446712,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "w_stand_0009",
+          "start_time": 128.55727891156462,
+          "duration": 2.008526077097507,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Tickle",
+            "category": "basic_action",
+            "emotion": "happy"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 126.94875283446713,
+          "duration": 2.008526077097507,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 128.54566893424035,
+      "end_time": 132.56272108843538,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 128.54566893424035,
+          "duration": 4.017052154195028,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 128.54566893424035,
+          "duration": 2.008526077097514,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "w_stand_0003",
+          "start_time": 130.55419501133787,
+          "duration": 2.008526077097514,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Stretching",
+            "category": "basic_action",
+            "emotion": "calm"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 128.94566893424036,
+          "duration": 2.008526077097514,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 130.56580498866214,
+      "end_time": 134.55963718820863,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 130.56580498866214,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 130.56580498866214,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 130.96580498866214,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 132.56272108843538,
+      "end_time": 136.55655328798187,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 132.56272108843538,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 132.56272108843538,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 132.9627210884354,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 134.55963718820863,
+      "end_time": 138.55346938775511,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 134.55963718820863,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 134.55963718820863,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 134.95963718820863,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 136.55655328798187,
+      "end_time": 140.55038548752833,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 136.55655328798187,
+          "duration": 3.9938321995464605,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 136.55655328798187,
+          "duration": 3.9938321995464605,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 136.95655328798188,
+          "duration": 1.9969160997732303,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 138.55346938775511,
+      "end_time": 142.57052154195011,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 138.55346938775511,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 138.55346938775511,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 140.5619954648526,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 138.95346938775512,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 140.55038548752833,
+      "end_time": 144.56743764172336,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 140.55038548752833,
+          "duration": 4.017052154195028,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 140.55038548752833,
+          "duration": 2.008526077097514,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "015",
+          "start_time": 142.55891156462584,
+          "duration": 2.008526077097514,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Welcome",
+            "category": "greeting",
+            "emotion": "friendly"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 140.95038548752834,
+          "duration": 2.008526077097514,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 142.57052154195011,
+      "end_time": 146.5643537414966,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 142.57052154195011,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 142.57052154195011,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 142.97052154195012,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 144.56743764172336,
+      "end_time": 148.56126984126985,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 144.56743764172336,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 144.56743764172336,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 144.96743764172336,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 146.5643537414966,
+      "end_time": 150.5581859410431,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 146.5643537414966,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 146.5643537414966,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 146.9643537414966,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 148.56126984126985,
+      "end_time": 152.55510204081634,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 148.56126984126985,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 148.56126984126985,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 148.96126984126985,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 150.5581859410431,
+      "end_time": 154.55201814058958,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 150.5581859410431,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 150.5581859410431,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 150.9581859410431,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 152.55510204081634,
+      "end_time": 156.54893424036283,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 152.55510204081634,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 152.55510204081634,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 152.95510204081634,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 154.55201814058958,
+      "end_time": 158.54585034013604,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 154.55201814058958,
+          "duration": 3.9938321995464605,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 154.55201814058958,
+          "duration": 3.9938321995464605,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 154.9520181405896,
+          "duration": 1.9969160997732303,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 156.54893424036283,
+      "end_time": 160.56598639455783,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 156.54893424036283,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 156.54893424036283,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "w_stand_0009",
+          "start_time": 158.5574603174603,
+          "duration": 2.0085260770974998,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Tickle",
+            "category": "basic_action",
+            "emotion": "happy"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 156.94893424036283,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 158.54585034013604,
+      "end_time": 162.56290249433107,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 158.54585034013604,
+          "duration": 4.017052154195028,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 158.54585034013604,
+          "duration": 2.008526077097514,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 160.55437641723356,
+          "duration": 2.008526077097514,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 158.94585034013605,
+          "duration": 2.008526077097514,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 160.56598639455783,
+      "end_time": 164.5598185941043,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 160.56598639455783,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 160.56598639455783,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 160.96598639455783,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 162.56290249433107,
+      "end_time": 166.55673469387756,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 162.56290249433107,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 162.56290249433107,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 162.96290249433108,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 164.5598185941043,
+      "end_time": 168.5536507936508,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 164.5598185941043,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 164.5598185941043,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 164.95981859410432,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 166.55673469387756,
+      "end_time": 170.55056689342405,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 166.55673469387756,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 166.55673469387756,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 166.95673469387756,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 168.5536507936508,
+      "end_time": 172.5474829931973,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 168.5536507936508,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 168.5536507936508,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 168.9536507936508,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 170.55056689342405,
+      "end_time": 174.5443990929705,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 170.55056689342405,
+          "duration": 3.9938321995464605,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 170.55056689342405,
+          "duration": 3.9938321995464605,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 170.95056689342405,
+          "duration": 1.9969160997732303,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 172.5474829931973,
+      "end_time": 176.5645351473923,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 172.5474829931973,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 172.5474829931973,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "random_short4",
+          "start_time": 174.5560090702948,
+          "duration": 2.0085260770974998,
+          "intensity": "low",
+          "parameters": {
+            "description": "Waving right hand",
+            "category": "greeting",
+            "emotion": "friendly"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 172.9474829931973,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 174.5443990929705,
+      "end_time": 178.56145124716554,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 174.5443990929705,
+          "duration": 4.017052154195028,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 174.5443990929705,
+          "duration": 2.008526077097514,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "010",
+          "start_time": 176.55292517006802,
+          "duration": 2.008526077097514,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Laughing",
+            "category": "emotion",
+            "emotion": "happy"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 174.9443990929705,
+          "duration": 2.008526077097514,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 176.5645351473923,
+      "end_time": 180.55836734693878,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 176.5645351473923,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 176.5645351473923,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 176.9645351473923,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 178.56145124716554,
+      "end_time": 182.55528344671202,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 178.56145124716554,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 178.56145124716554,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 178.96145124716554,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 180.55836734693878,
+      "end_time": 184.55219954648527,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 180.55836734693878,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 180.55836734693878,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 180.9583673469388,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 182.55528344671202,
+      "end_time": 186.5491156462585,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 182.55528344671202,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 182.55528344671202,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 182.95528344671203,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 184.55219954648527,
+      "end_time": 188.56925170068027,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 184.55219954648527,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 184.55219954648527,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "010",
+          "start_time": 186.56072562358275,
+          "duration": 2.0085260770974998,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Laughing",
+            "category": "emotion",
+            "emotion": "happy"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 184.95219954648528,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 186.5491156462585,
+      "end_time": 190.5661678004535,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 186.5491156462585,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 186.5491156462585,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "010",
+          "start_time": 188.55764172335603,
+          "duration": 2.0085260770974998,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Laughing",
+            "category": "emotion",
+            "emotion": "happy"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 186.94911564625852,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 188.56925170068027,
+      "end_time": 192.56308390022676,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 188.56925170068027,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 188.56925170068027,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 188.96925170068027,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 190.5661678004535,
+      "end_time": 194.56,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 190.5661678004535,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 190.5661678004535,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 190.96616780045352,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 192.56308390022676,
+      "end_time": 196.55691609977325,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 192.56308390022676,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 192.56308390022676,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 192.96308390022676,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 194.56,
+      "end_time": 198.577052154195,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 194.56,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 194.56,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 196.5685260770975,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 194.96,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 196.55691609977325,
+      "end_time": 200.55074829931974,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 196.55691609977325,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 196.55691609977325,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 196.95691609977325,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 198.577052154195,
+      "end_time": 202.54766439909298,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 198.577052154195,
+          "duration": 3.9706122448979784,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 198.577052154195,
+          "duration": 3.9706122448979784,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 198.977052154195,
+          "duration": 1.9853061224489892,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 200.55074829931974,
+      "end_time": 204.54458049886622,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 200.55074829931974,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 200.55074829931974,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 200.95074829931974,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 202.54766439909298,
+      "end_time": 206.56471655328798,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 202.54766439909298,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 202.54766439909298,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "018",
+          "start_time": 204.55619047619047,
+          "duration": 2.0085260770974998,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Raise your right leg",
+            "category": "basic_action",
+            "emotion": "balanced"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 202.947664399093,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 204.54458049886622,
+      "end_time": 208.56163265306122,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 204.54458049886622,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 204.54458049886622,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 206.55310657596374,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 204.94458049886623,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 206.56471655328798,
+      "end_time": 210.55854875283447,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 206.56471655328798,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 206.56471655328798,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 206.96471655328799,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 208.56163265306122,
+      "end_time": 212.5554648526077,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 208.56163265306122,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 208.56163265306122,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 208.96163265306123,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 210.55854875283447,
+      "end_time": 214.55238095238096,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 210.55854875283447,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 210.55854875283447,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 210.95854875283447,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 212.5554648526077,
+      "end_time": 216.5725170068027,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 212.5554648526077,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 212.5554648526077,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 214.5639909297052,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 212.95546485260772,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 214.55238095238096,
+      "end_time": 218.54621315192745,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 214.55238095238096,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 214.55238095238096,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 214.95238095238096,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 216.5725170068027,
+      "end_time": 220.5431292517007,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 216.5725170068027,
+          "duration": 3.9706122448979784,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 216.5725170068027,
+          "duration": 3.9706122448979784,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 216.97251700680272,
+          "duration": 1.9853061224489892,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 218.54621315192745,
+      "end_time": 222.56326530612245,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 218.54621315192745,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 218.54621315192745,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "016",
+          "start_time": 220.55473922902496,
+          "duration": 2.0085260770974998,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Golden Rooster Independent",
+            "category": "basic_action",
+            "emotion": "balanced"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 218.94621315192745,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 220.5431292517007,
+      "end_time": 224.5601814058957,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 220.5431292517007,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 220.5431292517007,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "010",
+          "start_time": 222.55165532879818,
+          "duration": 2.0085260770974998,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Laughing",
+            "category": "emotion",
+            "emotion": "happy"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 220.9431292517007,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 222.56326530612245,
+      "end_time": 226.55709750566893,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 222.56326530612245,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 222.56326530612245,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 222.96326530612245,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 224.5601814058957,
+      "end_time": 228.55401360544218,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 224.5601814058957,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 224.5601814058957,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 224.9601814058957,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 226.55709750566893,
+      "end_time": 230.55092970521542,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 226.55709750566893,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 226.55709750566893,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 226.95709750566894,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 228.55401360544218,
+      "end_time": 232.54784580498867,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 228.55401360544218,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 228.55401360544218,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 228.95401360544219,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 230.55092970521542,
+      "end_time": 234.5447619047619,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 230.55092970521542,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 230.55092970521542,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 230.95092970521543,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 232.54784580498867,
+      "end_time": 236.54167800453516,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 232.54784580498867,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 232.54784580498867,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 232.94784580498867,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 234.5447619047619,
+      "end_time": 238.5385941043084,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 234.5447619047619,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 234.5447619047619,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 234.94476190476192,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 236.54167800453516,
+      "end_time": 240.55873015873016,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 236.54167800453516,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 236.54167800453516,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "w_stand_0009",
+          "start_time": 238.55020408163267,
+          "duration": 2.0085260770974998,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Tickle",
+            "category": "basic_action",
+            "emotion": "happy"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 236.94167800453516,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 238.5385941043084,
+      "end_time": 242.5556462585034,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 238.5385941043084,
+          "duration": 4.0170521541949995,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 238.5385941043084,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "024",
+          "start_time": 240.5471201814059,
+          "duration": 2.0085260770974998,
+          "intensity": "low",
+          "parameters": {
+            "description": "Yoga",
+            "category": "basic_action",
+            "emotion": "calm"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 238.9385941043084,
+          "duration": 2.0085260770974998,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 240.55873015873016,
+      "end_time": 244.55256235827665,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 240.55873015873016,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 240.55873015873016,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 240.95873015873016,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 242.5556462585034,
+      "end_time": 246.5494784580499,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 242.5556462585034,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 242.5556462585034,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 242.9556462585034,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 244.55256235827665,
+      "end_time": 248.54639455782313,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 244.55256235827665,
+          "duration": 3.993832199546489,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 244.55256235827665,
+          "duration": 3.993832199546489,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 244.95256235827665,
+          "duration": 1.9969160997732445,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 246.5494784580499,
+      "end_time": 250.54978179249844,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 246.5494784580499,
+          "duration": 4.000303334448546,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 246.5494784580499,
+          "duration": 2.000151667224273,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "015",
+          "start_time": 248.54963012527418,
+          "duration": 2.000151667224273,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Welcome",
+            "category": "greeting",
+            "emotion": "friendly"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 246.9494784580499,
+          "duration": 2.000151667224273,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 248.54639455782313,
+      "end_time": 252.54669789227168,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.376094251871109,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 248.54639455782313,
+          "duration": 4.000303334448546,
+          "intensity": "medium",
+          "parameters": {
+            "color": "orange",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 248.54639455782313,
+          "duration": 2.000151667224273,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "015",
+          "start_time": 250.5465462250474,
+          "duration": 2.000151667224273,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Welcome",
+            "category": "greeting",
+            "emotion": "friendly"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 248.94639455782314,
+          "duration": 2.000151667224273,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        }
+      ]
+    }
+  ]
+}

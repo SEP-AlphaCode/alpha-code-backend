@@ -1,0 +1,240 @@
+{
+  "id": "acea8bbf-8852-414e-a7cc-0f5703eba1d0",
+  "name": "Auto-generated for BẠC PHẬN - ICM x JACK - OFFICIAL MV (online-audio-converter.com) (2).wav",
+  "music_file": "BẠC PHẬN - ICM x JACK - OFFICIAL MV (online-audio-converter.com) (2).wav",
+  "music_analysis_id": "93976e55-0a3c-4401-90b8-debd60fca1d4",
+  "segments": [
+    {
+      "start_time": 0.0,
+      "end_time": 0.0,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.7,
+        "ubx_action_id": "emo_007"
+      },
+      "ubx_file": "emo_007.ubx",
+      "energy_level": "medium",
+      "notes": "Opening: Smile"
+    },
+    {
+      "start_time": 0.0,
+      "end_time": 1.0216780045351475,
+      "action": "arm_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "random_short4",
+        "action_name": "Wave the right hand",
+        "category": "arm",
+        "expected_duration": 1.5,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "random_short4.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Wave the right hand"
+    },
+    {
+      "start_time": 1.0216780045351475,
+      "end_time": 2.043356009070295,
+      "action": "dance",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "action_007",
+        "action_name": "Beat you up",
+        "category": "dance",
+        "expected_duration": 3.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "action_007.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Beat you up"
+    },
+    {
+      "start_time": 2.043356009070295,
+      "end_time": 3.0650340136054424,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "emo_028",
+        "action_name": "Cover up the face",
+        "category": "expression",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "emo_028.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Cover up the face"
+    },
+    {
+      "start_time": 3.0650340136054424,
+      "end_time": 4.08671201814059,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "emo_022",
+        "action_name": "Wipe eye gunk",
+        "category": "expression",
+        "expected_duration": 1.5,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "emo_022.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Wipe eye gunk"
+    },
+    {
+      "start_time": 4.08671201814059,
+      "end_time": 5.108390022675737,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "emo_022",
+        "action_name": "Wipe eye gunk",
+        "category": "expression",
+        "expected_duration": 1.5,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "emo_022.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Wipe eye gunk"
+    },
+    {
+      "start_time": 5.108390022675737,
+      "end_time": 6.130068027210885,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "w_basic_0011_1",
+        "action_name": "Look left and right",
+        "category": "head",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "w_basic_0011_1.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Look left and right"
+    },
+    {
+      "start_time": 6.130068027210885,
+      "end_time": 7.151746031746032,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "codemao1",
+        "action_name": "Look around",
+        "category": "head",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "codemao1.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Look around"
+    },
+    {
+      "start_time": 7.151746031746032,
+      "end_time": 8.17342403628118,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "emo_015",
+        "action_name": "Arrogant",
+        "category": "expression",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "emo_015.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Arrogant"
+    },
+    {
+      "start_time": 8.17342403628118,
+      "end_time": 9.195102040816327,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "Surveillance_004",
+        "action_name": "Blow a kiss",
+        "category": "expression",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "Surveillance_004.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Blow a kiss"
+    },
+    {
+      "start_time": 9.195102040816327,
+      "end_time": 10.216780045351474,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "037",
+        "action_name": "Shake the head",
+        "category": "head",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "037.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Shake the head"
+    },
+    {
+      "start_time": 10.216780045351474,
+      "end_time": 11.23845804988662,
+      "action": "arm_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "random_short2",
+        "action_name": "Hug",
+        "category": "arm",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "random_short2.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Hug"
+    },
+    {
+      "start_time": 11.23845804988662,
+      "end_time": 13.23845804988662,
+      "action": "head_movement",
+      "parameters": {
+        "intensity": 0.39151278409090917,
+        "ubx_action_id": "emo_010",
+        "action_name": "Shy",
+        "category": "expression",
+        "expected_duration": 2.0,
+        "sync_to_beat": true,
+        "tempo": 117.45383522727273
+      },
+      "ubx_file": "emo_010.ubx",
+      "energy_level": "low",
+      "notes": "UBX Action: Shy"
+    },
+    {
+      "start_time": 13.23845804988662,
+      "end_time": 16.23845804988662,
+      "action": "arm_movement",
+      "parameters": {
+        "intensity": 0.5,
+        "ubx_action_id": "action_005"
+      },
+      "ubx_file": "action_005.ubx",
+      "energy_level": "low",
+      "notes": "Closing: Give a thumb-up"
+    }
+  ],
+  "total_duration": 256.20897959183674,
+  "bpm": 117.45383522727273,
+  "created_at": "2025-08-07T23:07:51.665710",
+  "style_preferences": {}
+}

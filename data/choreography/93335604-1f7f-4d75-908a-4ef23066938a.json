@@ -1,0 +1,286 @@
+{
+  "id": "93335604-1f7f-4d75-908a-4ef23066938a",
+  "name": "Auto-generated for BẠC PHẬN - ICM x JACK - OFFICIAL MV (online-audio-converter.com) (2).wav",
+  "music_file": "BẠC PHẬN - ICM x JACK - OFFICIAL MV (online-audio-converter.com) (2).wav",
+  "music_analysis_id": "94df1be8-6a83-472a-bf8a-74d3c02b1bc9",
+  "segments": [
+    {
+      "start_time": 0.0,
+      "end_time": 1.0216780045351475,
+      "action": "dance",
+      "parameters": {
+        "actions": [
+          {
+            "name": "037",
+            "type": "basic_action",
+            "duration": 1.0
+          }
+        ],
+        "beat_count": 44,
+        "energy_level": "low_energy",
+        "primary_emotion": "happy",
+        "is_climax": false
+      },
+      "ubx_file": null,
+      "energy_level": "low_energy",
+      "notes": ""
+    },
+    {
+      "start_time": 1.0216780045351475,
+      "end_time": 2.043356009070295,
+      "action": "dance",
+      "parameters": {
+        "actions": [
+          {
+            "name": "action_006",
+            "type": "basic_action",
+            "duration": 1.0
+          }
+        ],
+        "beat_count": 44,
+        "energy_level": "low_energy",
+        "primary_emotion": "happy",
+        "is_climax": false
+      },
+      "ubx_file": null,
+      "energy_level": "low_energy",
+      "notes": ""
+    },
+    {
+      "start_time": 2.043356009070295,
+      "end_time": 3.0650340136054424,
+      "action": "dance",
+      "parameters": {
+        "actions": [
+          {
+            "name": "w_stand_0008",
+            "type": "basic_action",
+            "duration": 1.0
+          }
+        ],
+        "beat_count": 44,
+        "energy_level": "low_energy",
+        "primary_emotion": "happy",
+        "is_climax": false
+      },
+      "ubx_file": null,
+      "energy_level": "low_energy",
+      "notes": ""
+    },
+    {
+      "start_time": 3.0650340136054424,
+      "end_time": 4.08671201814059,
+      "action": "dance",
+      "parameters": {
+        "actions": [
+          {
+            "name": "011",
+            "type": "basic_action",
+            "duration": 1.0
+          }
+        ],
+        "beat_count": 44,
+        "energy_level": "low_energy",
+        "primary_emotion": "happy",
+        "is_climax": false
+      },
+      "ubx_file": null,
+      "energy_level": "low_energy",
+      "notes": ""
+    },
+    {
+      "start_time": 4.08671201814059,
+      "end_time": 5.108390022675737,
+      "action": "dance",
+      "parameters": {
+        "actions": [
+          {
+            "name": "w_stand_0008",
+            "type": "basic_action",
+            "duration": 1.0
+          }
+        ],
+        "beat_count": 44,
+        "energy_level": "low_energy",
+        "primary_emotion": "happy",
+        "is_climax": false
+      },
+      "ubx_file": null,
+      "energy_level": "low_energy",
+      "notes": ""
+    },
+    {
+      "start_time": 5.108390022675737,
+      "end_time": 6.130068027210885,
+      "action": "dance",
+      "parameters": {
+        "actions": [
+          {
+            "name": "037",
+            "type": "basic_action",
+            "duration": 1.0
+          }
+        ],
+        "beat_count": 44,
+        "energy_level": "low_energy",
+        "primary_emotion": "happy",
+        "is_climax": false
+      },
+      "ubx_file": null,
+      "energy_level": "low_energy",
+      "notes": ""
+    },
+    {
+      "start_time": 6.130068027210885,
+      "end_time": 7.151746031746032,
+      "action": "dance",
+      "parameters": {
+        "actions": [
+          {
+            "name": "w_stand_0008",
+            "type": "basic_action",
+            "duration": 1.0
+          }
+        ],
+        "beat_count": 44,
+        "energy_level": "low_energy",
+        "primary_emotion": "happy",
+        "is_climax": false
+      },
+      "ubx_file": null,
+      "energy_level": "low_energy",
+      "notes": ""
+    },
+    {
+      "start_time": 7.151746031746032,
+      "end_time": 8.17342403628118,
+      "action": "dance",
+      "parameters": {
+        "actions": [
+          {
+            "name": "action_006",
+            "type": "basic_action",
+            "duration": 1.0
+          }
+        ],
+        "beat_count": 44,
+        "energy_level": "low_energy",
+        "primary_emotion": "happy",
+        "is_climax": false
+      },
+      "ubx_file": null,
+      "energy_level": "low_energy",
+      "notes": ""
+    },
+    {
+      "start_time": 8.17342403628118,
+      "end_time": 9.195102040816327,
+      "action": "dance",
+      "parameters": {
+        "actions": [
+          {
+            "name": "w_stand_0008",
+            "type": "basic_action",
+            "duration": 1.0
+          }
+        ],
+        "beat_count": 44,
+        "energy_level": "low_energy",
+        "primary_emotion": "happy",
+        "is_climax": false
+      },
+      "ubx_file": null,
+      "energy_level": "low_energy",
+      "notes": ""
+    },
+    {
+      "start_time": 9.195102040816327,
+      "end_time": 10.216780045351474,
+      "action": "dance",
+      "parameters": {
+        "actions": [
+          {
+            "name": "011",
+            "type": "basic_action",
+            "duration": 1.0
+          }
+        ],
+        "beat_count": 44,
+        "energy_level": "low_energy",
+        "primary_emotion": "happy",
+        "is_climax": false
+      },
+      "ubx_file": null,
+      "energy_level": "low_energy",
+      "notes": ""
+    },
+    {
+      "start_time": 10.216780045351474,
+      "end_time": 11.23845804988662,
+      "action": "dance",
+      "parameters": {
+        "actions": [
+          {
+            "name": "action_006",
+            "type": "basic_action",
+            "duration": 1.0
+          }
+        ],
+        "beat_count": 44,
+        "energy_level": "low_energy",
+        "primary_emotion": "happy",
+        "is_climax": false
+      },
+      "ubx_file": null,
+      "energy_level": "low_energy",
+      "notes": ""
+    },
+    {
+      "start_time": 11.23845804988662,
+      "end_time": 256.20897959183674,
+      "action": "dance",
+      "parameters": {
+        "actions": [
+          {
+            "name": "019",
+            "type": "basic_action",
+            "duration": 3.0
+          },
+          {
+            "name": "action_011",
+            "type": "basic_action",
+            "duration": 4.0
+          }
+        ],
+        "beat_count": 5,
+        "energy_level": "low_energy",
+        "primary_emotion": "happy",
+        "is_climax": false
+      },
+      "ubx_file": null,
+      "energy_level": "low_energy",
+      "notes": ""
+    }
+  ],
+  "total_duration": 256.20897959183674,
+  "bpm": 117.45383522727273,
+  "created_at": "2025-08-08 10:19:04.759248",
+  "style_preferences": {
+    "emotion_analysis": {
+      "primary_emotion": "happy",
+      "suitable_emotions": [
+        "happy",
+        "gentle",
+        "peaceful",
+        "graceful",
+        "calm"
+      ],
+      "tempo_category": "moderate",
+      "energy_category": "low_energy",
+      "energy_score": 0.0,
+      "tempo": 117.45383522727273
+    },
+    "total_beats": 489,
+    "ai_generated": true
+  }
+}

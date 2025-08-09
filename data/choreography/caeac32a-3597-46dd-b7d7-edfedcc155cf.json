@@ -1,0 +1,311 @@
+{
+  "id": "caeac32a-3597-46dd-b7d7-edfedcc155cf",
+  "music_analysis_id": "157b028d-f2ca-4cc4-bb6d-496b57294158",
+  "filename": "test.wav",
+  "duration": 20.138684807256237,
+  "style": "ai_generated",
+  "created_at": "2025-08-08T12:04:13.601438",
+  "metadata": {
+    "emotion_analysis": {
+      "primary_emotion": "excited",
+      "energy_score": 0.37496688961982727,
+      "spectral_brightness": 0.7795134724191042,
+      "tempo": 117.45383522727273,
+      "tempo_category": "moderate",
+      "emotion_weights": {
+        "energetic": 0.06843337697427408,
+        "happy": 0.12716043677243632,
+        "calm": 0.07978140709820335,
+        "powerful": 0.037749300334083774,
+        "gentle": 0.06292438947452084,
+        "excited": 0.1418883142233857,
+        "peaceful": 0.0637393200032865,
+        "playful": 0.07995021993698366,
+        "confident": 0.05452973012180363,
+        "graceful": 0.06432152405159268,
+        "athletic": 0.029360566926509596,
+        "friendly": 0.1006736898086046,
+        "balanced": 0.0894877242743152
+      }
+    },
+    "total_segments": 5,
+    "total_actions": 20
+  },
+  "segments": [
+    {
+      "start_time": 0.06965986394557823,
+      "end_time": 4.1099319727891155,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.37496688961982727,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 0.06965986394557823,
+          "duration": 4.040272108843538,
+          "intensity": "medium",
+          "parameters": {
+            "color": "yellow",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 0.06965986394557823,
+          "duration": 1.3467573696145125,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 1.4164172335600909,
+          "duration": 1.3467573696145125,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "018",
+          "start_time": 2.7631746031746034,
+          "duration": 1.3467573696145125,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Raise your right leg",
+            "category": "basic_action",
+            "emotion": "balanced"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 4.1099319727891155,
+      "end_time": 8.103764172335602,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.37496688961982727,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 4.1099319727891155,
+          "duration": 3.9938321995464863,
+          "intensity": "medium",
+          "parameters": {
+            "color": "white",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "019",
+          "start_time": 4.1099319727891155,
+          "duration": 1.3312773998488288,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Raise left leg",
+            "category": "basic_action",
+            "emotion": "balanced"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 5.441209372637944,
+          "duration": 1.3312773998488288,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "random_short4",
+          "start_time": 6.772486772486773,
+          "duration": 1.3312773998488288,
+          "intensity": "low",
+          "parameters": {
+            "description": "Waving right hand",
+            "category": "greeting",
+            "emotion": "friendly"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 8.103764172335602,
+      "end_time": 12.097596371882085,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.37496688961982727,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 8.103764172335602,
+          "duration": 3.9938321995464836,
+          "intensity": "medium",
+          "parameters": {
+            "color": "white",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "016",
+          "start_time": 8.103764172335602,
+          "duration": 1.3312773998488279,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Golden Rooster Independent",
+            "category": "basic_action",
+            "emotion": "balanced"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 9.43504157218443,
+          "duration": 1.3312773998488279,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "016",
+          "start_time": 10.766318972033257,
+          "duration": 1.3312773998488279,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Golden Rooster Independent",
+            "category": "basic_action",
+            "emotion": "balanced"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 12.097596371882085,
+      "end_time": 16.114648526077097,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.37496688961982727,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 12.097596371882085,
+          "duration": 4.017052154195012,
+          "intensity": "medium",
+          "parameters": {
+            "color": "yellow",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "015",
+          "start_time": 12.097596371882085,
+          "duration": 1.3390173847316706,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Welcome",
+            "category": "greeting",
+            "emotion": "friendly"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 13.436613756613756,
+          "duration": 1.3390173847316706,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "Surveillance_001",
+          "start_time": 14.775631141345427,
+          "duration": 1.3390173847316706,
+          "intensity": "medium",
+          "parameters": {
+            "description": "Say hello",
+            "category": "greeting",
+            "emotion": "friendly"
+          }
+        }
+      ]
+    },
+    {
+      "start_time": 16.114648526077097,
+      "end_time": 20.12038839467411,
+      "tempo": 117.45383522727273,
+      "energy_level": 0.37496688961982727,
+      "primary_emotion": "excited",
+      "actions": [
+        {
+          "type": "light",
+          "name": "mouth_lamp",
+          "start_time": 16.114648526077097,
+          "duration": 4.005739868597011,
+          "intensity": "medium",
+          "parameters": {
+            "color": "yellow",
+            "mode": "breath"
+          }
+        },
+        {
+          "type": "action",
+          "name": "action_018",
+          "start_time": 16.114648526077097,
+          "duration": 1.3352466228656705,
+          "intensity": "high",
+          "parameters": {
+            "description": "Hey ha",
+            "category": "emotion",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "expression",
+          "name": "codemao10",
+          "start_time": 17.44989514894277,
+          "duration": 1.3352466228656705,
+          "intensity": "high",
+          "parameters": {
+            "description": "Exciting",
+            "emotion": "excited"
+          }
+        },
+        {
+          "type": "action",
+          "name": "random_short3",
+          "start_time": 18.78514177180844,
+          "duration": 1.3352466228656705,
+          "intensity": "low",
+          "parameters": {
+            "description": "Waving left hand",
+            "category": "greeting",
+            "emotion": "friendly"
+          }
+        }
+      ]
+    }
+  ]
+}
