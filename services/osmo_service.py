@@ -1,5 +1,5 @@
 from models.osmo import OsmoCardSequence, AlphaMiniAction, AlphaMiniActionList, ActionCardList, ActionCard, OsmoCard
-from typing import List, Optional
+from typing import List
 from fastapi.responses import JSONResponse
 
 def parse_osmo_cards(card_sequence: OsmoCardSequence) -> AlphaMiniActionList:

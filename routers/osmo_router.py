@@ -1,13 +1,7 @@
-from fastapi import APIRouter, Body, UploadFile, File
-from fastapi.responses import JSONResponse
-import os
-import shutil
-import tempfile
+from fastapi import APIRouter, UploadFile, File
 
 from models.osmo import ActionCardList
 from services.osmo_service import (
-    parse_osmo_cards,
-    export_actions_to_json_response,
     # recognize_osmo_cards_from_image,
     parse_action_card_list,
     recognize_action_cards_from_image,
@@ -15,16 +9,12 @@ from services.osmo_service import (
 
 router = APIRouter()
 
-@router.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
-
-@router.post("/osmo/parse_action_cards")
+@router.post("/parse_action_cards")
 async def parse_action_cards(action_card_list: ActionCardList):
     actions = parse_action_card_list(action_card_list)
     return {"actions": [a.dict() for a in actions.actions]}
 
-@router.post("/osmo/recognize_action_cards_from_image")
+@router.post("/recognize_action_cards_from_image")
 async def recognize_action_cards_from_image_api(
     image: UploadFile = File(...)
 ):
