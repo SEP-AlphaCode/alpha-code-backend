@@ -1,13 +1,19 @@
+import logging
+
 from fastapi import APIRouter, UploadFile, HTTPException
 
-from services.audio_parse_service import generate_sequence
+from services.audio_parse_service import generate_actions, load_data
 
 router = APIRouter()
+logger = logging.getLogger('uvicorn.error')
 
 @router.post('/parse')
-async def parse_audio_file(file: UploadFile):
+async def parse_audio_file(file: UploadFile, change_threshold: float):
+    await load_data()
     if not (file.filename.lower().endswith(".wav")):
         raise HTTPException(status_code=400, detail="Only .wav files are supported.")
-
-    service = await generate_sequence(file)
-    return service
+    try:
+        service = await generate_actions(file=file, change_threshold=change_threshold)
+        return service
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=e)
