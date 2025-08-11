@@ -4,7 +4,7 @@ from models.osmo import ActionCardList
 from services.osmo_service import (
     # recognize_osmo_cards_from_image,
     parse_action_card_list,
-    recognize_action_cards_from_image,
+    recognize_action_cards_from_image_fixed,
 )
 
 router = APIRouter()
@@ -23,7 +23,7 @@ async def recognize_action_cards_from_image_api(
         shutil.copyfileobj(image.file, temp)
         temp_path = temp.name
     try:
-        action_card_list = recognize_action_cards_from_image(temp_path)
+        action_card_list = recognize_action_cards_from_image_fixed(temp_path)
         actions = parse_action_card_list(action_card_list)
         return {
             "action_cards": [ac.dict() for ac in action_card_list.action_cards],
