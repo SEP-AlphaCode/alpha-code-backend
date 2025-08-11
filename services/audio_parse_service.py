@@ -1,3 +1,4 @@
+import random
 import librosa
 import numpy as np
 from fastapi import UploadFile
@@ -19,6 +20,8 @@ async def generate_actions(file: UploadFile, change_threshold: float) -> DanceRe
     info = await get_music_info(file=file, change_threshold=change_threshold)
     action_pool = await load_data()
     activity_actions = select_actions(info.duration, action_pool)
+    set_zero_actions(activity_actions)
+    activity_actions.extend(select_expression(info.duration, expressions))
     activity = Activity(actions=activity_actions)
     mus = MusicInfo(duration=info.duration, music_file_url= '', name=file.filename)
     result = DanceResponse(music_info=mus, activity=activity)
@@ -160,3 +163,53 @@ def select_actions(duration: float, action_pool: Dict[str, int]) -> List[ActionB
                 if remaining_time_ms < 1700:
                     break
     return scheduled_actions
+
+
+def select_expression(duration: float, expression_pool: Dict[str, int]) -> List[ActionBlock]:
+    total_duration_ms = duration * 1000
+    current_time_ms = 0
+    scheduled_expressions = []
+    expression_ids = list(expression_pool.keys())
+
+    if not expression_ids:
+        return scheduled_expressions
+
+    last_expression_id = None
+    while current_time_ms < total_duration_ms:
+        # Filter out the last used expression to avoid consecutive repeats
+        available_expressions = [expr for expr in expression_ids if expr != last_expression_id]
+        if not available_expressions:
+            # If no other expressions are available, break to avoid infinite loop
+            break
+
+        # Randomly select an expression
+        selected_expr = random.choice(available_expressions)
+        expr_duration = expression_pool[selected_expr]
+
+        if current_time_ms + expr_duration > total_duration_ms:
+            # If adding this expression exceeds the duration, try to find a shorter one
+            shorter_expressions = [expr for expr in available_expressions if
+                                   expression_pool[expr] <= (total_duration_ms - current_time_ms)]
+            if shorter_expressions:
+                selected_expr = random.choice(shorter_expressions)
+                expr_duration = expression_pool[selected_expr]
+            else:
+                # No shorter expressions available that fit, break the loop
+                break
+
+        # Add the selected expression to the schedule
+        scheduled_expressions.append(ActionBlock.create(
+            action_id=selected_expr,
+            start_time=current_time_ms / 1000,
+            duration=expr_duration / 1000,
+            action_type='expression'
+        ))
+        current_time_ms += expr_duration
+        last_expression_id = selected_expr
+
+    return scheduled_expressions
+
+# Make actions do not interrupt with the mouth LED
+def set_zero_actions(param: List[ActionBlock]):
+    for block in param:
+        block.duration = 0
