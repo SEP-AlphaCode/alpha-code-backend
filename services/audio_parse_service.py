@@ -3,7 +3,6 @@ import librosa
 import numpy as np
 from fastapi import UploadFile
 from typing import Dict, List
-
 from models.audio_parse import AudioInfo, Section, MusicInfo
 from models.dance_action import Activity, ActionBlock, DanceResponse
 from pathlib import Path
@@ -19,9 +18,9 @@ has_loaded = False
 async def generate_actions(file: UploadFile, change_threshold: float) -> DanceResponse:
     info = await get_music_info(file=file, change_threshold=change_threshold)
     action_pool = await load_data()
-    activity_actions = select_actions(info.duration, action_pool)
-    set_zero_actions(activity_actions)
-    activity_actions.extend(select_expression(info.duration, expressions))
+    activity_actions = select_actions(action_pool, info)
+    #set_zero_actions(activity_actions)
+    #activity_actions.extend(select_expression(info.duration, expressions))
     activity = Activity(actions=activity_actions)
     mus = MusicInfo(duration=info.duration, music_file_url= '', name=file.filename)
     result = DanceResponse(music_info=mus, activity=activity)
@@ -87,83 +86,77 @@ async def get_music_info(file: UploadFile, change_threshold: float) -> AudioInfo
     return info
 
 
-def select_actions(duration: float, action_pool: Dict[str, int]) -> List[ActionBlock]:
-    total_duration_ms = duration * 1000
-    current_time_ms = 0
-    scheduled_actions = []
+def select_actions(action_pool: Dict[str, int], audio_info: AudioInfo) -> List[ActionBlock]:
+    # Filter dances shorter than audio duration
+    dances = {k: v for k, v in action_pool.items()
+              if k.startswith("dance_") and v < audio_info.duration * 600}
+    others = {k: v for k, v in action_pool.items()
+              if not k.startswith("dance_")}
 
-    # Separate dances and short actions
-    dances = []
-    short_actions = []
-    for action_id, action_duration_ms in action_pool.items():
-        if action_id.startswith("dance_"):
-            dances.append((action_id, action_duration_ms))
-        else:
-            if 1700 <= action_duration_ms <= 6200:  # Check if within short action duration range
-                short_actions.append((action_id, action_duration_ms))
+    # Choose terminating dance
+    term_dance_id, term_dance_dur = random.choice(list(dances.items()))
+    term_dance_start = audio_info.duration * 1000 - term_dance_dur
 
-    # Sort dances by duration ascending to fit as many as possible
-    dances.sort(key=lambda x: x[1])
+    actions = []
 
-    # Schedule dances
-    last_action_id = None
-    i = 0
-    while i < len(dances):
-        dance_id, dance_duration = dances[i]
-        if current_time_ms + dance_duration <= total_duration_ms:
-            if dance_id != last_action_id:
-                scheduled_actions.append(ActionBlock.create(
-                    action_id=dance_id,
-                    start_time=current_time_ms / 1000,
-                    duration=dance_duration / 1000,
-                    action_type='dance'
-                ))
-                current_time_ms += dance_duration
-                last_action_id = dance_id
-                i += 1
-            else:
-                # Try to find another dance that is not the same as the last one
-                found = False
-                for j in range(i + 1, len(dances)):
-                    next_dance_id, next_dance_duration = dances[j]
-                    if next_dance_id != last_action_id and current_time_ms + next_dance_duration <= total_duration_ms:
-                        scheduled_actions.append(ActionBlock.create(
-                            action_id=next_dance_id,
-                            start_time=current_time_ms / 1000,
-                            duration=next_dance_duration / 1000,
-                            action_type='dance'
-                        ))
-                        current_time_ms += next_dance_duration
-                        last_action_id = next_dance_id
-                        dances.pop(j)
-                        found = True
-                        break
-                if not found:
-                    i += 1
-        else:
-            i += 1
+    # Fill sections up until term_dance_start
+    for section in audio_info.sections:
+        section_start = section.time
+        section_end = section.time + section.duration
 
-    # Now try to fill remaining time with short actions
-    remaining_time_ms = total_duration_ms - current_time_ms
-    if remaining_time_ms >= 1700:  # Minimum duration for short actions
-        # Sort short actions by duration descending to minimize leftover time
-        short_actions.sort(key=lambda x: -x[1])
-        last_short_action_id = last_action_id
-        for action_id, action_duration in short_actions:
-            if action_duration <= remaining_time_ms and action_id != last_short_action_id:
-                scheduled_actions.append(ActionBlock.create(
-                    action_id=action_id,
-                    start_time=current_time_ms / 1000,
-                    duration=action_duration / 1000,
-                    action_type='action',
-                ))
-                current_time_ms += action_duration
-                remaining_time_ms -= action_duration
-                last_short_action_id = action_id
-                if remaining_time_ms < 1700:
+        # If section starts after terminating dance, skip
+        if section_start >= term_dance_start:
+            continue
+
+        # Limit section end so it doesn't overlap terminating dance
+        section_end = min(section_end, term_dance_start)
+        t = section_start
+
+        while t < section_end:
+            dance_id, dance_dur = random.choice(list(dances.items()))
+            if dance_id == term_dance_id:
+                continue
+
+            # If this dance would cross section_end, truncate
+            if t + dance_dur > section_end:
+                dance_dur = section_end - t
+                if dance_dur <= 0:
                     break
-    return scheduled_actions
 
+            # Add the dance
+            actions.append(ActionBlock.create(
+                action_id=dance_id,
+                start_time=t / 1000,
+                duration=dance_dur / 1000,
+                action_type='dance'
+            ))
+
+            # Insert another action before bow (last 4s), if fits
+            if others and dance_dur > 4000:
+                other_id, other_dur = random.choice(list(others.items()))
+                insert_start = t + (dance_dur - 4000) - other_dur
+                if t < insert_start < section_end:
+                    actions.append(ActionBlock.create(
+                        action_id=other_id,
+                        start_time=insert_start / 1000,
+                        duration=other_dur / 1000,
+                        action_type='dance'
+                    ))
+
+            t += dance_dur
+
+    # Add terminating dance at the end
+    actions.append(ActionBlock.create(
+        action_id=term_dance_id,
+        start_time=term_dance_start / 1000,
+        duration=term_dance_dur / 1000,
+        action_type='dance'
+    ))
+
+    # Sort all actions by start time
+    actions.sort(key=lambda a: a.start_time)
+
+    return actions
 
 def select_expression(duration: float, expression_pool: Dict[str, int]) -> List[ActionBlock]:
     total_duration_ms = duration * 1000

@@ -8,7 +8,7 @@ router = APIRouter()
 logger = logging.getLogger('uvicorn.error')
 
 @router.post('/parse')
-async def parse_audio_file(file: UploadFile, change_threshold: float = 0.1):
+async def parse_audio_file(file: UploadFile, change_threshold: float = 0.05):
     await load_data()
     if not (file.filename.lower().endswith(".wav")):
         raise HTTPException(status_code=400, detail="Only .wav files are supported.")
