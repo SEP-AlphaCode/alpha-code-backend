@@ -8,7 +8,13 @@ class Section(BaseModel):
     duration: int
 
 
-class MusicInfo(BaseModel):
+class AudioInfo(BaseModel):
     duration: float
     sections: List[Section]
     sample_rate: float
+
+
+class MusicInfo(BaseModel):
+    name: str
+    music_file_url: str
+    duration: float

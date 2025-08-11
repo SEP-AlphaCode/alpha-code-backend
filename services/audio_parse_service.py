@@ -3,40 +3,45 @@ import numpy as np
 from fastapi import UploadFile
 from typing import Dict, List
 
-from models.audio_parse import MusicInfo, Section
-from models.dance_action import DanceSequence, ActionBlock
+from models.audio_parse import AudioInfo, Section, MusicInfo
+from models.dance_action import Activity, ActionBlock, DanceResponse
 from pathlib import Path
 
 current_dir = Path(__file__).parent  # Gets directory containing service.py
 action_file_path = current_dir.parent / "local_files" / "available_actions.txt"
+exp_file_path = current_dir.parent / "local_files" / "expressions.txt"
 
-data: Dict[str, int] = {}
+actions: Dict[str, int] = {}
+expressions: Dict[str, int] = {}
 has_loaded = False
 
-async def generate_actions(file: UploadFile, change_threshold: float) -> DanceSequence:
+async def generate_actions(file: UploadFile, change_threshold: float) -> DanceResponse:
     info = await get_music_info(file=file, change_threshold=change_threshold)
     action_pool = await load_data()
-    actions = select_actions(info.duration, action_pool)
-    result = DanceSequence()
-    result.actions = actions
+    activity_actions = select_actions(info.duration, action_pool)
+    activity = Activity(actions=activity_actions)
+    mus = MusicInfo(duration=info.duration, music_file_url= '', name=file.filename)
+    result = DanceResponse(music_info=mus, activity=activity)
     return result
 
+def read_file(path) -> Dict[str, int]:
+    file = open(path)
+    rs: Dict[str, int] = dict()
+    for line in file:
+        comp = line.strip().split()
+        rs[comp[0]] = int(comp[1])
+    return rs
 
 async def load_data() -> Dict[str, int]:
-    global data, has_loaded
+    global actions, has_loaded, expressions
     if not has_loaded:
-        print('Load file')
-        file = open(action_file_path)
-        rs: Dict[str, int] = dict()
-        for line in file:
-            comp = line.strip().split()
-            rs[comp[0]] = int(comp[1])
+        actions = read_file(action_file_path)
+        expressions = read_file(exp_file_path)
         has_loaded = True
-        data = rs
-    return data
+    return actions
 
 
-async def get_music_info(file: UploadFile, change_threshold: float) -> MusicInfo:
+async def get_music_info(file: UploadFile, change_threshold: float) -> AudioInfo:
     contents = await file.read()
     import io
     y, sr = librosa.load(io.BytesIO(contents), sr=None)
@@ -75,67 +80,83 @@ async def get_music_info(file: UploadFile, change_threshold: float) -> MusicInfo
     end_time_ms = int(beat_times[-1] * 1000)
     avg_bps = float(np.mean(bps_list[start_idx:]))
     sections.append(Section(time=start_time_ms, bps=avg_bps, duration=end_time_ms - start_time_ms))
-    info = MusicInfo(duration=duration, sample_rate=sr, sections=sections)
+    info = AudioInfo(duration=duration, sample_rate=sr, sections=sections)
     return info
 
 
 def select_actions(duration: float, action_pool: Dict[str, int]) -> List[ActionBlock]:
-    # Separate dances and other actions, convert ms to seconds
-    dances = {}
-    other_actions = {}
-    for action, dur_ms in action_pool.items():
-        dur_s = dur_ms / 1000
-        if action.startswith('dance_'):
-            dances[action] = dur_s
+    total_duration_ms = duration * 1000
+    current_time_ms = 0
+    scheduled_actions = []
+
+    # Separate dances and short actions
+    dances = []
+    short_actions = []
+    for action_id, action_duration_ms in action_pool.items():
+        if action_id.startswith("dance_"):
+            dances.append((action_id, action_duration_ms))
         else:
-            other_actions[action] = dur_s
-    print(dances)
-    print(other_actions)
-    # Sort by duration (ascending)
-    sorted_dances = sorted(dances.items(), key=lambda x: x[1])
-    sorted_other = sorted(other_actions.items(), key=lambda x: x[1])
+            if 1700 <= action_duration_ms <= 6200:  # Check if within short action duration range
+                short_actions.append((action_id, action_duration_ms))
 
-    selected_components = []
-    current_time = 0.0
-    last_action = None
+    # Sort dances by duration ascending to fit as many as possible
+    dances.sort(key=lambda x: x[1])
 
-    def find_next_action(actions, max_dur, last):
-        for action, dur in actions:
-            if dur <= max_dur and action != last:
-                return action, dur
-        return None, 0
-
-    # Add as many dances as possible
-    while True:
-        next_dance, next_dur = find_next_action(sorted_dances, duration - current_time, last_action)
-        if next_dance:
-            component = ActionBlock(
-                action_id=next_dance,
-                start_time=current_time,
-                duration=next_dur,
-                action_type='action'
-            )
-            selected_components.append(component)
-            current_time += next_dur
-            last_action = next_dance
+    # Schedule dances
+    last_action_id = None
+    i = 0
+    while i < len(dances):
+        dance_id, dance_duration = dances[i]
+        if current_time_ms + dance_duration <= total_duration_ms:
+            if dance_id != last_action_id:
+                scheduled_actions.append(ActionBlock.create(
+                    action_id=dance_id,
+                    start_time=current_time_ms / 1000,
+                    duration=dance_duration / 1000,
+                    action_type='dance'
+                ))
+                current_time_ms += dance_duration
+                last_action_id = dance_id
+                i += 1
+            else:
+                # Try to find another dance that is not the same as the last one
+                found = False
+                for j in range(i + 1, len(dances)):
+                    next_dance_id, next_dance_duration = dances[j]
+                    if next_dance_id != last_action_id and current_time_ms + next_dance_duration <= total_duration_ms:
+                        scheduled_actions.append(ActionBlock.create(
+                            action_id=next_dance_id,
+                            start_time=current_time_ms / 1000,
+                            duration=next_dance_duration / 1000,
+                            action_type='dance'
+                        ))
+                        current_time_ms += next_dance_duration
+                        last_action_id = next_dance_id
+                        dances.pop(j)
+                        found = True
+                        break
+                if not found:
+                    i += 1
         else:
-            break
+            i += 1
 
-    # If remaining time is within other actions' duration, add one
-    remaining_time = duration - current_time
-    if sorted_other:
-        min_other = sorted_other[0][1]
-        max_other = sorted_other[-1][1]
-        if min_other <= remaining_time <= max_other:
-            next_other, next_other_dur = find_next_action(sorted_other, remaining_time, last_action)
-            if next_other:
-                component = ActionBlock(
-                    duration=next_other_dur,
-                    action_id=next_other,
+    # Now try to fill remaining time with short actions
+    remaining_time_ms = total_duration_ms - current_time_ms
+    if remaining_time_ms >= 1700:  # Minimum duration for short actions
+        # Sort short actions by duration descending to minimize leftover time
+        short_actions.sort(key=lambda x: -x[1])
+        last_short_action_id = last_action_id
+        for action_id, action_duration in short_actions:
+            if action_duration <= remaining_time_ms and action_id != last_short_action_id:
+                scheduled_actions.append(ActionBlock.create(
+                    action_id=action_id,
+                    start_time=current_time_ms / 1000,
+                    duration=action_duration / 1000,
                     action_type='action',
-                    start_time=current_time
-                    )
-                selected_components.append(component)
-                current_time += next_other_dur
-
-    return selected_components
+                ))
+                current_time_ms += action_duration
+                remaining_time_ms -= action_duration
+                last_short_action_id = action_id
+                if remaining_time_ms < 1700:
+                    break
+    return scheduled_actions
