@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 
 class OsmoCard(BaseModel):
     color: str
+    direction: Optional[str] = None
     value: Optional[int] = None
 
 class OsmoAction(BaseModel):
@@ -21,6 +22,7 @@ class OsmoCardSequence(BaseModel):
 
 class ActionCard(BaseModel):
     action: OsmoCard  # action card (blue, red, orange, gray)
+    direction: OsmoCard
     step: OsmoCard    # step card (yellow, value)
 
 class ActionCardList(BaseModel):
