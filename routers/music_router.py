@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from app.services.music_analysis import build_activity_json
+from app.services.music.planner import build_activity_json
 
 router = APIRouter()
 
