@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Optional
 import io
 import random
 import requests
@@ -115,13 +115,6 @@ class PlannedSegment:
     start_time: float
     duration: float
     action_type: str  # 'dance' | 'action' | 'expression'
-    color: Tuple[int, int, int, int] = (0, 255, 0, 0)  # (a,r,g,b) just placeholder
-
-COLOR_PALETTE = {
-    'dance': (0, 255, 0, 0),
-    'expression': (0, 0, 255, 0),
-    'action': (0, 0, 0, 255),
-}
 
 class MusicActivityPlanner:
     """Beat-aware planner.
@@ -145,17 +138,17 @@ class MusicActivityPlanner:
         self._action_index = 0
         self._expr_index = 0
 
-    def _next_dance(self) -> Tuple[str, float]:
+    def _next_dance(self) -> tuple[str, float]:
         item = self._dance_cycle[self._dance_index]
         self._dance_index = (self._dance_index + 1) % len(self._dance_cycle)
         return item
 
-    def _next_action(self) -> Tuple[str, float]:
+    def _next_action(self) -> tuple[str, float]:
         item = self._action_cycle[self._action_index]
         self._action_index = (self._action_index + 1) % len(self._action_cycle)
         return item
 
-    def _next_expression(self) -> Tuple[str, float]:
+    def _next_expression(self) -> tuple[str, float]:
         item = self._expr_cycle[self._expr_index]
         self._expr_index = (self._expr_index + 1) % len(self._expr_cycle)
         return item
@@ -165,13 +158,13 @@ class MusicActivityPlanner:
         # Fallback beats grid
         if not beats or len(beats) < 4:
             interval = 2.0
-            beats = [i*interval for i in range(int(music_duration/interval)+1)]
+            beats = [i * interval for i in range(int(music_duration / interval) + 1)]
         if beats[-1] < music_duration:
             beats.append(music_duration)
         # Energies normalization
-        if not energies or len(energies) < len(beats)-1:
-            energies = [1.0]*(len(beats)-1)
-        arr = np.array(energies[:len(beats)-1])
+        if not energies or len(energies) < len(beats) - 1:
+            energies = [1.0] * (len(beats) - 1)
+        arr = np.array(energies[: len(beats) - 1])
         if arr.max() > 0:
             arr = arr / arr.max()
         med = float(np.median(arr)) if arr.size else 0.5
@@ -189,7 +182,7 @@ class MusicActivityPlanner:
             rng.shuffle(expr_pool)
         d_idx = a_idx = e_idx = 0
 
-        def next_dance() -> Tuple[str, float]:
+        def next_dance() -> tuple[str, float]:
             nonlocal d_idx
             if not dance_pool:
                 return self._next_dance()
@@ -200,7 +193,7 @@ class MusicActivityPlanner:
             d_idx = (d_idx + 1) % len(dance_pool)
             return item
 
-        def next_action() -> Tuple[str, float]:
+        def next_action() -> tuple[str, float]:
             nonlocal a_idx
             if not action_pool:
                 return self._next_action()
@@ -210,7 +203,7 @@ class MusicActivityPlanner:
             a_idx = (a_idx + 1) % len(action_pool)
             return item
 
-        def next_expression() -> Tuple[str, float]:
+        def next_expression() -> tuple[str, float]:
             nonlocal e_idx
             if not expr_pool:
                 return self._next_expression()
@@ -232,11 +225,11 @@ class MusicActivityPlanner:
                     break
                 # prefer 1.0–2.5s slices for frequent changes
                 slice_dur = min(max_allow, max(0.6, min(edur, 2.5)))
-                segments.append(PlannedSegment(eid, t_expr, slice_dur, 'expression', COLOR_PALETTE['expression']))
+                segments.append(PlannedSegment(eid, t_expr, slice_dur, 'expression'))
                 # small gap before next expression to create clear change
                 step = slice_dur + rng.uniform(0.1, 0.3)
                 t_expr += step
-        
+
         # helper: fill rapid action chain between [a, b)
         def fill_action_chain(a: float, b: float):
             t = a
@@ -248,23 +241,24 @@ class MusicActivityPlanner:
                     break
                 # prefer short, punchy actions 0.8–2.2s
                 slice_dur = min(max_allow, max(0.8, min(adur, 2.2)))
-                segments.append(PlannedSegment(aid, t, slice_dur, 'action', COLOR_PALETTE['action']))
+                segments.append(PlannedSegment(aid, t, slice_dur, 'action'))
                 t += slice_dur + rng.uniform(0.05, 0.2)
+
         i = 0
-        while i < len(beats)-1:
+        while i < len(beats) - 1:
             # energy for next window
-            window_energy = arr[i:min(i+2, len(arr))].mean() if arr.size else 0.5
+            window_energy = arr[i : min(i + 2, len(arr))].mean() if arr.size else 0.5
             high = window_energy >= med
             # choose group length
             # occasional single-beat groups for variety
-            if i+1 < len(beats) and rng.random() < 0.15:
+            if i + 1 < len(beats) and rng.random() < 0.15:
                 group_len = 1
-            elif high and i+3 < len(beats) and rng.random() < 0.6:
+            elif high and i + 3 < len(beats) and rng.random() < 0.6:
                 group_len = 3
             else:
                 group_len = 2
             start = beats[i]
-            end_idx = min(i+group_len, len(beats)-1)
+            end_idx = min(i + group_len, len(beats) - 1)
             end = beats[end_idx]
             dur = max(0.4, end - start)
             # choose movement type with action-biased randomness
@@ -272,13 +266,14 @@ class MusicActivityPlanner:
             action_bias = 0.5 if high else 0.65
             if rng.random() < action_bias:
                 aid, _ = next_action()
-                segments.append(PlannedSegment(aid, start, dur, 'action', COLOR_PALETTE['action']))
+                segments.append(PlannedSegment(aid, start, dur, 'action'))
                 fill_expression_chain(start, end)
             else:
                 did, _ = next_dance()
-                segments.append(PlannedSegment(did, start, dur, 'dance', COLOR_PALETTE['dance']))
+                segments.append(PlannedSegment(did, start, dur, 'dance'))
                 fill_expression_chain(start, end)
             i = end_idx
+
         # Closing segment: prefer a dance that fits; if none fits, use actions instead of forcing a dance
         dance_items_sorted = sorted(self.dances.items(), key=lambda kv: kv[1])
         fit_candidates = [(did, dlen) for did, dlen in dance_items_sorted if dlen <= music_duration]
@@ -298,7 +293,7 @@ class MusicActivityPlanner:
                     fill_action_chain(pre_start, close_start)
                     fill_expression_chain(pre_start, close_start)
 
-            segments.append(PlannedSegment(close_id, close_start, close_len, 'dance', COLOR_PALETTE['dance']))
+            segments.append(PlannedSegment(close_id, close_start, close_len, 'dance'))
             # also layer expressions continuously during the closing dance window
             fill_expression_chain(close_start, music_duration)
         else:
@@ -320,7 +315,7 @@ class MusicActivityPlanner:
                         fill_action_chain(pre_start, close_start)
                         fill_expression_chain(pre_start, close_start)
 
-                segments.append(PlannedSegment(close_id, close_start, close_len, 'action', COLOR_PALETTE['action']))
+                segments.append(PlannedSegment(close_id, close_start, close_len, 'action'))
                 # layer expressions during the closing action window
                 fill_expression_chain(close_start, music_duration)
             else:
@@ -332,21 +327,27 @@ class MusicActivityPlanner:
                     close_id = list(self.expressions.keys())[0]
                 # Clear any prior segments; do one final block ending exactly at song end
                 segments = []
-                segments.append(PlannedSegment(close_id, 0.0, max(0.2, music_duration), 'action', COLOR_PALETTE['action']))
+                segments.append(PlannedSegment(close_id, 0.0, max(0.2, music_duration), 'action'))
                 fill_expression_chain(0.0, music_duration)
+
         # trim expression overflow
         cleaned: List[PlannedSegment] = []
         for s in segments:
             # Trim any expression that might accidentally exceed boundaries
             if s.action_type == 'expression' and s.start_time + s.duration > music_duration:
-                s = PlannedSegment(s.action_id, s.start_time, max(0.4, music_duration - s.start_time - 0.05), 'expression', s.color)
+                s = PlannedSegment(
+                    s.action_id,
+                    s.start_time,
+                    max(0.4, music_duration - s.start_time - 0.05),
+                    'expression',
+                )
                 if s.duration <= 0:
                     continue
             cleaned.append(s)
-        cleaned.sort(key=lambda s: (s.start_time, 0 if s.action_type in ('dance','action') else 1))
+        cleaned.sort(key=lambda s: (s.start_time, 0 if s.action_type in ('dance', 'action') else 1))
         return cleaned
 
-def detect_beats_and_energy(audio_bytes: bytes, sr: int = 22050) -> Tuple[List[float], List[float]]:
+def detect_beats_and_energy(audio_bytes: bytes, sr: int = 22050) -> tuple[List[float], List[float]]:
     if not librosa:
         return [], []
     try:
@@ -384,7 +385,6 @@ def build_activity_json(music_name: str, music_url: str, music_duration: float) 
     plan = planner.plan(music_duration, beats, energies, seed)
     activity_actions = []
     golden = 0.618033988749895
-    random.seed(2025)
     def gen_color(idx: int, atype: str):
         h = (idx * golden) % 1.0
         if atype == 'expression':
