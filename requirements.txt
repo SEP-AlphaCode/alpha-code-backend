@@ -6,3 +6,7 @@ pillow
 pytesseract
 pydub
 python-dotenv
+requests
+librosa
+numpy
+soundfile

@@ -1,27 +1,28 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from typing import List  # may still be used elsewhere in future
 
 from routers.osmo_router import router as osmo_router
 from routers.audio_router import router as audio_router
-from routers.websocket_router import router as websocket_router
+from routers.websocket_router import router as websocket_router, manager as ws_manager
+from routers.music_router import router as music_router
 
 from config.config import settings
 
-app = FastAPI(
+# Build FastAPI kwargs dynamically to avoid invalid empty URL in license
+fastapi_kwargs = dict(
     title=settings.TITLE,
     description=settings.DESCRIPTION,
     version=settings.VERSION,
-    contact={
-        "name": settings.CONTACT_NAME,
-        "email": settings.CONTACT_EMAIL,
-    },
-    license_info={
-        "name": settings.LICENSE_NAME,
-        "url": settings.LICENSE_URL,
-    },
 )
+contact = {"name": settings.CONTACT_NAME, "email": settings.CONTACT_EMAIL}
+if any(contact.values()):
+    fastapi_kwargs["contact"] = contact
+if settings.LICENSE_NAME and settings.LICENSE_URL:
+    fastapi_kwargs["license_info"] = {"name": settings.LICENSE_NAME, "url": settings.LICENSE_URL}
+
+app = FastAPI(**fastapi_kwargs)
 
 app.add_middleware(
     CORSMiddleware,
@@ -34,6 +35,21 @@ app.add_middleware(
 app.include_router(osmo_router, prefix="/osmo", tags=["Osmo"])
 app.include_router(audio_router, prefix="/audio", tags=["Audio"])
 app.include_router(websocket_router, prefix="/websocket", tags=["WebSocket"])
+app.include_router(music_router, prefix="/music", tags=["Music"])
+
+# Backward-compatible alias path for websocket without /websocket prefix
+@app.websocket("/ws")
+async def websocket_alias(websocket: WebSocket):
+    await ws_manager.connect(websocket)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            print(f"[Alias /ws] Client said: {data}")
+    except WebSocketDisconnect:
+        ws_manager.disconnect(websocket)
+    except Exception as e:
+        print(f"WebSocket alias error: {e}")
+        ws_manager.disconnect(websocket)
 
 @app.get("/", include_in_schema=False)
 async def root():
