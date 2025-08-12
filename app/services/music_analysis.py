@@ -177,12 +177,55 @@ class MusicActivityPlanner:
         med = float(np.median(arr)) if arr.size else 0.5
         segments: List[PlannedSegment] = []
 
+        # Build per-song shuffled pools so selection isn't monotonic
+        dance_pool = list(self.dances.items())
+        action_pool = list(self.actions.items())
+        expr_pool = list(self.expressions.items())
+        if dance_pool:
+            rng.shuffle(dance_pool)
+        if action_pool:
+            rng.shuffle(action_pool)
+        if expr_pool:
+            rng.shuffle(expr_pool)
+        d_idx = a_idx = e_idx = 0
+
+        def next_dance() -> Tuple[str, float]:
+            nonlocal d_idx
+            if not dance_pool:
+                return self._next_dance()
+            # 30% pick a random entry, otherwise cycle
+            if rng.random() < 0.30:
+                return rng.choice(dance_pool)
+            item = dance_pool[d_idx]
+            d_idx = (d_idx + 1) % len(dance_pool)
+            return item
+
+        def next_action() -> Tuple[str, float]:
+            nonlocal a_idx
+            if not action_pool:
+                return self._next_action()
+            if rng.random() < 0.30:
+                return rng.choice(action_pool)
+            item = action_pool[a_idx]
+            a_idx = (a_idx + 1) % len(action_pool)
+            return item
+
+        def next_expression() -> Tuple[str, float]:
+            nonlocal e_idx
+            if not expr_pool:
+                return self._next_expression()
+            if rng.random() < 0.25:
+                return rng.choice(expr_pool)
+            item = expr_pool[e_idx]
+            e_idx = (e_idx + 1) % len(expr_pool)
+            return item
+
         # helper: fill expressions continuously between [a, b)
         def fill_expression_chain(a: float, b: float):
             t_expr = a + 0.25
             safety = 0.05
             while t_expr < b - 0.4:
-                eid, edur = self._next_expression()
+                eid, edur = next_expression()
                 # choose a practical slice (cap long expressions to fit nicely)
                 max_allow = max(0.6, (b - t_expr) - safety)
                 if max_allow <= 0.6:
@@ -193,13 +236,30 @@ class MusicActivityPlanner:
                 # small gap before next expression to create clear change
                 step = slice_dur + rng.uniform(0.1, 0.3)
                 t_expr += step
+        
+        # helper: fill rapid action chain between [a, b)
+        def fill_action_chain(a: float, b: float):
+            t = a
+            safety = 0.05
+            while t < b - 0.4:
+                aid, adur = next_action()
+                max_allow = max(0.6, (b - t) - safety)
+                if max_allow <= 0.6:
+                    break
+                # prefer short, punchy actions 0.8–2.2s
+                slice_dur = min(max_allow, max(0.8, min(adur, 2.2)))
+                segments.append(PlannedSegment(aid, t, slice_dur, 'action', COLOR_PALETTE['action']))
+                t += slice_dur + rng.uniform(0.05, 0.2)
         i = 0
         while i < len(beats)-1:
             # energy for next window
             window_energy = arr[i:min(i+2, len(arr))].mean() if arr.size else 0.5
             high = window_energy >= med
             # choose group length
-            if high and i+3 < len(beats) and rng.random() < 0.6:
+            # occasional single-beat groups for variety
+            if i+1 < len(beats) and rng.random() < 0.15:
+                group_len = 1
+            elif high and i+3 < len(beats) and rng.random() < 0.6:
                 group_len = 3
             else:
                 group_len = 2
@@ -207,34 +267,73 @@ class MusicActivityPlanner:
             end_idx = min(i+group_len, len(beats)-1)
             end = beats[end_idx]
             dur = max(0.4, end - start)
-            # choose movement type weighted by energy
-            if high or rng.random() < 0.55:
-                did, _ = self._next_dance()
-                segments.append(PlannedSegment(did, start, dur, 'dance', COLOR_PALETTE['dance']))
-                # continuous expressions during dance segment
+            # choose movement type with action-biased randomness
+            # normal energy: prefer actions ~65%; high energy: closer to 50/50 to allow dances
+            action_bias = 0.5 if high else 0.65
+            if rng.random() < action_bias:
+                aid, _ = next_action()
+                segments.append(PlannedSegment(aid, start, dur, 'action', COLOR_PALETTE['action']))
                 fill_expression_chain(start, end)
             else:
-                aid, _ = self._next_action()
-                segments.append(PlannedSegment(aid, start, dur, 'action', COLOR_PALETTE['action']))
-                # treat actions like dance for facial expressions layering
+                did, _ = next_dance()
+                segments.append(PlannedSegment(did, start, dur, 'dance', COLOR_PALETTE['dance']))
                 fill_expression_chain(start, end)
             i = end_idx
-    # Closing dance exact alignment
-    # Force closing dance that ENDS exactly at music end using its full duration
-    # Choose a dance whose duration <= music_duration and as long as possible to look natural
-            dance_items = sorted(self.dances.items(), key=lambda kv: kv[1])
-            close_id, close_len = dance_items[0]
-            for did, dlen in dance_items:
-                if dlen <= music_duration:
-                    close_id, close_len = did, dlen
-                else:
-                    break
+        # Closing segment: prefer a dance that fits; if none fits, use actions instead of forcing a dance
+        dance_items_sorted = sorted(self.dances.items(), key=lambda kv: kv[1])
+        fit_candidates = [(did, dlen) for did, dlen in dance_items_sorted if dlen <= music_duration]
+        if fit_candidates:
+            # pick the longest dance that still fits to look natural
+            close_id, close_len = fit_candidates[-1]
             close_start = max(0.0, music_duration - close_len)
             # Remove any segments that overlap the closing window [close_start, music_duration]
             segments = [s for s in segments if (s.start_time + s.duration) <= close_start]
-        segments.append(PlannedSegment(close_id, close_start, close_len, 'dance', COLOR_PALETTE['dance']))
-        # also layer expressions continuously during the closing dance window
-        fill_expression_chain(close_start, music_duration)
+
+            # Optional pre-closing window: allow chaining actions right before the final dance
+            if close_start > 0.6:
+                last_end = max((s.start_time + s.duration) for s in segments) if segments else 0.0
+                pre_window = rng.uniform(3.0, 6.0)
+                pre_start = max(last_end, close_start - pre_window)
+                if close_start - pre_start >= 1.0:
+                    fill_action_chain(pre_start, close_start)
+                    fill_expression_chain(pre_start, close_start)
+
+            segments.append(PlannedSegment(close_id, close_start, close_len, 'dance', COLOR_PALETTE['dance']))
+            # also layer expressions continuously during the closing dance window
+            fill_expression_chain(close_start, music_duration)
+        else:
+            # No dance fits within the song duration: finish with a precise-ending ACTION
+            action_items_sorted = sorted(self.actions.items(), key=lambda kv: kv[1])
+            fit_actions = [(aid, alen) for aid, alen in action_items_sorted if alen <= music_duration]
+            if fit_actions:
+                close_id, close_len = fit_actions[-1]  # longest action that still fits
+                close_start = max(0.0, music_duration - close_len)
+                # Remove any segments that overlap the closing window [close_start, music_duration]
+                segments = [s for s in segments if (s.start_time + s.duration) <= close_start]
+
+                # Optional pre-closing window with quick actions and expressions
+                if close_start > 0.6:
+                    last_end = max((s.start_time + s.duration) for s in segments) if segments else 0.0
+                    pre_window = rng.uniform(2.0, 4.0)
+                    pre_start = max(last_end, close_start - pre_window)
+                    if close_start - pre_start >= 0.8:
+                        fill_action_chain(pre_start, close_start)
+                        fill_expression_chain(pre_start, close_start)
+
+                segments.append(PlannedSegment(close_id, close_start, close_len, 'action', COLOR_PALETTE['action']))
+                # layer expressions during the closing action window
+                fill_expression_chain(close_start, music_duration)
+            else:
+                # Extremely short song: use the shortest action trimmed to end exactly at music end
+                if action_items_sorted:
+                    close_id, _ = action_items_sorted[0]
+                else:
+                    # fallback to any expression if actions list is empty (shouldn't happen)
+                    close_id = list(self.expressions.keys())[0]
+                # Clear any prior segments; do one final block ending exactly at song end
+                segments = []
+                segments.append(PlannedSegment(close_id, 0.0, max(0.2, music_duration), 'action', COLOR_PALETTE['action']))
+                fill_expression_chain(0.0, music_duration)
         # trim expression overflow
         cleaned: List[PlannedSegment] = []
         for s in segments:
