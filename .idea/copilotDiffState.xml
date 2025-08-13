@@ -11,23 +11,6 @@
             </PendingDiffInfo>
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/README.md">
-          <value>
-            <PendingDiffInfo>
-              <option name="filePath" value="$PROJECT_DIR$/README.md" />
-              <option name="originalContent" value="# Alpha Mini Robot API&#10;&#10;This project is a FastAPI backend for controlling and interacting with the Alpha Mini robot.&#10;&#10;## Project Structure&#10;&#10;- `main.py`: Entry point, includes FastAPI app and router registration.&#10;- `routers/`: Contains API route definitions.&#10;- `models/`: Pydantic models for request/response schemas.&#10;- `services/`: Business logic and robot control functions.&#10;- `utils/`: Utility/helper functions.&#10;&#10;## Setup&#10;&#10;1. **Install dependencies**&#10;&#10;```bash&#10;pip install -r requirements.txt&#10;```&#10;&#10;2. **Run the server**&#10;&#10;```bash&#10;uvicorn main:app --reload&#10;```&#10;&#10;## Usage&#10;&#10;- Access the API docs at: http://localhost:8000/docs&#10;- Example endpoints:&#10;  - `GET /` - Health check&#10;  - `GET /hello/{name}` - Greet by name&#10;&#10;## Customization&#10;&#10;- Add new endpoints in `routers/` and register them in `main.py`.&#10;- Implement business logic in `services/`.&#10;- Define data models in `models/`.&#10;- Place helper functions in `utils/`.&#10;&#10;---&#10;&#10;For more details, see the code comments and FastAPI documentation.&#10;fastapi&#10;uvicorn&#10;pydantic&#10;&#10;" />
-              <option name="updatedContent" value="# Alpha Mini Robot API&#10;&#10;This project is a FastAPI backend for controlling and interacting with the Alpha Mini robot, including features for Osmo coding card recognition and audio conversion.&#10;&#10;## Project Structure&#10;&#10;- `main.py`: Entry point, includes FastAPI app and router registration.&#10;- `routers/`: Contains API route definitions.&#10;- `models/`: Pydantic models for request/response schemas.&#10;- `services/`: Business logic and robot control functions.&#10;- `utils/`: Utility/helper functions.&#10;&#10;## Setup&#10;&#10;### 1. Install Python dependencies&#10;&#10;```bash&#10;pip install -r requirements.txt&#10;```&#10;&#10;### 2. Install system dependencies&#10;&#10;#### **FFmpeg** (for audio conversion)&#10;- **Windows:**&#10;  1. Download FFmpeg from [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html) (choose Windows build).&#10;  2. Extract and add the `bin` folder to your system `PATH` environment variable.&#10;  3. Test in terminal: `ffmpeg -version`&#10;&#10;- **Linux (Debian/Ubuntu):**&#10;  ```bash&#10;  sudo apt update &amp;&amp; sudo apt install ffmpeg&#10;  ```&#10;&#10;#### **Tesseract OCR** (for image recognition)&#10;- **Windows:**&#10;  1. Download the installer from [https://github.com/tesseract-ocr/tesseract](https://github.com/tesseract-ocr/tesseract) (see Releases).&#10;  2. Install and add the install directory to your system `PATH`.&#10;  3. Test in terminal: `tesseract --version`&#10;&#10;- **Linux (Debian/Ubuntu):**&#10;  ```bash&#10;  sudo apt update &amp;&amp; sudo apt install tesseract-ocr&#10;  ```&#10;&#10;### 3. Run the server&#10;&#10;```bash&#10;uvicorn main:app --reload&#10;```&#10;&#10;## Usage&#10;&#10;- Access the API docs at: http://localhost:8000/docs&#10;- Example endpoints:&#10;  - `GET /` - Health check&#10;  - `POST /osmo/parse_and_export` - Parse Osmo cards from JSON&#10;  - `POST /osmo/recognize_from_image` - Parse Osmo cards from image&#10;  - `POST /audio/convert` - Convert audio file to .wav&#10;&#10;## Customization&#10;&#10;- Add new endpoints in `routers/` and register them in `main.py`.&#10;- Implement business logic in `services/`.&#10;- Define data models in `models/`.&#10;- Place helper functions in `utils/`.&#10;&#10;---&#10;&#10;For more details, see the code comments and FastAPI documentation.&#10;fastapi&#10;uvicorn&#10;pydantic" />
-            </PendingDiffInfo>
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/models/__init__.py">
-          <value>
-            <PendingDiffInfo>
-              <option name="filePath" value="$PROJECT_DIR$/models/__init__.py" />
-              <option name="updatedContent" value="# This folder contains Pydantic models for request and response schemas.&#10;" />
-            </PendingDiffInfo>
-          </value>
-        </entry>
       </map>
     </option>
   </component>

@@ -39,10 +39,6 @@ pip install -r requirements.txt
 
 - **Linux (Debian/Ubuntu):**
   ```bash
-  sudo apt update && sudo apt install tesseract-ocr
-  ```
-
-### 3. Run the server
 
 ```bash
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload --ws websockets
@@ -53,9 +49,7 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload --ws websockets
 - Access the API docs at: http://localhost:8000/docs
 - Example endpoints:
   - `GET /` - Health check
-  - `POST /osmo/parse_and_export` - Parse Osmo cards from JSON
-  - `POST /osmo/recognize_from_image` - Parse Osmo cards from image
-  - `POST /audio/convert` - Convert audio file to .wav
+  - `GET /hello/{name}` - Greet by name
 
 ## Customization
 
@@ -70,3 +64,4 @@ For more details, see the code comments and FastAPI documentation.
 fastapi
 uvicorn
 pydantic
+
