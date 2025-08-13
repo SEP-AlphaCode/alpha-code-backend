@@ -161,45 +161,28 @@ class MusicActivityPlanner:
                 fill_expression_chain(start, end)
             i = end_idx
 
-        dance_items_sorted = sorted(self.dances.items(), key=lambda kv: kv[1])
-        fit_candidates = [(did, dlen) for did, dlen in dance_items_sorted if dlen <= music_duration]
-        if fit_candidates:
-            close_id, close_len = fit_candidates[-1]
+        # Always end with an ACTION that finishes exactly at the music end.
+        action_items_sorted = sorted(self.actions.items(), key=lambda kv: kv[1])
+        fit_actions = [(aid, alen) for aid, alen in action_items_sorted if alen <= music_duration]
+        if fit_actions:
+            close_id, close_len = fit_actions[-1]
             close_start = max(0.0, music_duration - close_len)
             segments = [s for s in segments if (s.start_time + s.duration) <= close_start]
-            if close_start > 0.6:
-                last_end = max((s.start_time + s.duration) for s in segments) if segments else 0.0
-                pre_window = rng.uniform(3.0, 6.0)
-                pre_start = max(last_end, close_start - pre_window)
-                if close_start - pre_start >= 1.0:
-                    fill_action_chain(pre_start, close_start)
-                    fill_expression_chain(pre_start, close_start)
-            segments.append(PlannedSegment(close_id, close_start, close_len, 'dance'))
+            # Fill entire gap before closing with actions + expressions (no idle)
+            last_end = max((s.start_time + s.duration) for s in segments) if segments else 0.0
+            if last_end < close_start - 0.05:
+                fill_action_chain(last_end, close_start)
+                fill_expression_chain(last_end, close_start)
+            segments.append(PlannedSegment(close_id, close_start, close_len, 'action'))
             fill_expression_chain(close_start, music_duration)
         else:
-            action_items_sorted = sorted(self.actions.items(), key=lambda kv: kv[1])
-            fit_actions = [(aid, alen) for aid, alen in action_items_sorted if alen <= music_duration]
-            if fit_actions:
-                close_id, close_len = fit_actions[-1]
-                close_start = max(0.0, music_duration - close_len)
-                segments = [s for s in segments if (s.start_time + s.duration) <= close_start]
-                if close_start > 0.6:
-                    last_end = max((s.start_time + s.duration) for s in segments) if segments else 0.0
-                    pre_window = rng.uniform(2.0, 4.0)
-                    pre_start = max(last_end, close_start - pre_window)
-                    if close_start - pre_start >= 0.8:
-                        fill_action_chain(pre_start, close_start)
-                        fill_expression_chain(pre_start, close_start)
-                segments.append(PlannedSegment(close_id, close_start, close_len, 'action'))
-                fill_expression_chain(close_start, music_duration)
+            if action_items_sorted:
+                close_id, _ = action_items_sorted[0]
             else:
-                if action_items_sorted:
-                    close_id, _ = action_items_sorted[0]
-                else:
-                    close_id = list(self.expressions.keys())[0]
-                segments = []
-                segments.append(PlannedSegment(close_id, 0.0, max(0.2, music_duration), 'action'))
-                fill_expression_chain(0.0, music_duration)
+                close_id = list(self.expressions.keys())[0]
+            segments = []
+            segments.append(PlannedSegment(close_id, 0.0, max(0.2, music_duration), 'action'))
+            fill_expression_chain(0.0, music_duration)
 
         cleaned: List[PlannedSegment] = []
         for s in segments:
