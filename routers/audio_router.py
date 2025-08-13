@@ -20,7 +20,8 @@ async def convert_to_wav_api(file: UploadFile = File(...)):
         return {
             "message": "File converted and uploaded successfully",
             "file_name": result["file_name"],
-            "url": result["url"]
+            "url": result["url"],
+            "duration": result["duration"]
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Conversion or upload failed: {str(e)}")
