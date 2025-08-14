@@ -22,8 +22,8 @@ class OsmoCardSequence(BaseModel):
 
 class ActionCard(BaseModel):
     action: OsmoCard  # action card (blue, red, orange, gray)
-    direction: OsmoCard
-    step: OsmoCard    # step card (yellow, value)
+    direction: Optional[OsmoCard] = None
+    step: Optional[OsmoCard] = None    # step card (yellow, value)
 
 class ActionCardList(BaseModel):
     action_cards: List[ActionCard]
