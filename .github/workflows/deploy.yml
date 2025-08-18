@@ -3,7 +3,7 @@ name: Build, Push Docker Image and Deploy with Podman
 on:
   push:
     branches:
-      - deploy
+      - main
 
 jobs:
   build-and-push-image:
