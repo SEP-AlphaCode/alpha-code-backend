@@ -1,99 +1,57 @@
-from fastapi import FastAPI, File, UploadFile, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse
-import uvicorn
-import os
-import asyncio
-from typing import List
+from fastapi.responses import RedirectResponse
 
-from app.api.endpoints import music, choreography, robot, ai_music
-from app.core.config import settings
-from app.services.websocket_manager import ConnectionManager
+from routers.osmo_router import router as osmo_router
+from routers.audio_router import router as audio_router
+from routers.websocket_router import router as websocket_router, manager as ws_manager
+from routers.music_router import router as music_router
 
-# Tạo FastAPI app
-app = FastAPI(
-    title="Alpha Mini AI Music Choreographer API",
-    description="Backend API cho robot Alpha Mini với AI tự động phân tích nhạc và tạo vũ đạo thông minh",
-    version="2.0.0"
+from config.config import settings
+
+# Build FastAPI kwargs dynamically to avoid invalid empty URL in license
+fastapi_kwargs = dict(
+    title=settings.TITLE,
+    description=settings.DESCRIPTION,
+    version=settings.VERSION,
 )
+contact = {"name": settings.CONTACT_NAME, "email": settings.CONTACT_EMAIL}
+if any(contact.values()):
+    fastapi_kwargs["contact"] = contact
+if settings.LICENSE_NAME and settings.LICENSE_URL:
+    fastapi_kwargs["license_info"] = {"name": settings.LICENSE_NAME, "url": settings.LICENSE_URL}
 
-# CORS middleware
+app = FastAPI(**fastapi_kwargs)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Cho phép tất cả origin, có thể chỉnh lại domain cụ thể nếu cần
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Static files cho uploads
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
-app.mount("/data", StaticFiles(directory="data"), name="data")
+app.include_router(osmo_router, prefix="/osmo", tags=["Osmo"])
+app.include_router(audio_router, prefix="/audio", tags=["Audio"])
+app.include_router(websocket_router, prefix="/websocket", tags=["WebSocket"])
+app.include_router(music_router, prefix="/music", tags=["Music"])
 
-# WebSocket manager cho giao tiếp real-time với robot
-manager = ConnectionManager()
-
-# Include routers
-app.include_router(music.router, prefix="/api/v1/music", tags=["Music Analysis"])
-app.include_router(choreography.router, prefix="/api/v1/choreography", tags=["Choreography"])
-app.include_router(robot.router, prefix="/api/v1/robot", tags=["Robot Control"])
-app.include_router(ai_music.router, prefix="/api/v1/ai-music", tags=["AI Music Choreographer"])
-
-@app.get("/")
-async def root():
-    return {
-        "message": "Alpha Mini AI Music Choreographer API",
-        "version": "2.0.0", 
-        "status": "running",
-        "features": [
-            "Automatic music analysis",
-            "AI-powered choreography generation",
-            "Built-in Alpha Mini actions & expressions",
-            "Real-time robot control",
-            "WebSocket support"
-        ],
-        "endpoints": {
-            "ai_music": "/api/v1/ai-music",
-            "music": "/api/v1/music", 
-            "choreography": "/api/v1/choreography",
-            "robot": "/api/v1/robot",
-            "docs": "/docs"
-        }
-    }
-
-@app.websocket("/ws/{client_id}")
-async def websocket_endpoint(websocket: WebSocket, client_id: str):
-    """WebSocket endpoint cho giao tiếp real-time với robot"""
-    await manager.connect(websocket, client_id)
+# Backward-compatible alias path for websocket without /websocket prefix
+@app.websocket("/ws")
+async def websocket_alias(websocket: WebSocket):
+    await ws_manager.connect(websocket)
     try:
         while True:
             data = await websocket.receive_text()
-            await manager.send_personal_message(f"Echo: {data}", client_id)
+            print(f"[Alias /ws] Client said: {data}")
     except WebSocketDisconnect:
-        manager.disconnect(client_id)
-        await manager.broadcast(f"Robot {client_id} disconnected")
+        ws_manager.disconnect(websocket)
+    except Exception as e:
+        print(f"WebSocket alias error: {e}")
+        ws_manager.disconnect(websocket)
 
-@app.on_event("startup")
-async def startup_event():
-    """Khởi tạo khi server start"""
-    # Tạo thư mục cần thiết
-    os.makedirs("uploads/music", exist_ok=True)
-    os.makedirs("uploads/ubx", exist_ok=True)
-    os.makedirs("data/analysis", exist_ok=True)
-    os.makedirs("data/choreography", exist_ok=True)
-    print("✅ Alpha Mini Backend Server started successfully!")
+@app.get("/", include_in_schema=False)
+async def root():
+    return RedirectResponse(url="/docs")
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Cleanup khi server shutdown"""
-    print("🔌 Alpha Mini Backend Server shutting down...")
-
-if __name__ == "__main__":
-    uvicorn.run(
-        "main:app",
-        host=settings.HOST,
-        port=settings.PORT,
-        reload=settings.DEBUG,
-        log_level="info"
-    )
+"""Main application entrypoint. WebSocket logic moved to routers.websocket_router."""
