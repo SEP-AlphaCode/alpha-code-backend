@@ -10,3 +10,5 @@ requests
 librosa
 numpy
 soundfile
+boto3
+openai-whisper
