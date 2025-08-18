@@ -1,4 +1,4 @@
-from models.osmo import OsmoCardSequence, AlphaMiniAction, AlphaMiniActionList, ActionCardList, ActionCard, OsmoCard
+from app.models.osmo import OsmoCardSequence, AlphaMiniAction, AlphaMiniActionList, ActionCardList, ActionCard, OsmoCard
 from typing import List
 from fastapi.responses import JSONResponse
 
@@ -136,7 +136,7 @@ def card_to_action(card):
 # ------------------ Recognizer ------------------
 
 import cv2, numpy as np, math
-from models.osmo import ActionCard, OsmoCard, ActionCardList
+from app.models.osmo import ActionCard, OsmoCard, ActionCardList
 from typing import Optional
 
 def detect_arrow_direction(gray_img):
@@ -179,7 +179,7 @@ def recognize_action_cards_from_image(
     row_height_bin: int = 70,   # nới một chút cho điện thoại chụp
 ):
     import cv2, numpy as np
-    from models.osmo import ActionCard, OsmoCard, ActionCardList
+    from app.models.osmo import ActionCard, OsmoCard, ActionCardList
 
     img = cv2.imread(image_path)
     if img is None:

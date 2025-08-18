@@ -1,7 +1,6 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
-from typing import List  # may still be used elsewhere in future
 
 from routers.osmo_router import router as osmo_router
 from routers.audio_router import router as audio_router

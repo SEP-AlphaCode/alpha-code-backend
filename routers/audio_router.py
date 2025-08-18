@@ -1,7 +1,6 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, UploadFile, File, HTTPException
 import os
-from services.audio_service import convert_audio_to_wav_and_upload
+from app.services.audio.audio_service import convert_audio_to_wav_and_upload
 
 router = APIRouter()
 

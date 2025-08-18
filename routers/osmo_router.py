@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File
 
-from models.osmo import ActionCardList
-from services.osmo_service import (
+from app.models.osmo import ActionCardList
+from app.services.osmo.osmo_service import (
     # recognize_osmo_cards_from_image,
     parse_action_card_list,
     recognize_action_cards_from_image,
