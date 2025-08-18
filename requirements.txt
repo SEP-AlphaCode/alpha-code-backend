@@ -6,6 +6,7 @@ pillow
 pytesseract
 pydub
 python-dotenv
+python-multipart
 requests
 librosa
 numpy
