@@ -2,11 +2,11 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
-from app.routers.osmo_router import router as osmo_router
-from app.routers.audio_router import router as audio_router
-from app.routers.websocket_router import router as websocket_router, manager as ws_manager
-from app.routers.music_router import router as music_router
-from app.routers.stt_router import router as stt_router
+from routers.osmo_router import router as osmo_router
+from routers.audio_router import router as audio_router
+from routers.websocket_router import router as websocket_router, manager as ws_manager
+from routers.music_router import router as music_router
+from routers.nlp_router import router as nlp_router
 
 from config.config import settings
 
@@ -36,16 +36,16 @@ app.include_router(osmo_router, prefix="/osmo", tags=["Osmo"])
 app.include_router(audio_router, prefix="/audio", tags=["Audio"])
 app.include_router(websocket_router, prefix="/websocket", tags=["WebSocket"])
 app.include_router(music_router, prefix="/music", tags=["Music"])
-app.include_router(stt_router, prefix='/stt', tags=["STT"])
+app.include_router(nlp_router, prefix="/nlp", tags=["NLP"])
 
 # Backward-compatible alias path for websocket without /websocket prefix
-@app.websocket("/websocket")
+@app.websocket("/ws")
 async def websocket_alias(websocket: WebSocket):
     await ws_manager.connect(websocket)
     try:
         while True:
             data = await websocket.receive_text()
-            print(f"[Alias /websocket] Client said: {data}")
+            print(f"[Alias /ws] Client said: {data}")
     except WebSocketDisconnect:
         ws_manager.disconnect(websocket)
     except Exception as e:
