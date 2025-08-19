@@ -2,11 +2,19 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
-from routers.osmo_router import router as osmo_router
-from routers.audio_router import router as audio_router
-from routers.websocket_router import router as websocket_router, manager as ws_manager
-from routers.music_router import router as music_router
-from routers.nlp_router import router as nlp_router
+"""Main FastAPI application entrypoint.
+
+Adjusting imports to reference the actual package layout (app/routers/*).
+Previously the code tried to import from a top-level 'routers' package that
+no longer contains all router modules, causing ModuleNotFoundError when
+starting the server. We now import from 'app.routers'.
+"""
+
+from app.routers.osmo_router import router as osmo_router
+from app.routers.audio_router import router as audio_router
+from app.routers.websocket_router import router as websocket_router, manager as ws_manager
+from app.routers.music_router import router as music_router
+from app.routers.nlp_router import router as nlp_router
 
 from config.config import settings
 
