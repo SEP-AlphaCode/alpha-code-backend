@@ -222,7 +222,7 @@ def recognize_action_cards_from_image(
         return int(round((b["y"] + b["h"] * 0.5) / row_height_bin))
 
     boxes = sorted(boxes, key=lambda z: (row_id(z), z["x"]))
-
+    
     # Tạo index để "đánh dấu đã dùng"
     for idx, b in enumerate(boxes):
         b["idx"] = idx
@@ -242,57 +242,103 @@ def recognize_action_cards_from_image(
 
     # --- 2.1 Ghép các ACTION (blue/red/orange) với direction + yellow cùng hàng, gần nhất
     for a in boxes:
-        if a["color_detect"] not in ("blue", "red1", "red2", "orange"):
-            continue
+        # if a["color_detect"] not in ("blue", "red1", "red2", "orange"):
+        #     continue
+        
+        if a["color_detect"] in ("blue", "red1", "red2", "orange"):
 
-        action_color = "red" if a["color_detect"] in ("red1", "red2") else a["color_detect"]
-        row = a["row"]
-
-        # direction (gray) cùng hàng, x > action.x, chưa dùng, gần nhất
-        direction_box = pick_nearest(
-            boxes,
-            cond=lambda b: (
-                b["row"] == row and
-                b["color_detect"] == "gray" and
-                b["x"] > a["x"] and
-                b["idx"] not in used_dir
-            ),
-            ref_x=a["x"],
-        )
-
-        direction_text = None
-        anchor_x = a["x"]
-        if direction_box is not None:
-            roi = img[
-                direction_box["y"]:direction_box["y"] + direction_box["h"],
-                direction_box["x"]:direction_box["x"] + direction_box["w"]
-            ]
-            direction_text = detect_arrow_direction(cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)) or "forward"
-            used_dir.add(direction_box["idx"])
-            anchor_x = direction_box["x"]
-
-        # yellow (step) cùng hàng, x > anchor_x, chưa dùng, gần nhất
-        yellow_box = pick_nearest(
-            boxes,
-            cond=lambda b: (
-                b["row"] == row and
-                b["color_detect"] == "yellow" and
-                b["x"] > anchor_x and
-                b["idx"] not in used_yellow
-            ),
-            ref_x=anchor_x,
-        )
-
-        step_value = 1
-        if yellow_box is not None:
+            action_color = "red" if a["color_detect"] in ("red1", "red2") else a["color_detect"]
+            row = a["row"]
+    
+            # direction (gray) cùng hàng, x > action.x, chưa dùng, gần nhất
+            direction_box = pick_nearest(
+                boxes,
+                cond=lambda b: (
+                    b["row"] == row and
+                    b["color_detect"] == "gray" and
+                    b["x"] > a["x"] and
+                    b["idx"] not in used_dir
+                ),
+                ref_x=a["x"],
+            )
+    
+            direction_text = None
+            anchor_x = a["x"]
+            if direction_box is not None:
+                roi = img[
+                    direction_box["y"]:direction_box["y"] + direction_box["h"],
+                    direction_box["x"]:direction_box["x"] + direction_box["w"]
+                ]
+                direction_text = detect_arrow_direction(cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)) or "forward"
+                used_dir.add(direction_box["idx"])
+                anchor_x = direction_box["x"]
+    
+            # yellow (step) cùng hàng, x > anchor_x, chưa dùng, gần nhất
+            yellow_box = pick_nearest(
+                boxes,
+                cond=lambda b: (
+                    b["row"] == row and
+                    b["color_detect"] == "yellow" and
+                    b["x"] > anchor_x and
+                    b["idx"] not in used_yellow
+                ),
+                ref_x=anchor_x,
+            )
+    
+            step_value = 1
+            if yellow_box is not None:
+                try:
+                    import pytesseract
+                    if tesseract_cmd:
+                        pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+                    roi_y = img[
+                        yellow_box["y"]:yellow_box["y"] + yellow_box["h"],
+                        yellow_box["x"]:yellow_box["x"] + yellow_box["w"]
+                    ]
+                    gray_y = cv2.cvtColor(roi_y, cv2.COLOR_BGR2GRAY)
+                    _, thr_y = cv2.threshold(gray_y, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                    txt = pytesseract.image_to_string(
+                        thr_y, config="--psm 8 -c tessedit_char_whitelist=0123456789"
+                    ).strip()
+                    if txt.isdigit():
+                        step_value = int(txt)
+                    used_yellow.add(yellow_box["idx"])
+                except:
+                    pass
+    
+            action_cards.append(ActionCard(
+                action=OsmoCard(color=action_color),
+                direction=OsmoCard(color="gray", direction=direction_text) if direction_box is not None else None,
+                step=OsmoCard(color="yellow", value=step_value)
+            ))
+            
+    # --- 2.2 Nhận thẻ LOOP (xám độc lập, không phải direction của action nào) + yellow cùng hàng
+            
+        if a["color_detect"] in ("gray", "green"):
+            if a["idx"] in used_dir:
+                continue
+    
+            # tìm yellow cùng hàng, x > g.x, gần nhất
+            yb = pick_nearest(
+                boxes,
+                cond=lambda b: (
+                    b["row"] == a["row"] and
+                    b["color_detect"] == "yellow" and
+                    b["x"] > a["x"] and
+                    b["idx"] not in used_yellow
+                ),
+                ref_x=a["x"],
+            )
+    
+            if yb is None:
+                continue
+    
+            step_value = 1
             try:
                 import pytesseract
                 if tesseract_cmd:
                     pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
-                roi_y = img[
-                    yellow_box["y"]:yellow_box["y"] + yellow_box["h"],
-                    yellow_box["x"]:yellow_box["x"] + yellow_box["w"]
-                ]
+                roi_y = img[yb["y"]:yb["y"] + yb["h"], yb["x"]:yb["x"] + yb["w"]]
                 gray_y = cv2.cvtColor(roi_y, cv2.COLOR_BGR2GRAY)
                 _, thr_y = cv2.threshold(gray_y, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
                 txt = pytesseract.image_to_string(
@@ -300,99 +346,14 @@ def recognize_action_cards_from_image(
                 ).strip()
                 if txt.isdigit():
                     step_value = int(txt)
-                used_yellow.add(yellow_box["idx"])
+                used_yellow.add(yb["idx"])
             except:
                 pass
-
-        action_cards.append(ActionCard(
-            action=OsmoCard(color=action_color),
-            direction=OsmoCard(color="gray", direction=direction_text) if direction_box is not None else None,
-            step=OsmoCard(color="yellow", value=step_value)
-        ))
-
-    # --- 2.2 Nhận thẻ LOOP (xám độc lập, không phải direction của action nào) + yellow cùng hàng
-    for g in boxes:
-        if g["color_detect"] != "gray":
-            continue
-        # nếu box xám đã dùng làm direction thì bỏ
-        if g["idx"] in used_dir:
-            continue
-
-        # tìm yellow cùng hàng, x > g.x, gần nhất
-        yb = pick_nearest(
-            boxes,
-            cond=lambda b: (
-                b["row"] == g["row"] and
-                b["color_detect"] == "yellow" and
-                b["x"] > g["x"] and
-                b["idx"] not in used_yellow
-            ),
-            ref_x=g["x"],
-        )
-
-        if yb is None:
-            continue
-
-        step_value = 1
-        try:
-            import pytesseract
-            if tesseract_cmd:
-                pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
-            roi_y = img[yb["y"]:yb["y"] + yb["h"], yb["x"]:yb["x"] + yb["w"]]
-            gray_y = cv2.cvtColor(roi_y, cv2.COLOR_BGR2GRAY)
-            _, thr_y = cv2.threshold(gray_y, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-            txt = pytesseract.image_to_string(
-                thr_y, config="--psm 8 -c tessedit_char_whitelist=0123456789"
-            ).strip()
-            if txt.isdigit():
-                step_value = int(txt)
-            used_yellow.add(yb["idx"])
-        except:
-            pass
-
-        action_cards.append(ActionCard(
-            action=OsmoCard(color="gray"),   # loop
-            direction=None,
-            step=OsmoCard(color="yellow", value=step_value)
-        ))
-
+    
+            action_cards.append(ActionCard(
+                action=OsmoCard(color="gray"),   # loop
+                direction=None,
+                step=OsmoCard(color="yellow", value=step_value)
+            ))
+            
     return ActionCardList(action_cards=action_cards)
-
-
-def detect_card_colors_from_image(image_path: str):
-    """Chỉ detect màu thẻ từ ảnh, không OCR, không logic."""
-    img = cv2.imread(image_path)
-    if img is None:
-        raise FileNotFoundError(image_path)
-
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-
-    # HSV ranges mở rộng thêm green
-    color_ranges = {
-        "blue":   ([90, 60, 60],  [130, 255, 255]),
-        "yellow": ([18, 120,120], [40, 255, 255]),
-        "orange": ([5, 100,100],  [18, 255, 255]),
-        "red1":   ([0, 100,100],  [8,  255, 255]),
-        "red2":   ([160,100,100], [179,255,255]),
-        "gray":   ([0, 0, 50],    [179, 50, 200]),
-        "green":  ([40, 70, 70],  [85, 255, 255]),   # thêm green
-    }
-
-    detected = []
-    for cname, (low, high) in color_ranges.items():
-        mask = cv2.inRange(hsv, np.array(low, np.uint8), np.array(high, np.uint8))
-        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
-        mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=1)
-        cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        for c in cnts:
-            x, y, w, h = cv2.boundingRect(c)
-            if w * h < 300:
-                continue
-            detected.append({
-                "color": "red" if cname in ("red1", "red2") else cname,
-                "x": int(x), "y": int(y), "w": int(w), "h": int(h)
-            })
-
-    # sort theo (y, x)
-    detected = sorted(detected, key=lambda b: (b["y"], b["x"]))
-    return detected
