@@ -8,6 +8,7 @@ def parse_osmo_cards(card_sequence: OsmoCardSequence) -> AlphaMiniActionList:
     while i < len(card_sequence.cards):
         card = card_sequence.cards[i]
         ccolor = getattr(card, "color", None)
+        cvalue = getattr(card, "value", None)
 
         if ccolor in ("blue", "red", "orange"):
             # Default values
