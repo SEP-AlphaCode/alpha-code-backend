@@ -59,27 +59,6 @@ def export_actions_to_json_response(actions: AlphaMiniActionList):
 
 # ------------------ New Parser for ActionCardList ------------------
 
-# def parse_action_card_list(action_card_list: ActionCardList) -> AlphaMiniActionList:
-#     """Convert ActionCardList -> AlphaMiniActionList"""
-#     actions: List[AlphaMiniAction] = []
-#     for ac in action_card_list.action_cards:
-#         color = ac.action.color
-#         direction = ac.direction.direction if ac.direction and ac.direction.direction else "forward"
-#         step = ac.step.value if ac.step and ac.step.value is not None else 1
-# 
-#         if color == "blue":
-#             action_name = f"move_{direction}"
-#         elif color == "red":
-#             action_name = f"jump_{direction}"
-#         elif color == "orange":
-#             action_name = f"raise_hand_{direction}"
-#         else:
-#             continue  # skip unsupported colors
-# 
-#         actions.append(AlphaMiniAction(action=action_name, value=step))
-# 
-#     return AlphaMiniActionList(actions=actions)
-
 def parse_action_card_list(action_card_list):
     """Chuyển ActionCardList thành list action dictionary, hỗ trợ loop."""
     result = []
@@ -378,3 +357,42 @@ def recognize_action_cards_from_image(
         ))
 
     return ActionCardList(action_cards=action_cards)
+
+
+def detect_card_colors_from_image(image_path: str):
+    """Chỉ detect màu thẻ từ ảnh, không OCR, không logic."""
+    img = cv2.imread(image_path)
+    if img is None:
+        raise FileNotFoundError(image_path)
+
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    # HSV ranges mở rộng thêm green
+    color_ranges = {
+        "blue":   ([90, 60, 60],  [130, 255, 255]),
+        "yellow": ([18, 120,120], [40, 255, 255]),
+        "orange": ([5, 100,100],  [18, 255, 255]),
+        "red1":   ([0, 100,100],  [8,  255, 255]),
+        "red2":   ([160,100,100], [179,255,255]),
+        "gray":   ([0, 0, 50],    [179, 50, 200]),
+        "green":  ([40, 70, 70],  [85, 255, 255]),   # thêm green
+    }
+
+    detected = []
+    for cname, (low, high) in color_ranges.items():
+        mask = cv2.inRange(hsv, np.array(low, np.uint8), np.array(high, np.uint8))
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+        mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=1)
+        cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        for c in cnts:
+            x, y, w, h = cv2.boundingRect(c)
+            if w * h < 300:
+                continue
+            detected.append({
+                "color": "red" if cname in ("red1", "red2") else cname,
+                "x": int(x), "y": int(y), "w": int(w), "h": int(h)
+            })
+
+    # sort theo (y, x)
+    detected = sorted(detected, key=lambda b: (b["y"], b["x"]))
+    return detected

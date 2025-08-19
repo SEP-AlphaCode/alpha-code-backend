@@ -2,11 +2,11 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
-from routers.osmo_router import router as osmo_router
-from routers.audio_router import router as audio_router
-from routers.websocket_router import router as websocket_router, manager as ws_manager
-from routers.music_router import router as music_router
-from routers.stt_router import router as stt_router
+from app.routers.osmo_router import router as osmo_router
+from app.routers.audio_router import router as audio_router
+from app.routers.websocket_router import router as websocket_router, manager as ws_manager
+from app.routers.music_router import router as music_router
+from app.routers.stt_router import router as stt_router
 
 from config.config import settings
 
