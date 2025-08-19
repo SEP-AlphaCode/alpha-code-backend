@@ -52,6 +52,7 @@ async def websocket_alias(websocket: WebSocket):
         print(f"WebSocket alias error: {e}")
         ws_manager.disconnect(websocket)
 
+
 @app.get("/", include_in_schema=False)
 async def root():
     return RedirectResponse(url="/docs")
