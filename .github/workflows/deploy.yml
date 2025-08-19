@@ -47,13 +47,12 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
-            - name: Deploy container with podman-compose via SSH
+      - name: Deploy container with podman-compose via SSH
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << 'EOF'
             set -e
             cd /home/norman/alpha-code-backend
             echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose down || true
             echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose pull
-            echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose up -d --replace
+            echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose up -d
           EOF
-
