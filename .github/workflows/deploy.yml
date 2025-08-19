@@ -54,6 +54,5 @@ jobs:
             cd /home/norman/alpha-code-backend
             echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose down || true
             echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose pull
-            echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose up -d --replace
+            echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose up -d
           EOF
-
