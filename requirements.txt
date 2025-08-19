@@ -12,3 +12,5 @@ numpy
 soundfile
 boto3
 openai-whisper
+protobuf
+google.generativeai
