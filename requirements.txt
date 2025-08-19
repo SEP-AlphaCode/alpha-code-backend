@@ -13,3 +13,5 @@ soundfile
 google-generativeai
 boto3
 openai-whisper
+protobuf
+google.generativeai
