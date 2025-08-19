@@ -52,7 +52,6 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << EOF
             set -e
             cd /home/norman/alpha-code-backend
-            echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose down
             echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose pull
             echo "${{ secrets.SSH_PASS }}" | sudo -S podman-compose up -d
           EOF
