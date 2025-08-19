@@ -39,13 +39,13 @@ app.include_router(music_router, prefix="/music", tags=["Music"])
 app.include_router(nlp_router, prefix="/nlp", tags=["NLP"])
 
 # Backward-compatible alias path for websocket without /websocket prefix
-@app.websocket("/ws")
+@app.websocket("/websocket")
 async def websocket_alias(websocket: WebSocket):
     await ws_manager.connect(websocket)
     try:
         while True:
             data = await websocket.receive_text()
-            print(f"[Alias /ws] Client said: {data}")
+            print(f"[Alias /websocket] Client said: {data}")
     except WebSocketDisconnect:
         ws_manager.disconnect(websocket)
     except Exception as e:
