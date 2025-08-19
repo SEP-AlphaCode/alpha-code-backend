@@ -1,5 +1,4 @@
 fastapi
-boto3
 uvicorn
 pydantic
 opencv-python
@@ -7,9 +6,9 @@ pillow
 pytesseract
 pydub
 python-dotenv
-python-multipart
 requests
 librosa
 numpy
 soundfile
-google-generativeai
+boto3
+openai-whisper
