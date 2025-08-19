@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  backend:
+    image: norman1910/alpha-code-backend:latest
+    container_name: alpha-backend
+    restart: always
+    ports:
+      - "8082:8082"
+    env_file:
+      - .env
+    volumes:
+      - ./uploads:/app/uploads
