@@ -1,11 +1,12 @@
-from fastapi import HTTPException
-import google.generativeai as genai
+from fastapi import HTTPException, UploadFile
+import google as genai
 import os
 from starlette.concurrency import run_in_threadpool
 from app.models.nlp import NLPRequest
 import json
 import re
 from .prompt import build_prompt
+from ..stt.stt_service import stt
 
 # =========================
 # Config Gemini
@@ -26,7 +27,14 @@ else:
     init_error = "Missing GEMINI_API_KEY or GEMINI_MODEL environment variables"
 
 
-async def process_text(req: NLPRequest):
+async def process_text(req: UploadFile):
+    try:
+        text_from_stt = await stt(req)
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=f"{e}"
+        )
     """
     Nhận text từ client, gửi qua Gemini để phân tích intent
     và trả về JSON chuẩn theo rule.
@@ -38,7 +46,7 @@ async def process_text(req: NLPRequest):
         )
 
     # Build prompt from external template file for maintainability
-    prompt = build_prompt(req.text)
+    prompt = build_prompt(text_from_stt)
 
     try:
         # gọi Gemini ở threadpool (async safe)
