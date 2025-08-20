@@ -2,20 +2,13 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
-"""Main FastAPI application entrypoint.
-
-Adjusting imports to reference the actual package layout (app/routers/*).
-Previously the code tried to import from a top-level 'routers' package that
-no longer contains all router modules, causing ModuleNotFoundError when
-starting the server. We now import from 'app.routers'.
-"""
-
 from app.routers.osmo_router import router as osmo_router
 from app.routers.audio_router import router as audio_router
 from app.routers.websocket_router import router as websocket_router, manager as ws_manager
 from app.routers.music_router import router as music_router
 from app.routers.nlp_router import router as nlp_router
 from app.routers.stt_router import router as stt_router
+from app.routers.marker_router import router as marker_router
 
 from config.config import settings
 
@@ -41,12 +34,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(osmo_router, prefix="/osmo", tags=["Osmo"])
 app.include_router(audio_router, prefix="/audio", tags=["Audio"])
+app.include_router(osmo_router, prefix="/osmo", tags=["Osmo"])
 app.include_router(websocket_router, prefix="/websocket", tags=["WebSocket"])
 app.include_router(music_router, prefix="/music", tags=["Music"])
 app.include_router(stt_router, prefix="/stt", tags=["STT"])
 app.include_router(nlp_router, prefix="/nlp", tags=["NLP"])
+app.include_router(marker_router, prefix="/marker", tags=["Marker"])
 
 # Backward-compatible alias path for websocket without /websocket prefix
 @app.websocket("/ws")
