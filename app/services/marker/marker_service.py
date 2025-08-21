@@ -60,8 +60,8 @@ class MarkerService:
             )
             img_marked = cv2.aruco.drawDetectedMarkers(img.copy(), corners_found, ids)
             cv2.imwrite(debug_path, img_marked)
-            debug_b64 = image_to_base64(debug_path)
-            data_url = f"data:image/png;base64,{debug_b64}"
+            # debug_b64 = image_to_base64(debug_path)
+            # data_url = f"data:image/png;base64,{debug_b64}"
             
             return MarkerResponse(
                 page_id=f"{used_dict}_{'_'.join(map(str, detected_ids))}",
@@ -69,7 +69,8 @@ class MarkerService:
                 method="aruco",
                 marker_ids=detected_ids,  # list ID rõ ràng
                 dict_used=used_dict,  # dictionary phát hiện
-                debug_image=data_url  # ảnh debug lưu ra file
+                # debug_image=data_url  # ảnh debug lưu ra file
+                debug_image=debug_path
             )
 
         return MarkerResponse(page_id=None, confidence=0.0, method="none")
