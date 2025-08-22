@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
+from app.routers.websocket_router import send_command, Command
 from app.services.nlp.nlp_service import process_text
 from app.services.stt.stt_service import transcribe_bytes
 from app.models.stt import ASRData, STTResponse
@@ -17,6 +18,8 @@ async def transcribe_audio(data: ASRData):
 async def transcribe_audio(data: ASRData):
     try:
         resp = await transcribe_bytes(data)
-        return await process_text(resp.text)
+        json_result = await process_text(resp.text)
+        await send_command(Command(type=json_result['type'], data=json_result['data']))
+        return json_result
     except Exception as e:
         raise HTTPException(status_code=500, detail=e)
