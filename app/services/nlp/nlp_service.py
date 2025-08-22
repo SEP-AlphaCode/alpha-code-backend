@@ -1,5 +1,5 @@
 from fastapi import HTTPException, UploadFile
-import google as genai
+import google.generativeai as genai
 import os
 from starlette.concurrency import run_in_threadpool
 from app.models.nlp import NLPRequest
@@ -53,7 +53,6 @@ async def process_text(req: UploadFile):
         response = await run_in_threadpool(model.generate_content, prompt)
 
         text = getattr(response, "text", None)
-
         # fallback nếu Gemini trả về trong candidates
         if not text and hasattr(response, "candidates"):
             try:
@@ -67,7 +66,6 @@ async def process_text(req: UploadFile):
 
         if not text:
             raise HTTPException(status_code=500, detail="Empty response from Gemini")
-
         # cleanup nếu Gemini vẫn trả về với code fences
         cleaned = re.sub(r"^```(?:json)?|```$", "", text.strip(), flags=re.MULTILINE).strip()
 
