@@ -21,6 +21,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - "study" (learning, vocabulary, teaching…)
        - "dance" (dance, move, but not with music)
        - "dance-with-music" (dance with rhythm, music, or song)
+       - "talk" (simply to speak)
        - "unknown" (if it does not match any intent above)
 
     2. Special rule for "qr-code":
@@ -36,7 +37,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - Always respond in English, friendly and suitable for students.
        - Use this strict JSON format:
        {
-         "type": "<one_of: greeting | study | dance | dance-with-music | unknown>",
+         "type": "<one_of: greeting | study | dance | dance-with-music | talk | unknown>",
          "data": {
            "text": "<your English response here>"
          }

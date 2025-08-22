@@ -13,5 +13,6 @@ soundfile
 boto3
 openai-whisper
 protobuf
-google.generativeai
 python-multipart
+whisper
+openai-whisper
