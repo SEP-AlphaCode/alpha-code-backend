@@ -117,7 +117,18 @@ def _split_text(text: str, limit: int) -> List[str]:
         parts.append(' '.join(current).strip())
     return parts
 
-async def text_to_wav_and_upload(text: str, voice: Optional[str] = None):
+def _sanitize_filename(name: str) -> str:
+    """Sanitize a user-provided base filename to be safe for S3/local use and ensure .wav extension."""
+    base = name.strip().replace(" ", "_")
+    allowed = "-_.()"
+    base = ''.join(c for c in base if c.isalnum() or c in allowed or c == '_')
+    if not base:
+        base = "tts"
+    if not base.lower().endswith('.wav'):
+        base += '.wav'
+    return base
+
+async def text_to_wav_and_upload(text: str, voice: Optional[str] = None, file_name: Optional[str] = None):
     """
     Convert input text to speech (WAV) using AWS Polly, upload to S3, return metadata.
 
@@ -129,6 +140,7 @@ async def text_to_wav_and_upload(text: str, voice: Optional[str] = None):
         raise RuntimeError("Missing AWS credentials for Polly")
 
     use_voice = voice or POLLY_DEFAULT_VOICE
+    custom_name = _sanitize_filename(file_name) if file_name else None
 
     # Chunk text if longer than limit
     chunks = _split_text(text.strip(), POLLY_TEXT_LIMIT)
@@ -169,9 +181,12 @@ async def text_to_wav_and_upload(text: str, voice: Optional[str] = None):
 
         duration_seconds = round(len(final_audio) / 1000.0, 2)
 
-        # Naming: tts_<timestamp>.wav
-        timestamp = int(time.time() * 1000)
-        download_name = f"tts_{timestamp}.wav"
+        # Naming
+        if custom_name:
+            download_name = custom_name
+        else:
+            timestamp = int(time.time() * 1000)
+            download_name = f"tts_{timestamp}.wav"
         s3_key = f"tts/{download_name}"
 
         try:
@@ -241,6 +256,8 @@ async def text_to_wav_local(text: str, voice: Optional[str] = None):
     for seg in segments[1:]:
         final_audio += seg
 
+    # Determine output name
+    # Keep function signature minimal; allow caller to rename after saving if needed
     timestamp = int(time.time() * 1000)
     file_name = f"tts_local_{timestamp}.wav"
     out_path = os.path.join(LOCAL_TTS_OUTPUT_DIR, file_name)
