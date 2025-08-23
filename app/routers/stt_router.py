@@ -20,6 +20,6 @@ async def transcribe_audio(data: ASRData):
         resp = await transcribe_bytes(data)
         json_result = await process_text(resp.text)
         await send_command(Command(type=json_result['type'], data=json_result['data']))
-        return json_result
+        raise json_result
     except Exception as e:
         raise HTTPException(status_code=500, detail=e)
