@@ -31,7 +31,7 @@ async def transcribe_audio(audio_file: UploadFile) -> str:
         content = await audio_file.read()
 
         # Convert bytes to numpy array using soundfile
-        audio_data, sample_rate = sf.read(io.BytesIO(content))
+        audio_data = sf.read(io.BytesIO(content))
 
         # Ensure audio is in float32 format (Whisper expects this)
         if audio_data.dtype != np.float32:
