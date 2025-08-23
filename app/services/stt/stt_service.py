@@ -49,7 +49,7 @@ async def transcribe_bytes(data: ASRData):
     if whisper is None or model is None:
         raise RuntimeError("Whisper STT not available (package not installed or model failed to load)")
     try:
-        logging.debug(f"Full original data array: {data.arr}")
+        logging(f"Full original data array: {data.arr}")
 
         # 1. Convert list of ints -> raw bytes
         byte_array = np.array(data.arr, dtype=np.int8).tobytes()
