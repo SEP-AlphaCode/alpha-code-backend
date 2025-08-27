@@ -8,7 +8,7 @@ from botocore.exceptions import NoCredentialsError, BotoCoreError, ClientError
 from dotenv import load_dotenv
 import time
 import io
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 # Explicitly set ffmpeg path for Windows
 if os.name == "nt":
@@ -271,3 +271,110 @@ async def text_to_wav_local(text: str, voice: Optional[str] = None):
         "text_length": len(text)
     }
 
+async def text_to_mp3_bytes(text: str, voice: Optional[str] = None) -> Dict[str, Any]:
+    """Generate MP3 bytes from text and return (bytes + metadata)."""
+    if not text or not text.strip():
+        raise RuntimeError("Text is empty")
+
+    use_voice = voice or POLLY_DEFAULT_VOICE
+    chunks = _split_text(text.strip(), POLLY_TEXT_LIMIT)
+
+    mp3_segments: List[bytes] = []
+    for chunk in chunks:
+        try:
+            resp = polly_client.synthesize_speech(
+                Text=chunk,
+                VoiceId=use_voice,
+                OutputFormat="mp3"
+            )
+        except ClientError as e:
+            code = e.response.get("Error", {}).get("Code")
+            if code == "AccessDeniedException":
+                raise RuntimeError(
+                    "Access denied for Polly SynthesizeSpeech. Grant IAM permission polly:SynthesizeSpeech."
+                ) from e
+            raise
+        except BotoCoreError as e:
+            raise RuntimeError(f"Polly core error: {e}")
+
+        audio_stream = resp.get("AudioStream")
+        if not audio_stream:
+            raise RuntimeError("Polly returned no AudioStream")
+
+        mp3_bytes = audio_stream.read()
+        mp3_segments.append(mp3_bytes)
+
+    if not mp3_segments:
+        raise RuntimeError("No audio produced")
+
+    # If multiple chunks, just concatenate them
+    final_mp3 = b"".join(mp3_segments)
+
+    timestamp = int(time.time() * 1000)
+    file_name = f"tts_mem_{timestamp}.mp3"
+
+    # Duration not computed (need decode for that) → optional
+    return {
+        "bytes": final_mp3,
+        "file_name": file_name,
+        "duration": None,  # skip to save overhead
+        "voice": use_voice,
+        "text_length": len(text),
+    }
+
+async def text_to_wav_bytes(text: str, voice: Optional[str] = None) -> Dict[str, Any]:
+    """Generate WAV bytes from text and return (bytes + metadata)."""
+    if not text or not text.strip():
+        raise RuntimeError("Text is empty")
+
+    use_voice = voice or POLLY_DEFAULT_VOICE
+    chunks = _split_text(text.strip(), POLLY_TEXT_LIMIT)
+
+    segments: List[AudioSegment] = []
+    for chunk in chunks:
+        try:
+            resp = polly_client.synthesize_speech(
+                Text=chunk,
+                VoiceId=use_voice,
+                OutputFormat="mp3"
+            )
+        except ClientError as e:
+            code = e.response.get("Error", {}).get("Code")
+            if code == "AccessDeniedException":
+                raise RuntimeError(
+                    "Access denied for Polly SynthesizeSpeech. Grant IAM permission polly:SynthesizeSpeech."
+                ) from e
+            raise
+        except BotoCoreError as e:
+            raise RuntimeError(f"Polly core error: {e}")
+
+        audio_stream = resp.get("AudioStream")
+        if not audio_stream:
+            raise RuntimeError("Polly returned no AudioStream")
+
+        mp3_bytes = audio_stream.read()
+        segments.append(AudioSegment.from_file(io.BytesIO(mp3_bytes), format="mp3"))
+
+    if not segments:
+        raise RuntimeError("No audio produced")
+
+    final_audio = segments[0]
+    for seg in segments[1:]:
+        final_audio += seg
+
+    # Export to WAV in memory
+    wav_io = io.BytesIO()
+    final_audio.export(wav_io, format="wav")
+    wav_bytes = wav_io.getvalue()
+
+    duration_seconds = round(len(final_audio) / 1000.0, 2)
+    timestamp = int(time.time() * 1000)
+    file_name = f"tts_mem_{timestamp}.wav"
+
+    return {
+        "bytes": wav_bytes,
+        "file_name": file_name,
+        "duration": duration_seconds,
+        "voice": use_voice,
+        "text_length": len(text),
+    }
