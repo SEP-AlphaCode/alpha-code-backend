@@ -15,5 +15,4 @@ openai-whisper
 protobuf
 python-multipart
 whisper
-openai-whisper
 google.generativeai
