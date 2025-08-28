@@ -5,7 +5,7 @@ from app.models.nlp import NLPRequest
 router = APIRouter()
 
 @router.post('/process-audio')
-async def generate_dance_plan(file: UploadFile):
+async def process_audio_endpoint(file: UploadFile):
     # Await the async service function; previously this returned a coroutine causing JSON serialization errors
     return await process_audio(file)
 
