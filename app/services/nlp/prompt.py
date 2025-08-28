@@ -18,6 +18,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
     1. Detect the intent of the sentence. Allowed values for "type" are:
        - "greeting" (hello, hi, good morning…)
        - "qr-code" (when user asks about QR code or scanning)
+       - "osmo-card" (when user asks about Osmo cards)
        - "study" (learning, vocabulary, teaching…)
        - "dance" (dance, move, but not with music)
        - "dance-with-music" (dance with rhythm, music, or song)
@@ -29,12 +30,21 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        {
          "type": "qr-code",
          "data": {
-           "text": "Please place the QR card under my feet in my view. Now I will bend down to scan it."
+           "text": "Please place the QR card in front of me. Now I will capture it."
+         }
+       }
+       
+    3. Special rule for "osmo-card":
+       Always return this exact format:
+       {
+         "type": "qr-code",
+         "data": {
+           "text": "Please place the Osmo cards under my feet in my view. Now I will bend down to scan it."
          }
        }
 
-    3. For other intents:
-       - Always respond in English, friendly and suitable for students.
+    4. For other intents:
+       - Always respond in English, friendly and suitable for young students (below 10 year old).
        - Use this strict JSON format:
        {
          "type": "<one_of: greeting | study | dance | dance-with-music | talk | unknown>",
@@ -46,6 +56,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
     Important:
     - Output must be strict JSON.
     - Do not use markdown or code fences (```json ... ```).
+    - Response positively but reject the input if irrelevant or inappropriate.
     """
 ).strip()
 

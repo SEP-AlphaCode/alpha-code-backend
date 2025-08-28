@@ -17,7 +17,7 @@ async def transcribe_audio(data: ASRData):
         raise HTTPException(status_code=500, detail=e)
 
 @router.post('/with-action')
-async def transcribe_audio(data: ASRData):
+async def response_to_audio(data: ASRData):
     try:
         resp = await transcribe_bytes(data)
         json_result = await process_text(resp.text)

@@ -1,7 +1,9 @@
+import json
+
 from fastapi import APIRouter, UploadFile, Response, HTTPException
 
 from app.services.audio.audio_service import text_to_mp3_bytes
-from app.services.nlp.nlp_service import process_text, process_audio
+from app.services.nlp.nlp_service import process_text, process_audio, analyze_dance
 from app.models.nlp import NLPRequest
 
 router = APIRouter()
@@ -40,3 +42,19 @@ async def do_tts(input_text: NLPRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/dance-plan-gemini")
+async def process_files(
+    audio_file: UploadFile,
+    json_file: UploadFile
+):
+    # TODO: Implement processing logic later
+    result = await analyze_dance(audio_file, json_file)
+    return {
+        'type': 'dance-with-music',
+        'data': {
+            'activity': {
+                'actions': json.loads(result)
+            }
+        }
+    }
