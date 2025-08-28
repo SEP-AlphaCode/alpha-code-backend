@@ -29,23 +29,18 @@ async def transcribe_audio(data: ASRData):
         # Example output: {"type": "<greeting|study|dance|...>", "data": {"text": "..."}}
         json_raw = await process_text(resp.text)
 
-        # 3. Convert text to WAV and upload
-        # Returns: {"file_name": "...", "url": "...", "duration": ..., "voice": ..., "text_length": ...}
-        json_wav = await text_to_wav_and_upload(json_raw['data']['text'])
-
-        # 4. Combine original text with TTS result
+        # 3. Combine original text with TTS result
         json_combined = {
             "type": json_raw['type'],
             "data": {
                 "text": json_raw['data']['text'],
-                "wav": json_wav
             }
         }
 
-        # 5. Send command to client or robot
+        # 4. Send command to client or robot
         await send_command(Command(type=json_combined['type'], data=json_combined['data']))
 
-        # 6. Return combined JSON as API response
+        # 5. Return combined JSON as API response
         return json_combined
 
     except Exception as e:
