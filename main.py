@@ -43,18 +43,18 @@ app.include_router(nlp_router, prefix="/nlp", tags=["NLP"])
 app.include_router(marker_router, prefix="/marker", tags=["Marker"])
 
 # Backward-compatible alias path for websocket without /websocket prefix
-@app.websocket("/ws")
-async def websocket_alias(websocket: WebSocket):
-    await ws_manager.connect(websocket)
-    try:
-        while True:
-            data = await websocket.receive_text()
-            print(f"[Alias /ws] Client said: {data}")
-    except WebSocketDisconnect:
-        ws_manager.disconnect(websocket)
-    except Exception as e:
-        print(f"WebSocket alias error: {e}")
-        ws_manager.disconnect(websocket)
+# @app.websocket("/ws/")
+# async def websocket_alias(websocket: WebSocket):
+#     await ws_manager.connect(websocket)
+#     try:
+#         while True:
+#             data = await websocket.receive_text()
+#             print(f"[Alias /ws] Client said: {data}")
+#     except WebSocketDisconnect:
+#         ws_manager.disconnect(websocket)
+#     except Exception as e:
+#         print(f"WebSocket alias error: {e}")
+#         ws_manager.disconnect(websocket)
 
 
 @app.get("/", include_in_schema=False)
