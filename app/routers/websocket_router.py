@@ -55,7 +55,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
         while True:
             data = await websocket.receive_text()
-        print(f"{serial} -> {data}")
+            print(f"{serial} -> {data}")
 
     except WebSocketDisconnect:
         print(f"Robot {serial} disconnected")
