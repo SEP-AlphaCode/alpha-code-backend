@@ -1,7 +1,7 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from typing import List
+from typing import Dict
 
 router = APIRouter()
 
@@ -11,27 +11,29 @@ class Command(BaseModel):
 
 class ConnectionManager:
     def __init__(self):
-        self.clients: List[WebSocket] = []
+        # Store clients as {serial: websocket}
+        self.clients: Dict[str, WebSocket] = {}
 
-    async def connect(self, websocket: WebSocket):
+    async def connect(self, websocket: WebSocket, serial: str):
         await websocket.accept()
-        self.clients.append(websocket)
+        self.clients[serial] = websocket
+        print(f"Robot {serial} connected. Total: {len(self.clients)}")
 
-    def disconnect(self, websocket: WebSocket):
-        if websocket in self.clients:
-            self.clients.remove(websocket)
+    def disconnect(self, serial: str):
+        if serial in self.clients:
+            del self.clients[serial]
+            print(f"Robot {serial} disconnected. Total: {len(self.clients)}")
 
-    async def broadcast(self, message: str):
-        disconnected: List[WebSocket] = []
-        for ws in self.clients:
+    async def send_to_robot(self, serial: str, message: str) -> bool:
+        ws = self.clients.get(serial)
+        if ws:
             try:
                 await ws.send_text(message)
+                return True
             except Exception as e:
-                print(f"Broadcast error: {e}")
-                disconnected.append(ws)
-        for ws in disconnected:
-            self.disconnect(ws)
-        return len(self.clients)
+                print(f"Send error to {serial}: {e}")
+                self.disconnect(serial)
+        return False
 
     @property
     def active(self) -> int:
@@ -39,24 +41,27 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
+# Robot connects here with serial number
 @router.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await manager.connect(websocket)
+async def websocket_endpoint(websocket: WebSocket, serial: str = Query(...)):
+    await manager.connect(websocket, serial)
     try:
         while True:
             data = await websocket.receive_text()
-            print(f"Client said: {data}")
+            print(f"Robot {serial} said: {data}")
     except WebSocketDisconnect:
-        manager.disconnect(websocket)
+        manager.disconnect(serial)
     except Exception as e:
-        print(f"WebSocket error: {e}")
-        manager.disconnect(websocket)
+        print(f"WebSocket error for {serial}: {e}")
+        manager.disconnect(serial)
 
-@router.post("/command")
-async def send_command(command: Command):
-    delivered_after = await manager.broadcast(command.json())
+# Send a command to a specific robot
+@router.post("/command/{serial}")
+async def send_command(serial: str, command: Command):
+    ok = await manager.send_to_robot(serial, command.json())
     return JSONResponse({
-        "status": "sent",
+        "status": "sent" if ok else "failed",
+        "to": serial,
         "command": command.dict(),
-        "active_clients": delivered_after
+        "active_clients": manager.active
     })
