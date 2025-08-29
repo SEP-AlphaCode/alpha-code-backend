@@ -44,16 +44,21 @@ manager = ConnectionManager()
 # Robot connects here with serial number
 @router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket, serial: str = Query(...)):
-    await manager.connect(websocket, serial)
     try:
+        await manager.connect(websocket, serial)
+        print(f"✅ Robot {serial} connected")
         while True:
             data = await websocket.receive_text()
             print(f"Robot {serial} said: {data}")
     except WebSocketDisconnect:
+        print(f"❌ Robot {serial} isconnected")
         manager.disconnect(serial)
     except Exception as e:
-        print(f"WebSocket error for {serial}: {e}")
+        import traceback
+        print(f"🔥 WebSocket error for {serial}: {e}")
+        traceback.print_exc()
         manager.disconnect(serial)
+
 
 # Send a command to a specific robot
 @router.post("/command/{serial}")
