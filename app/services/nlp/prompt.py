@@ -29,7 +29,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        {
          "type": "qr-code",
          "data": {
-           "text": "Please place the QR card under my feet in my view. Now I will bend down to scan it."
+           "text": "Please show the QR code in front of me to take a picture. Now I will take the picture."
          }
        }
 
