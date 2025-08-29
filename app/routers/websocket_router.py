@@ -1,7 +1,9 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Dict
+
+from app.services.robot_sdk_control.dance_service import run_dances_for_serial
 
 router = APIRouter()
 
@@ -68,14 +70,45 @@ async def websocket_endpoint(websocket: WebSocket, serial: str):
 
 
 
-
 # Send a command to a specific robot
 @router.post("/command/{serial}")
 async def send_command(serial: str, command: Command):
-    ok = await manager.send_to_robot(serial, command.json())
+    # Use pydantic v2 model_dump_json / model_dump to avoid deprecation warnings
+    ok = await manager.send_to_robot(serial, command.model_dump_json())
     return JSONResponse({
         "status": "sent" if ok else "failed",
         "to": serial,
-        "command": command.dict(),
+        "command": command.model_dump(),
         "active_clients": manager.active
     })
+
+
+# New endpoint: trigger the action flow for a robot identified by serial tail
+from app.services.robot_sdk_control.action_service import run_actions_for_serial
+
+@router.post("/robot/actions/{serial}/{code}")
+async def trigger_robot_actions(serial: str, code: str):
+    """Connect to robot by serial tail, run predefined actions, and return results.
+
+    The router is included under the /websocket prefix in main.py, so the full path is POST /websocket/robot/actions/{serial}/{code}
+    """
+    try:
+        result = await run_actions_for_serial(serial, code)
+        return JSONResponse(result)
+    except Exception as e:
+        # return exception details to caller to aid debugging (do not keep this in production)
+        return JSONResponse({"error": str(e)})
+
+
+@router.post("/robot/dances/{serial}/{code}")
+async def trigger_robot_dances(serial: str, code: str):
+    """Connect to robot by serial tail, run predefined dances, and return results.
+
+    The router is included under the /websocket prefix in main.py, so the full path is POST /websocket/robot/dances/{serial}/{code}
+    """
+    try:
+        result = await run_dances_for_serial(serial, code)
+        return JSONResponse(result)
+    except Exception as e:
+        # return exception details to caller to aid debugging (do not keep this in production)
+        return JSONResponse({"error": str(e)})

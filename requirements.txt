@@ -12,8 +12,9 @@ numpy
 soundfile
 boto3
 openai-whisper
-protobuf
+protobuf==3.20.3
 python-multipart
 whisper
 google.generativeai
 email-validator
+alphamini
