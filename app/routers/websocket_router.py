@@ -42,11 +42,10 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 # Robot connects here with serial number
-@router.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
+@router.websocket("/ws/{serial}")
+async def websocket_endpoint(websocket: WebSocket, serial: str):
     try:
         print("Incoming WS request:", websocket.url)
-        serial = websocket.query_params.get("serial")
         print("Parsed serial:", serial)
         if not serial:
             await websocket.close(code=1008)  # Policy Violation
