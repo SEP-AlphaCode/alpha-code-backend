@@ -1,11 +1,10 @@
 from fastapi import APIRouter, HTTPException
 
-from app.routers.websocket_router import send_command, Command
+from app.services.audio.audio_service import text_to_mp3_bytes, text_to_wav_bytes
 from app.services.nlp.nlp_service import process_text
 from app.services.stt.stt_service import transcribe_bytes
 from app.models.stt import ASRData
-from app.services.audio.audio_service import text_to_wav_and_upload
-
+from fastapi.responses import Response
 router = APIRouter()
 
 @router.post('')
@@ -22,27 +21,73 @@ async def transcribe_audio(data: ASRData):
     generate TTS, and send command with combined JSON.
     """
     try:
-        # 1. Transcribe raw audio bytes to text
-        resp = await transcribe_bytes(data)  # returns object with 'text' attribute
+        resp = await transcribe_bytes(data)
+        json_result = await process_text(resp.text)
+        return json_result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=e)
 
-        # 2. Process the transcribed text to get JSON classification
-        # Example output: {"type": "<greeting|study|dance|...>", "data": {"text": "..."}}
-        json_raw = await process_text(resp.text)
+@router.post("/with-action-mp3")
+async def transcribe_audio_with_file(data: ASRData):
+    try:
+        # 1) Transcribe + NLP
+        resp = await transcribe_bytes(data)
+        json_result = await process_text(resp.text)
 
-        # 3. Combine original text with TTS result
-        json_combined = {
-            "type": json_raw['type'],
-            "data": {
-                "text": json_raw['data']['text'],
-            }
+        # 2) TTS in memory
+        tts_meta = await text_to_mp3_bytes(json_result["data"]["text"])
+        wav_bytes = tts_meta["bytes"]
+
+        # 3) Headers (all fields except url)
+        headers = {
+            "X-Type": str(json_result.get("type", "")),
+            "X-Text": str(json_result["data"].get("text", "")),
+            "X-File-Name": str(tts_meta.get("file_name", "")),
+            "X-Duration": str(tts_meta.get("duration", "")),
+            "X-Voice": str(tts_meta.get("voice", "")),
+            "X-Text-Length": str(tts_meta.get("text_length", "")),
+            "Content-Disposition": f'attachment; filename="{tts_meta["file_name"]}"',
         }
 
-        # 4. Send command to client or robot
-        await send_command(Command(type=json_combined['type'], data=json_combined['data']))
-
-        # 5. Return combined JSON as API response
-        return json_combined
+        # 4) Return WAV directly in body
+        return Response(
+            content=wav_bytes,
+            media_type="audio/wav",
+            headers=headers,
+        )
 
     except Exception as e:
-        # If any error occurs, raise HTTP 500
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/with-action-wav")
+async def transcribe_audio_with_file(data: ASRData):
+    try:
+        # 1) Transcribe + NLP
+        resp = await transcribe_bytes(data)
+        json_result = await process_text(resp.text)
+
+        # 2) TTS in memory
+        tts_meta = await text_to_wav_bytes(json_result["data"]["text"])
+        wav_bytes = tts_meta["bytes"]
+
+        # 3) Headers (all fields except url)
+        headers = {
+            "X-Type": str(json_result.get("type", "")),
+            "X-Text": str(json_result["data"].get("text", "")),
+            "X-File-Name": str(tts_meta.get("file_name", "")),
+            "X-Duration": str(tts_meta.get("duration", "")),
+            "X-Voice": str(tts_meta.get("voice", "")),
+            "X-Text-Length": str(tts_meta.get("text_length", "")),
+            "Content-Disposition": f'attachment; filename="{tts_meta["file_name"]}"',
+        }
+
+        # 4) Return WAV directly in body
+        return Response(
+            content=wav_bytes,
+            media_type="audio/wav",
+            headers=headers,
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+

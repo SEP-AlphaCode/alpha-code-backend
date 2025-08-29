@@ -62,3 +62,4 @@ async def transcribe_bytes(data: ASRData):
         return STTResponse(text=transcript)
     except Exception as e:
         raise RuntimeError(e)
+

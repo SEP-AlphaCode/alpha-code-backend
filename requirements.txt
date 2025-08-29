@@ -16,3 +16,4 @@ protobuf
 python-multipart
 whisper
 google.generativeai
+email-validator
