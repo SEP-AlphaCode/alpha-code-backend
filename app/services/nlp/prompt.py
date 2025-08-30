@@ -22,7 +22,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - "dance" (dance, move, but not with music)
        - "dance_with_music" (dance with rhythm, music, or song)
        - "talk" (simply to speak)
-       - "extended-action" (walk forward, walk backward, turn left, turn right, make bows, make nods, shake heads, slating heads, shake hands, wave hands, make press ups)
+       - "extended_action" (walk forward, walk backward, turn left, turn right, make bows, make nods, shake heads, slating heads, shake hands, wave hands, make press ups)
        - "unknown" (if it does not match any intent above)
 
     2. Special rule for "qr_code":
