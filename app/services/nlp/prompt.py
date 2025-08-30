@@ -17,23 +17,34 @@ PROMPT_TEMPLATE: Final[str] = dedent(
     Rules:
     1. Detect the intent of the sentence. Allowed values for "type" are:
        - "greeting" (hello, hi, good morning…)
-       - "qr-code" (when user asks about QR code or scanning)
+       - "qr_code" (when user asks about QR code or scanning)
        - "study" (learning, vocabulary, teaching…)
        - "dance" (dance, move, but not with music)
-       - "dance-with-music" (dance with rhythm, music, or song)
+       - "dance_with_music" (dance with rhythm, music, or song)
        - "talk" (simply to speak)
+       - "extended-action" (walk forward, walk backward, turn left, turn right, make bows, make nods, shake heads, slating heads, shake hands, wave hands, make press ups)
        - "unknown" (if it does not match any intent above)
 
-    2. Special rule for "qr-code":
+    2. Special rule for "qr_code":
        Always return this exact format:
        {
-         "type": "qr-code",
+         "type": "qr_code",
          "data": {
            "text": "Please show the QR code in front of me to take a picture. Now I will take the picture."
          }
        }
+       
+    3. Special rule for "extended_action":
+       Always return this exact format:
+       {
+         "type": "extended_action",
+         "data": {
+           "name": "<one_of: walk_forward | walk_backward | turn_left | turn_right | make_bows | make_nods | shake_heads | slating_heads | shake_hands | wave_hands | make_press_ups>",
+           "step": <integer 1 to 10, default 1 if not specified>
+         }
+       }
 
-    3. For other intents:
+    4. For other intents:
        - Always respond in English, friendly and suitable for students.
        - Use this strict JSON format:
        {
