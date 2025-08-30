@@ -36,13 +36,20 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        
     3. Special rule for "extended_action":
        Always return this exact format:
-       {
+        {
          "type": "extended_action",
          "data": {
-           "name": "<one_of: walk_forward | walk_backward | turn_left | turn_right | make_bows | make_nods | shake_heads | slating_heads | shake_hands | wave_hands | make_press_ups>",
-           "step": <integer 1 to 10, default 1 if not specified in voice command>
+           "actions": [
+             {
+               "name": "<one_of: walk_forward | walk_backward | turn_left | turn_right | make_bows | make_nods | shake_heads | slating_heads | shake_hands | wave_hands | make_press_ups>",
+               "step": <integer 1 to 10, default 1 if not specified in voice command>
+             },
+             ...
+           ]
          }
        }
+       - Multiple actions can appear inside "actions", executed in order from first to last.
+
 
     4. For other intents:
        - Always respond in English, friendly and suitable for students.
