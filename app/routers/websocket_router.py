@@ -82,11 +82,11 @@ async def send_command(serial: str, command: Command):
         "active_clients": manager.active
     })
 
-@router.post("/robot/dances/{serial}/{code}")
+@router.post("/ubt/dances/{serial}/{code}")
 async def trigger_robot_dances(serial: str, code: str):
     """Connect to robot by serial tail, run predefined dances, and return results.
 
-    The router is included under the /websocket prefix in main.py, so the full path is POST /websocket/robot/dances/{serial}/{code}
+    The router is included under the /websocket prefix in main.py, so the full path is POST /websocket/ubt/dances/{serial}/{code}
     """
     try:
         result = await run_dances_for_serial(serial, code)
