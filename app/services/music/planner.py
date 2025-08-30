@@ -258,7 +258,7 @@ def build_activity_json(music_name: str, music_url: str, music_duration: float) 
             'color': gen_color(idx, atype)
         })
     return {
-        'type': 'dance-with-music',
+        'type': 'dance_with_music',
         'data': {
             'music_info': {
                 'name': music_name,
