@@ -1,6 +1,6 @@
-from idlelib.iomenu import errors
 from typing import Any, Dict
 
+from app.utils.error_utils import get_express_error_str
 from mini import MiniApiResultType
 from mini.apis.api_behavior import StartBehavior
 from mini.pb2.codemao_controlbehavior_pb2 import ControlBehaviorResponse
@@ -19,7 +19,8 @@ async def dances_behavior(dance_code: str):
 
     print(f'test_control_behavior result: {response}')
     print(
-        'resultCode = {0}, error = {1}'.format(response.resultCode, errors.get_express_error_str(response.resultCode)))
+        f'resultCode = {response.resultCode}, error = {get_express_error_str(response.resultCode)}'
+    )
 
     assert resultType == MiniApiResultType.Success, 'test_control_behavior timetout'
     assert response is not None and isinstance(response,
