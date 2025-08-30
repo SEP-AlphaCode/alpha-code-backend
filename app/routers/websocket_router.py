@@ -90,7 +90,18 @@ async def trigger_robot_dances(serial: str, code: str):
     """
     try:
         result = await run_dances_for_serial(serial, code)
-        return JSONResponse(result)
+        # If the service returned an error, map it to an appropriate HTTP status
+        err = result.get("error") if isinstance(result, dict) else None
+        if err:
+            # device not found/connect failed -> 404
+            if isinstance(err, str) and err.startswith("device_not_found_or_connect_failed"):
+                return JSONResponse(result, status_code=404)
+            # other expected errors -> 400
+            return JSONResponse(result, status_code=400)
+
+        # success path
+        return JSONResponse(result, status_code=200)
+
     except Exception as e:
-        # return exception details to caller to aid debugging (do not keep this in production)
-        return JSONResponse({"error": str(e)})
+        # unexpected server error
+        return JSONResponse({"error": str(e)}, status_code=500)
