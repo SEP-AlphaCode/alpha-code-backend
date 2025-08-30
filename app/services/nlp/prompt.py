@@ -40,7 +40,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
          "type": "extended_action",
          "data": {
            "name": "<one_of: walk_forward | walk_backward | turn_left | turn_right | make_bows | make_nods | shake_heads | slating_heads | shake_hands | wave_hands | make_press_ups>",
-           "step": <integer 1 to 10, default 1 if not specified>
+           "step": <integer 1 to 10, default 1 if not specified in voice command>
          }
        }
 
