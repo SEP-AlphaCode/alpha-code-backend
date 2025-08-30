@@ -1,4 +1,3 @@
-import asyncio
 from idlelib.iomenu import errors
 from typing import Any, Dict
 
