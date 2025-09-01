@@ -18,6 +18,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
     1. Detect the intent of the sentence. Allowed values for "type" are:
        - "greeting" (hello, hi, good morning…)
        - "qr_code" (when user asks about QR code or scanning)
+       - "osmo_card" (when user asks about Osmo cards)
        - "study" (learning, vocabulary, teaching…)
        - "dance" (dance, move, but not with music)
        - "dance_with_music" (dance with rhythm, music, or song)
@@ -33,8 +34,16 @@ PROMPT_TEMPLATE: Final[str] = dedent(
            "text": "Please show the QR code in front of me to take a picture. Now I will take the picture."
          }
        }
+    3. Special rule for "osmo_card":
+      Always return this exact format:
+       {
+         "type": "osmo_card",
+         "data": {
+           "text": "Please place the OSMO card under my feet in my view. Now I will bend down to scan it."
+         }
+       }
        
-    3. Special rule for "extended_action":
+    4. Special rule for "extended_action":
        Always return this exact format:
         {
          "type": "extended_action",
@@ -51,7 +60,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - Multiple actions can appear inside "actions", executed in order from first to last.
 
 
-    4. For other intents:
+    5. For other intents:
        - Always respond in English, friendly and suitable for students.
        - Use this strict JSON format:
        {
