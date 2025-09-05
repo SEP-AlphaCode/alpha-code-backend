@@ -17,6 +17,8 @@ PROMPT_TEMPLATE: Final[str] = dedent(
     Rules:
     1. Detect the intent of the sentence. Allowed values for "type" are:
        - "greeting" (hello, hi, good morning…)
+       - "skill" (show me a skill, do a trick…)
+       - "skill_helper" (help me to do a skill, teach me a trick…)
        - "qr_code" (when user asks about QR code or scanning)
        - "osmo_card" (when user asks about Osmo cards)
        - "study" (learning, vocabulary, teaching…)
