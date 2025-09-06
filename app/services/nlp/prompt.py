@@ -3,9 +3,11 @@
 Keeping the large language model prompt in a dedicated module makes it easier
 to maintain, reuse, test, and potentially localize.
 """
-
+from pathlib import Path
 from textwrap import dedent
 from typing import Final
+
+SKILLS_FILE = Path(__file__).resolve().parents[2] / "files" / "skills.txt"
 
 PROMPT_TEMPLATE: Final[str] = dedent(
     """
@@ -17,8 +19,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
     Rules:
     1. Detect the intent of the sentence. Allowed values for "type" are:
        - "greeting" (hello, hi, good morning…)
-       - "skill" (show me a skill, do a trick…)
-       - "skill_helper" (help me to do a skill, teach me a trick…)
+       - "skill_helper" (help me do a skill, teach me a trick…)
        - "qr_code" (when user asks about QR code or scanning)
        - "osmo_card" (when user asks about Osmo cards)
        - "study" (learning, vocabulary, teaching…)
@@ -71,10 +72,25 @@ PROMPT_TEMPLATE: Final[str] = dedent(
            "text": "<your English response here>"
          }
        }
+       
+    6. Rules for skill:
+      - You will get a CSV list of several skills you can use, each with an id and description.
+      - If the user wants to execute a particular skill, then select the most appropriate skill in the supplied list
+      - Use this strict JSON format:
+      {
+        "type": "skill_helper",
+        "data": {
+            "id": <One of the id in the supplied CSV list>
+        }
+      }
 
     Important:
     - Output must be strict JSON.
     - Do not use markdown or code fences (```json ... ```).
+    
+    Skill list:
+    $SKILL_LIST
+    
     """
 ).strip()
 
@@ -85,7 +101,10 @@ def build_prompt(input_text: str) -> str:
     Escapes double quotes in the input to keep JSON inside prompt consistent.
     """
     safe_text = input_text.replace("\"", "\\\"")
-    return PROMPT_TEMPLATE.replace("$INPUT_TEXT", safe_text)
+    return PROMPT_TEMPLATE.replace("$INPUT_TEXT", safe_text).replace("$SKILL_LIST", SKILLS_TEXT)
 
 
 __all__ = ["build_prompt", "PROMPT_TEMPLATE"]
+
+with open(SKILLS_FILE, "r", encoding="utf-8") as f:
+    SKILLS_TEXT = f.read()

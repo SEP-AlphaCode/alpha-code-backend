@@ -1,0 +1,33 @@
+exercise, exercise
+yoga, yoga
+kungfu, kungfu
+sit_down, Sit down
+foot_stand, Posing as a pheasant standing on one foot
+fly, Dapeng spread his windgs
+stand_up, Stand up
+Routine Actions, raisinghands, Raising hands
+raisingrightleg, Raising right leg
+raisingleftleg, Raising left leg
+stoop, stoop
+Keep_turning_right, Turning right
+Keep_turning_left, Turing left
+Keep_moving_forward, Moving forward
+Keep_going_backwards, Going backwards
+crouch, Crouch
+bow_step, Bow step
+say_hi, Say hi
+sneeze, Sneeze
+burp, Burp
+break_wind, Break wind
+scratch, Scratch
+hand_kiss, Hand Kiss
+hug, Hug
+Stretch, Stretch
+doze, Doze
+frighten, Frighten
+shake_hand, Shaking hands
+nod, Nod
+shake_head, Shaking head
+turn_head, Turn head
+be_cute, Cute
+dancing, Dancing
