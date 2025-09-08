@@ -21,3 +21,7 @@ alphamini
 starlette
 botocore
 dataclasses
+ultralytics
+torch
+torchvision
+timm

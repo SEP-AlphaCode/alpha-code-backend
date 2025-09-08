@@ -9,7 +9,7 @@ from app.routers.music_router import router as music_router
 from app.routers.nlp_router import router as nlp_router
 from app.routers.stt_router import router as stt_router
 from app.routers.marker_router import router as marker_router
-
+from app.routers.object_detect import router as object_router
 from config.config import settings
 
 # Build FastAPI kwargs dynamically to avoid invalid empty URL in license
@@ -41,6 +41,7 @@ app.include_router(music_router, prefix="/music", tags=["Music"])
 app.include_router(stt_router, prefix="/stt", tags=["STT"])
 app.include_router(nlp_router, prefix="/nlp", tags=["NLP"])
 app.include_router(marker_router, prefix="/marker", tags=["Marker"])
+app.include_router(object_router, prefix="/object", tags=["Object Detection"])
 
 # Backward-compatible alias path for websocket without /websocket prefix
 @app.websocket("/ws/{serial}")
