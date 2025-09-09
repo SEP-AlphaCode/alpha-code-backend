@@ -1,11 +1,13 @@
 # app/routers/object_router.py
+from typing import List
+
 import torch
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from ultralytics import YOLO
 import cv2
 import numpy as np
 
-from app.models.object_detect import DetectResponse, DetectClosestResponse
+from app.models.object_detect import DetectResponse, DetectClosestResponse, Detection
 
 router = APIRouter()
 
@@ -79,7 +81,7 @@ async def detect_closest_objects(file: UploadFile = File(...), k: int = 3) -> De
         depth_map = estimate_depth(img)
         
         # Step 3: Collect detections with depth metrics
-        detections = []
+        detections: List[Detection] = []
         for r in results:
             for box in r.boxes:
                 x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
@@ -100,17 +102,17 @@ async def detect_closest_objects(file: UploadFile = File(...), k: int = 3) -> De
                 min_depth = float(np.min(roi))  # closest pixel
                 median_depth = float(np.median(roi))
                 
-                detections.append({
-                    "label": label,
-                    "confidence": conf,
-                    "bbox": [x1, y1, x2, y2],
-                    "depth_avg": avg_depth,
-                    "depth_min": min_depth,
-                    "depth_median": median_depth
-                })
-        
+                detections.append(Detection(
+                        label=label,
+                        confidence=conf,
+                        bbox=[x1, y1, x2, y2],
+                        depth_avg=avg_depth,
+                        depth_min=min_depth,
+                        depth_median=median_depth,
+                    ))
+        filtered = [d for d in detections if d.label.lower() != "person"]
         # Step 4: Sort by "closeness" (lowest depth = closest)
-        detections_sorted = sorted(detections, key=lambda d: d["depth_min"])
+        detections_sorted = sorted(filtered, key=lambda d: d.depth_min or 9999.0)
         
         return {
             "closest_objects": detections_sorted[:k],
