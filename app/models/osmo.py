@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing import List, Optional
 from fastapi.responses import JSONResponse
+from datetime import datetime
+from uuid import UUID
 
 # ------------------ Models ------------------
 
@@ -34,3 +36,18 @@ class AlphaMiniAction(BaseModel):
 
 class AlphaMiniActionList(BaseModel):
     actions: List[AlphaMiniAction]
+
+
+class OsmoCardRead(BaseModel):
+    id: UUID
+    color: str
+    name: str
+    status: int
+    expression_id: Optional[UUID]
+    action_id: Optional[UUID]
+    dance_id: Optional[UUID]
+    created_date: datetime
+    last_update: Optional[datetime]
+
+    class Config:
+        orm_mode = True

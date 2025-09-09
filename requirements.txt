@@ -25,3 +25,7 @@ ultralytics
 torch
 torchvision
 timm
+sqlalchemy[asyncio]
+asyncpg
+psycopg2-binary
+alembic        

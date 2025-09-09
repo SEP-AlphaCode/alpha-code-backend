@@ -1,6 +1,7 @@
 from app.models.osmo import OsmoCardSequence, AlphaMiniAction, AlphaMiniActionList, ActionCardList, ActionCard, OsmoCard
 from typing import List
 from fastapi.responses import JSONResponse
+from app.repositories.osmo_card_repository import get_osmo_card_by_color
 
 def parse_osmo_cards(card_sequence: OsmoCardSequence) -> AlphaMiniActionList:
     actions: List[AlphaMiniAction] = []
@@ -59,7 +60,7 @@ def export_actions_to_json_response(actions: AlphaMiniActionList):
 
 # ------------------ New Parser for ActionCardList ------------------
 
-def parse_action_card_list(action_card_list):
+async def parse_action_card_list(action_card_list):
     """Chuyển ActionCardList thành list action dictionary, hỗ trợ loop."""
     result = []
     cards = action_card_list.action_cards
@@ -74,7 +75,7 @@ def parse_action_card_list(action_card_list):
 
             # Lấy toàn bộ các thẻ sau loop
             for j in range(i + 1, len(cards)):
-                loop_body.append(card_to_action(cards[j]))
+                loop_body.append(await card_to_action(cards[j]))
 
             result.append({
                 "action": "loop",
@@ -84,25 +85,29 @@ def parse_action_card_list(action_card_list):
             break  # dừng vì đã xử lý xong
 
         # ---- ACTION THƯỜNG ----
-        result.append(card_to_action(card))
+        result.append(await card_to_action(card))
         i += 1
 
     return result
 
+async def card_to_action(card: ActionCard) -> dict:
+    """Chuyển 1 ActionCard sang dict hành động, lookup DB thay vì hardcode."""
+    db_card = await get_osmo_card_by_color(card.action.color)
 
+    if not db_card:
+        action_name = "unknown"
+    else:
+        # Ưu tiên action.name nếu có, rồi đến dance.name, expression.name
+        if db_card.action:
+            action_name = db_card.action.name
+        elif db_card.dance:
+            action_name = db_card.dance.name
+        elif db_card.expression:
+            action_name = db_card.expression.name
+        else:
+            action_name = db_card.name  # fallback
 
-
-def card_to_action(card):
-    """Chuyển 1 ActionCard sang dict hành động thường."""
-    color_map = {
-        "blue": "move",
-        "red": "jump",
-        "orange": "turn",
-        # thêm màu khác nếu cần
-    }
-    action_name = color_map.get(card.action.color, "unknown")
-
-    # thêm hướng nếu có
+    # Thêm hướng nếu có
     if card.direction and card.direction.direction:
         action_name += "_" + card.direction.direction
 
@@ -151,7 +156,8 @@ def detect_arrow_direction(gray_img):
     else:
         return "forward" if dy < 0 else "backward"
 
-def recognize_action_cards_from_image(
+
+async def recognize_action_cards_from_image(
     image_path: str,
     tesseract_cmd: Optional[str] = None,
     iou_merge_threshold: float = 0.25,
