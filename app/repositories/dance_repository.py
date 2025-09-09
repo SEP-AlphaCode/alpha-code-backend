@@ -1,0 +1,15 @@
+# app/db/repos/dance_repo.py
+from sqlalchemy.future import select
+from typing import List, Optional
+from app.entities.database import AsyncSessionLocal
+from app.entities.dance import Dance
+
+async def get_all_dances() -> List[Dance]:
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(select(Dance))
+        return result.scalars().all()
+
+async def get_dance_by_code(code: str) -> Optional[Dance]:
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(select(Dance).where(Dance.code == code))
+        return result.scalar_one_or_none()
