@@ -19,11 +19,10 @@ PROMPT_TEMPLATE: Final[str] = dedent(
     Rules:
     1. Detect the intent of the sentence. Allowed values for "type" are:
        - "greeting" (hello, hi, good morning…)
-       - "skill_helper" (help me do a skill, teach me a trick…)
+       - "skill_helper" (do…)
        - "qr_code" (when user asks about QR code or scanning)
        - "osmo_card" (when user asks about Osmo cards)
        - "study" (learning, vocabulary, teaching…)
-       - "dance" (dance, move, but not with music)
        - "dance_with_music" (dance with rhythm, music, or song)
        - "talk" (simply to speak)
        - "extended_action" (walk forward, walk backward, turn left, turn right, make bows, make nods, shake heads, slating heads, shake hands, wave hands, make press ups)
