@@ -80,7 +80,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
       {
         "type": "skill_helper",
         "data": {
-            "id": <One of the id in the supplied CSV list>
+            "code": <One of the id in the supplied CSV list>
         }
       }
 
