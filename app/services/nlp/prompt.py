@@ -27,6 +27,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - "dance_with_music" (dance with rhythm, music, or song)
        - "talk" (simply to speak)
        - "extended_action" (walk forward, walk backward, turn left, turn right, make bows, make nods, shake heads, slating heads, shake hands, wave hands, make press ups)
+       - "object_detect_start (the user asks you to detect an object)
        - "unknown" (if it does not match any intent above)
 
     2. Special rule for "qr_code":
@@ -83,7 +84,18 @@ PROMPT_TEMPLATE: Final[str] = dedent(
             "code": <One of the id in the supplied CSV list>
         }
       }
-
+    7. For object detection:
+       - Used when the user asks you to detect an object. You only need to return what to say when the user wants you to detect an object.
+       - The actual object detection will be done separately.
+       - Note that if the user asks "What is this?", it is asking for object detection. Similar to "Do you know what this is?", "Can you recognize this?", "What do you see?", etc.
+       - Use this strict  JSON format:
+       {
+        "type": "object_detect_start",
+        "data": {
+            "text: <Your English response when the user wants you to detect an object>
+        }
+      }
+      
     Important:
     - Output must be strict JSON.
     - Do not use markdown or code fences (```json ... ```).
