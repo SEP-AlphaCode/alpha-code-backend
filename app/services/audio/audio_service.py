@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 import time
 import io
 from typing import List, Optional, Dict, Any
+import subprocess
+
 
 # Explicitly set ffmpeg path for Windows
 if os.name == "nt":
@@ -39,45 +41,62 @@ polly_client = boto3.client(
 async def convert_audio_to_wav_and_upload(file: UploadFile):
     if not shutil.which("ffmpeg"):
         raise RuntimeError("ffmpeg is not installed or not in PATH. Please install ffmpeg.")
+    if not shutil.which("ffprobe"):
+        raise RuntimeError("ffprobe is required to calculate duration. Please install ffmpeg (includes ffprobe).")
 
+    # Lưu file upload tạm
     suffix = os.path.splitext(file.filename)[1].lower()
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temp_in:
         temp_in.write(await file.read())
         temp_in.flush()
         temp_in_path = temp_in.name
 
-    # Đọc file input
-    if suffix == ".mp4":
-        audio = AudioSegment.from_file(temp_in_path, format="mp4")
-    else:
-        audio = AudioSegment.from_file(temp_in_path)
-
-    # Lấy duration (giây)
-    duration_seconds = round(len(audio) / 1000.0, 2)
-
+    # File WAV output tạm
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_out:
-        audio.export(temp_out.name, format="wav")
         temp_out_path = temp_out.name
 
-    os.remove(temp_in_path)
-
-    # Tên file khi upload lên S3 (nằm trong folder music/)
-    timestamp = int(time.time() * 1000)
-    download_name = os.path.splitext(file.filename)[0] + "_" + str(timestamp) + ".wav"
-    s3_key = f"music/{download_name}"  # Thêm folder music
-
     try:
-        s3_client.upload_file(
-            temp_out_path,
-            S3_BUCKET_NAME,
-            s3_key,
-            ExtraArgs={'ContentType': 'audio/wav'}
-        )
-        file_url = f"https://{S3_BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com/{s3_key}"
-    except NoCredentialsError:
-        raise RuntimeError("AWS credentials not found. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.")
+        # Convert sang WAV bằng ffmpeg
+        subprocess.run([
+            "ffmpeg", "-y",
+            "-i", temp_in_path,
+            "-ar", "16000",    # sample rate 16kHz (tùy chỉnh)
+            "-ac", "1",        # mono
+            temp_out_path
+        ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        # Tính duration bằng ffprobe
+        result = subprocess.run([
+            "ffprobe", "-v", "error",
+            "-show_entries", "format=duration",
+            "-of", "default=noprint_wrappers=1:nokey=1",
+            temp_out_path
+        ], capture_output=True, text=True, check=True)
+
+        duration_seconds = round(float(result.stdout.strip()), 2)
+
+        # Tên file khi upload lên S3
+        timestamp = int(time.time() * 1000)
+        download_name = os.path.splitext(file.filename)[0] + "_" + str(timestamp) + ".wav"
+        s3_key = f"music/{download_name}"
+
+        # Upload lên S3
+        try:
+            s3_client.upload_file(
+                temp_out_path,
+                S3_BUCKET_NAME,
+                s3_key,
+                ExtraArgs={"ContentType": "audio/wav"}
+            )
+            file_url = f"https://{S3_BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com/{s3_key}"
+        except NoCredentialsError:
+            raise RuntimeError("AWS credentials not found. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.")
     finally:
-        os.remove(temp_out_path)
+        # Xóa file tạm
+        if os.path.exists(temp_in_path):
+            os.remove(temp_in_path)
+        if os.path.exists(temp_out_path):
+            os.remove(temp_out_path)
 
     return {
         "file_name": download_name,
