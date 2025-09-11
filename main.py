@@ -4,13 +4,14 @@ from fastapi.responses import RedirectResponse
 
 from app.routers.osmo_router import router as osmo_router
 from app.routers.audio_router import router as audio_router
-from app.routers.websocket_router import router as websocket_router, manager as ws_manager
+from app.routers.websocket_router import router as websocket_router
 from app.routers.music_router import router as music_router
 from app.routers.nlp_router import router as nlp_router
 from app.routers.stt_router import router as stt_router
 from app.routers.marker_router import router as marker_router
 from app.routers.object_detect import router as object_router
 from app.routers.robot_info_router import router as robot_info_router
+from app.services.socket.connection_manager import connection_manager
 from config.config import settings
 
 # Build FastAPI kwargs dynamically to avoid invalid empty URL in license
@@ -48,16 +49,16 @@ app.include_router(robot_info_router, prefix="/robot", tags=["Robot Info"])
 # Backward-compatible alias path for websocket without /websocket prefix
 @app.websocket("/ws/{serial}")
 async def websocket_alias(websocket: WebSocket, serial: str):
-    await ws_manager.connect(websocket, serial)
+    await connection_manager.connect(websocket, serial)
     try:
         while True:
             data = await websocket.receive_text()
             print(f"[Alias /ws] Client said: {data}")
     except WebSocketDisconnect:
-        ws_manager.disconnect(websocket)
+        connection_manager.disconnect(serial)
     except Exception as e:
         print(f"WebSocket alias error: {e}")
-        ws_manager.disconnect(websocket)
+        connection_manager.disconnect(serial)
 
 
 @app.get("/", include_in_schema=False)

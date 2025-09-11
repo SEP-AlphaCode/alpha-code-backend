@@ -9,7 +9,7 @@ import logging
 from typing import Dict, Optional, Any
 from datetime import datetime
 
-from app.routers.websocket_router import manager
+from .connection_manager import connection_manager
 
 
 class RobotWebSocketInfoService:
@@ -32,7 +32,7 @@ class RobotWebSocketInfoService:
         """
         try:
             # Kiểm tra robot có kết nối không
-            if serial not in manager.clients:
+            if serial not in connection_manager.clients:
                 return {
                     'success': False,
                     'data': {
@@ -64,7 +64,7 @@ class RobotWebSocketInfoService:
             
             # Gửi command tới robot
             command_json = json.dumps(command)
-            success = await manager.send_to_robot(serial, command_json)
+            success = await connection_manager.send_to_robot(serial, command_json)
             
             if not success:
                 del self.pending_requests[request_id]

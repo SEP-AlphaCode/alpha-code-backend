@@ -6,6 +6,7 @@ import json
 
 from app.services.robot_sdk_control.dance_service import run_dances_for_serial
 from app.services.socket.robot_websocket_service import robot_websocket_info_service
+from app.services.socket.connection_manager import connection_manager
 
 router = APIRouter()
 
@@ -13,37 +14,8 @@ class Command(BaseModel):
     type: str
     data: dict
 
-class ConnectionManager:
-    def __init__(self):
-        # Store clients as {serial: websocket}
-        self.clients: Dict[str, WebSocket] = {}
-
-    async def connect(self, websocket: WebSocket, serial: str):
-        await websocket.accept()
-        self.clients[serial] = websocket
-        print(f"Robot {serial} connected. Total: {len(self.clients)}")
-
-    def disconnect(self, serial: str):
-        if serial in self.clients:
-            del self.clients[serial]
-            print(f"Robot {serial} disconnected. Total: {len(self.clients)}")
-
-    async def send_to_robot(self, serial: str, message: str) -> bool:
-        ws = self.clients.get(serial)
-        if ws:
-            try:
-                await ws.send_text(message)
-                return True
-            except Exception as e:
-                print(f"Send error to {serial}: {e}")
-                self.disconnect(serial)
-        return False
-
-    @property
-    def active(self) -> int:
-        return len(self.clients)
-
-manager = ConnectionManager()
+# Sử dụng connection manager từ service
+manager = connection_manager
 
 # Robot connects here with serial number
 @router.websocket("/ws/{serial}")
