@@ -8,7 +8,8 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from ultralytics import YOLO
 
 # Add local MiDaS repo to sys.path
-sys.path.append(os.path.join(os.path.dirname(__file__), "../../midas_repo"))
+import sys
+sys.path.append("midas_repo")  # để import code từ thư mục midas_repo
 
 from midas.dpt_depth import DPTDepthModel
 from midas.transforms import dpt_transform
