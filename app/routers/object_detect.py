@@ -6,6 +6,8 @@ import cv2
 import numpy as np
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from ultralytics import YOLO
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "midas_repo"))
 from midas.dpt_depth import DPTDepthModel
 from midas.transforms import dpt_transform
 
