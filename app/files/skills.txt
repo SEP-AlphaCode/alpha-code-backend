@@ -5,7 +5,7 @@ sit_down, Sit down
 foot_stand, Posing as a pheasant standing on one foot
 fly, Dapeng spread his windgs
 stand_up, Stand up
-Routine Actions, raisinghands, Raising hands
+raisinghands, Raising hands
 raisingrightleg, Raising right leg
 raisingleftleg, Raising left leg
 stoop, stoop

@@ -48,8 +48,29 @@ PROMPT_TEMPLATE: Final[str] = dedent(
            "text": "Please place the OSMO card under my feet in my view. Now I will bend down to scan it." (English) OR "Vui lòng đặt thẻ OSMO dưới chân tôi trong tầm nhìn của tôi. Bây giờ tôi sẽ cúi xuống để quét thẻ." (Vietnamese)
          }
        }
+    4. Rules for skill:
+      - You will get a CSV list of several skills you can use, each with an id and description.
+      - If the user wants to execute a particular skill, then select the most appropriate skill in the supplied list
+      - Use this strict JSON format:
+      {
+        "type": "skill_helper",
+        "data": {
+            "code": <One of the id in the supplied CSV list>
+        }
+      }
+
+    5. For other intents:
+       - Respond in the same language as the user input (Vietnamese for Vietnamese input, English for English input)
+       - Be friendly and suitable for students.
+       - Use this strict JSON format:
+       {
+         "type": "<one_of: greeting | study | dance | dance-with-music | talk | unknown>",
+         "data": {
+           "text": "<your response in the same language as user input>"
+         }
+       }
        
-    4. Special rule for "extended_action":
+    6. Special rule for "extended_action":
        Always return this exact format:
         {
          "type": "extended_action",
@@ -66,27 +87,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - Multiple actions can appear inside "actions", executed in order from first to last.
 
 
-    5. For other intents:
-       - Respond in the same language as the user input (Vietnamese for Vietnamese input, English for English input)
-       - Be friendly and suitable for students.
-       - Use this strict JSON format:
-       {
-         "type": "<one_of: greeting | study | dance | dance-with-music | talk | unknown>",
-         "data": {
-           "text": "<your response in the same language as user input>"
-         }
-       }
        
-    6. Rules for skill:
-      - You will get a CSV list of several skills you can use, each with an id and description.
-      - If the user wants to execute a particular skill, then select the most appropriate skill in the supplied list
-      - Use this strict JSON format:
-      {
-        "type": "skill_helper",
-        "data": {
-            "code": <One of the id in the supplied CSV list>
-        }
-      }
     7. For object detection:
        - Used when the user asks you to detect an object. You only need to return what to say when the user wants you to detect an object.
        - The actual object detection will be done separately.
