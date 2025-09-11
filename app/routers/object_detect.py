@@ -7,14 +7,15 @@ import numpy as np
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from ultralytics import YOLO
 
-# Add local MiDaS repo to sys.path
-# Lấy đường dẫn tuyệt đối tới alpha-code-backend
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.join(BASE_DIR, "midas_repo"))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+MIDAS_DIR = os.path.join(BASE_DIR, "midas_repo")
+
+if MIDAS_DIR not in sys.path:
+    sys.path.append(MIDAS_DIR)
 
 from midas.dpt_depth import DPTDepthModel
 from midas.transforms import dpt_transform
-from app.models.object_detect import DetectResponse, DetectClosestResponse, Detection
+
 
 router = APIRouter()
 
