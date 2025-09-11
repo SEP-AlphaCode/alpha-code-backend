@@ -2,8 +2,10 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Dict
+import json
 
 from app.services.robot_sdk_control.dance_service import run_dances_for_serial
+from app.services.socket.robot_websocket_service import robot_websocket_info_service
 
 router = APIRouter()
 
@@ -59,6 +61,16 @@ async def websocket_endpoint(websocket: WebSocket, serial: str):
         while True:
             data = await websocket.receive_text()
             print(f"{serial} -> {data}")
+            
+            # Xử lý message từ robot
+            try:
+                message_data = json.loads(data)
+                # Kiểm tra nếu là response cho system info request
+                robot_websocket_info_service.handle_robot_response(message_data)
+            except json.JSONDecodeError:
+                print(f"Invalid JSON from robot {serial}: {data}")
+            except Exception as e:
+                print(f"Error processing message from robot {serial}: {e}")
 
     except WebSocketDisconnect:
         print(f"Robot {serial} disconnected")
