@@ -16,6 +16,11 @@ PROMPT_TEMPLATE: Final[str] = dedent(
 
     Input: "$INPUT_TEXT"
 
+    Language Rules:
+    - If the user speaks in Vietnamese, respond in Vietnamese
+    - If the user speaks in English, respond in English
+    - Maintain the same language throughout your response
+
     Rules:
     1. Detect the intent of the sentence. Allowed values for "type" are:
        - "greeting" (hello, hi, good morning…)
@@ -28,19 +33,19 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - "unknown" (if it does not match any intent above)
 
     2. Special rule for "qr_code":
-       Always return this exact format:
+       Always return this exact format (respond in the same language as user input):
        {
          "type": "qr_code",
          "data": {
-           "text": "Please show the QR code in front of me to take a picture. Now I will take the picture."
+           "text": "Please show the QR code in front of me to take a picture. Now I will take the picture." (English) OR "Vui lòng đưa mã QR ra trước mặt tôi để chụp ảnh. Bây giờ tôi sẽ chụp ảnh." (Vietnamese)
          }
        }
     3. Special rule for "osmo_card":
-      Always return this exact format:
+      Always return this exact format (respond in the same language as user input):
        {
          "type": "osmo_card",
          "data": {
-           "text": "Please place the OSMO card under my feet in my view. Now I will bend down to scan it."
+           "text": "Please place the OSMO card under my feet in my view. Now I will bend down to scan it." (English) OR "Vui lòng đặt thẻ OSMO dưới chân tôi trong tầm nhìn của tôi. Bây giờ tôi sẽ cúi xuống để quét thẻ." (Vietnamese)
          }
        }
        
@@ -62,12 +67,13 @@ PROMPT_TEMPLATE: Final[str] = dedent(
 
 
     5. For other intents:
-       - Always respond in English, friendly and suitable for students.
+       - Respond in the same language as the user input (Vietnamese for Vietnamese input, English for English input)
+       - Be friendly and suitable for students.
        - Use this strict JSON format:
        {
          "type": "<one_of: greeting | study | dance | dance-with-music | talk | unknown>",
          "data": {
-           "text": "<your English response here>"
+           "text": "<your response in the same language as user input>"
          }
        }
        
@@ -85,11 +91,12 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - Used when the user asks you to detect an object. You only need to return what to say when the user wants you to detect an object.
        - The actual object detection will be done separately.
        - Note that if the user asks "What is this?", it is asking for object detection. Similar to "Do you know what this is?", "Can you recognize this?", "What do you see?", etc.
-       - Use this strict  JSON format:
+       - Respond in the same language as the user input
+       - Use this strict JSON format:
        {
         "type": "object_detect_start",
         "data": {
-            "text: <Your English response when the user wants you to detect an object>
+            "text": "<Your response in the same language as user input when the user wants you to detect an object>"
         }
       }
       
