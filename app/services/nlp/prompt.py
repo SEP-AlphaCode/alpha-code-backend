@@ -3,6 +3,7 @@
 Keeping the large language model prompt in a dedicated module makes it easier
 to maintain, reuse, test, and potentially localize.
 """
+
 from pathlib import Path
 from textwrap import dedent
 from typing import Final
@@ -19,6 +20,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
     Language Rules:
     - If the user speaks in Vietnamese, respond in Vietnamese. Set the "lang" field in the JSON as "vi"
     - If the user speaks in English, respond in English. Set the "lang" field in the JSON as "en"
+    - Do not speak in any other languages
     - Maintain the same language throughout your response
 
     Rules:
@@ -123,8 +125,10 @@ def build_prompt(input_text: str) -> str:
 
     Escapes double quotes in the input to keep JSON inside prompt consistent.
     """
-    safe_text = input_text.replace("\"", "\\\"")
-    return PROMPT_TEMPLATE.replace("$INPUT_TEXT", safe_text).replace("$SKILL_LIST", SKILLS_TEXT)
+    safe_text = input_text.replace('"', '\\"')
+    return PROMPT_TEMPLATE.replace("$INPUT_TEXT", safe_text).replace(
+        "$SKILL_LIST", SKILLS_TEXT
+    )
 
 
 __all__ = ["build_prompt", "PROMPT_TEMPLATE"]
