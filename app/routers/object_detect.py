@@ -21,31 +21,6 @@ midas.to(device)
 midas.eval()
 
 
-@router.post("/detect")
-async def detect_object(file: UploadFile = File(...)) -> DetectResponse:
-    """
-    Upload an image and run YOLO object detection.
-    """
-    # Convert file to numpy array
-    image_bytes = await file.read()
-    nparr = np.frombuffer(image_bytes, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-    # Run YOLO inference
-    results = yolo_model(img)
-
-    detections = []
-    for r in results:
-        for box in r.boxes:
-            detections.append({
-                "label": r.names[int(box.cls)],
-                "confidence": float(box.conf),
-                "bbox": box.xyxy[0].tolist()  # [x1, y1, x2, y2]
-            })
-
-    return {"objects": detections}
-
-
 def estimate_depth(image: np.ndarray) -> np.ndarray:
     """Run MiDaS depth estimation and return normalized depth map."""
     input_batch = transform(image).to(device)
@@ -113,10 +88,7 @@ async def detect_closest_objects(file: UploadFile = File(...), k: int = 3) -> De
         filtered = [d for d in detections if d.label.lower() != "person"]
         # Step 4: Sort by "closeness" (lowest depth = closest)
         detections_sorted = sorted(filtered, key=lambda d: d.depth_min or 9999.0)
-        
-        return {
-            "closest_objects": detections_sorted[:k],
-            "all_objects": detections_sorted
-        }
+        return DetectClosestResponse(closest_objects=detections_sorted[:k], all_objects=detections_sorted)
+    
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
