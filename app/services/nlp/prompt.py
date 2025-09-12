@@ -16,6 +16,11 @@ PROMPT_TEMPLATE: Final[str] = dedent(
 
     Input: "$INPUT_TEXT"
 
+    Language Rules:
+    - If the user speaks in Vietnamese, respond in Vietnamese. Set the "lang" field in the JSON as "vi"
+    - If the user speaks in English, respond in English. Set the "lang" field in the JSON as "en"
+    - Maintain the same language throughout your response
+
     Rules:
     1. Detect the intent of the sentence. Allowed values for "type" are:
        - "greeting" (hello, hi, good morning…)
@@ -28,26 +33,52 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - "unknown" (if it does not match any intent above)
 
     2. Special rule for "qr_code":
-       Always return this exact format:
+       Always return this exact format (respond in the same language as user input):
        {
          "type": "qr_code",
+         "lang": ...,
          "data": {
-           "text": "Please show the QR code in front of me to take a picture. Now I will take the picture."
+           "text": "Please show the QR code in front of me to take a picture. Now I will take the picture." (English) OR "Vui lòng đưa mã QR ra trước mặt tôi để chụp ảnh. Bây giờ tôi sẽ chụp ảnh." (Vietnamese)
          }
        }
     3. Special rule for "osmo_card":
-      Always return this exact format:
+      Always return this exact format (respond in the same language as user input):
        {
          "type": "osmo_card",
+         "lang": ...,
          "data": {
-           "text": "Please place the OSMO card under my feet in my view. Now I will bend down to scan it."
+           "text": "Please place the OSMO card under my feet in my view. Now I will bend down to scan it." (English) OR "Vui lòng đặt thẻ OSMO dưới chân tôi trong tầm nhìn của tôi. Bây giờ tôi sẽ cúi xuống để quét thẻ." (Vietnamese)
+         }
+       }
+    4. Rules for skill:
+      - You will get a CSV list of several skills you can use, each with an id and description.
+      - If the user wants to execute a particular skill, then select the most appropriate skill in the supplied list
+      - Use this strict JSON format:
+      {
+        "type": "skill_helper",
+        "lang": ...,
+        "data": {
+            "code": <One of the id in the supplied CSV list>
+        }
+      }
+
+    5. For other intents:
+       - Respond in the same language as the user input (Vietnamese for Vietnamese input, English for English input)
+       - Be friendly and suitable for students.
+       - Use this strict JSON format:
+       {
+         "type": "<one_of: greeting | study | dance | dance-with-music | talk | unknown>",
+         "lang": ...,
+         "data": {
+           "text": "<your response in the same language as user input>"
          }
        }
        
-    4. Special rule for "extended_action":
+    6. Special rule for "extended_action":
        Always return this exact format:
         {
          "type": "extended_action",
+         "lang": ...,
          "data": {
            "actions": [
              {
@@ -61,35 +92,18 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - Multiple actions can appear inside "actions", executed in order from first to last.
 
 
-    5. For other intents:
-       - Always respond in English, friendly and suitable for students.
-       - Use this strict JSON format:
-       {
-         "type": "<one_of: greeting | study | dance | dance-with-music | talk | unknown>",
-         "data": {
-           "text": "<your English response here>"
-         }
-       }
        
-    6. Rules for skill:
-      - You will get a CSV list of several skills you can use, each with an id and description.
-      - If the user wants to execute a particular skill, then select the most appropriate skill in the supplied list
-      - Use this strict JSON format:
-      {
-        "type": "skill_helper",
-        "data": {
-            "code": <One of the id in the supplied CSV list>
-        }
-      }
     7. For object detection:
        - Used when the user asks you to detect an object. You only need to return what to say when the user wants you to detect an object.
        - The actual object detection will be done separately.
        - Note that if the user asks "What is this?", it is asking for object detection. Similar to "Do you know what this is?", "Can you recognize this?", "What do you see?", etc.
-       - Use this strict  JSON format:
+       - Respond in the same language as the user input
+       - Use this strict JSON format:
        {
         "type": "object_detect_start",
+        "lang": ...,
         "data": {
-            "text: <Your English response when the user wants you to detect an object>
+            "text": "<Ask the user to put the object in front of you>"
         }
       }
       
