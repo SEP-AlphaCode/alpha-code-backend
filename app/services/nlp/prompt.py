@@ -19,6 +19,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
     Language Rules:
     - If the user speaks in Vietnamese, respond in Vietnamese. Set the "lang" field in the JSON as "vi"
     - If the user speaks in English, respond in English. Set the "lang" field in the JSON as "en"
+    - Do not speak in any other languages
     - Maintain the same language throughout your response
 
     Rules:
@@ -82,7 +83,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
          "data": {
            "actions": [
              {
-               "name": "<one_of: walk_forward | walk_backward | turn_left | turn_right | make_bows | make_nods | shake_heads | slating_heads | shake_hands | wave_hands | make_press_ups>",
+               "name": "<one_of: walk_forward | walk_backward | make_bows | slating_heads | wave_hands>",
                "step": <integer 1 to 10, default 1 if not specified in voice command>
              },
              ...
