@@ -51,7 +51,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << 'EOF'
             set -e
-            cd /home/norman/SEP
+            cd /home/ferr_/Documents/SEP
             # Chỉ pull & up service alpha-backend để không ảnh hưởng service khác
             docker compose pull alpha-backend
             docker compose up -d alpha-backend
