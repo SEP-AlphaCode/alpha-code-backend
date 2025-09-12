@@ -3,6 +3,7 @@
 Keeping the large language model prompt in a dedicated module makes it easier
 to maintain, reuse, test, and potentially localize.
 """
+
 from pathlib import Path
 from textwrap import dedent
 from typing import Final
@@ -17,8 +18,9 @@ PROMPT_TEMPLATE: Final[str] = dedent(
     Input: "$INPUT_TEXT"
 
     Language Rules:
-    - If the user speaks in Vietnamese, respond in Vietnamese
-    - If the user speaks in English, respond in English
+    - If the user speaks in Vietnamese, respond in Vietnamese. Set the "lang" field in the JSON as "vi"
+    - If the user speaks in English, respond in English. Set the "lang" field in the JSON as "en"
+    - Do not speak in any other languages
     - Maintain the same language throughout your response
 
     Rules:
@@ -36,6 +38,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        Always return this exact format (respond in the same language as user input):
        {
          "type": "qr_code",
+         "lang": ...,
          "data": {
            "text": "Please show the QR code in front of me to take a picture. Now I will take the picture." (English) OR "Vui lòng đưa mã QR ra trước mặt tôi để chụp ảnh. Bây giờ tôi sẽ chụp ảnh." (Vietnamese)
          }
@@ -44,6 +47,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
       Always return this exact format (respond in the same language as user input):
        {
          "type": "osmo_card",
+         "lang": ...,
          "data": {
            "text": "Please place the OSMO card under my feet in my view. Now I will bend down to scan it." (English) OR "Vui lòng đặt thẻ OSMO dưới chân tôi trong tầm nhìn của tôi. Bây giờ tôi sẽ cúi xuống để quét thẻ." (Vietnamese)
          }
@@ -54,6 +58,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
       - Use this strict JSON format:
       {
         "type": "skill_helper",
+        "lang": ...,
         "data": {
             "code": <One of the id in the supplied CSV list>
         }
@@ -65,6 +70,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - Use this strict JSON format:
        {
          "type": "<one_of: greeting | study | dance | dance-with-music | talk | unknown>",
+         "lang": ...,
          "data": {
            "text": "<your response in the same language as user input>"
          }
@@ -74,6 +80,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        Always return this exact format:
         {
          "type": "extended_action",
+         "lang": ...,
          "data": {
            "actions": [
              {
@@ -96,8 +103,9 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - Use this strict JSON format:
        {
         "type": "object_detect_start",
+        "lang": ...,
         "data": {
-            "text": "<Your response in the same language as user input when the user wants you to detect an object>"
+            "text": "<Ask the user to put the object in front of you>"
         }
       }
       
@@ -117,8 +125,10 @@ def build_prompt(input_text: str) -> str:
 
     Escapes double quotes in the input to keep JSON inside prompt consistent.
     """
-    safe_text = input_text.replace("\"", "\\\"")
-    return PROMPT_TEMPLATE.replace("$INPUT_TEXT", safe_text).replace("$SKILL_LIST", SKILLS_TEXT)
+    safe_text = input_text.replace('"', '\\"')
+    return PROMPT_TEMPLATE.replace("$INPUT_TEXT", safe_text).replace(
+        "$SKILL_LIST", SKILLS_TEXT
+    )
 
 
 __all__ = ["build_prompt", "PROMPT_TEMPLATE"]
