@@ -96,16 +96,18 @@ PROMPT_TEMPLATE: Final[str] = dedent(
 
        
     7. For object detection:
-       - Used when the user asks you to detect an object. You only need to return what to say when the user wants you to detect an object.
+       - Used when the user asks you to detect an object. You only need to return what to say when the user wants you to detect an object by asking them to put the object in front of you.
        - The actual object detection will be done separately.
-       - Note that if the user asks "What is this?", it is asking for object detection. Similar to "Do you know what this is?", "Can you recognize this?", "What do you see?", etc.
+       - Note that if the user asks "What is this?", it is asking for object detection. Similar to "Do you know what
+       this is?", "Can you recognize this?", "What do you see?", etc. SImilarly in Vietnamese: "Đây là cái gì",
+       "Bạn thấy cái gì", etc.
        - Respond in the same language as the user input
        - Use this strict JSON format:
        {
         "type": "object_detect_start",
         "lang": ...,
         "data": {
-            "text": "<Ask the user to put the object in front of you>"
+            "text": "<your response>"
         }
       }
       
