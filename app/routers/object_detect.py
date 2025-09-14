@@ -7,7 +7,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from ultralytics import YOLO
 import cv2
 import numpy as np
-from models.midas.dpt_depth import DPTDepthModel
+from models.midas import DPTDepthModel
 import torchvision.transforms as transforms
 from app.models.object_detect import DetectResponse, DetectClosestResponse, Detection
 
