@@ -28,4 +28,5 @@ timm
 sqlalchemy[asyncio]
 asyncpg
 psycopg2-binary
-alembic        
+alembic
+midas
