@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/Dockerfile">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/Dockerfile" />
+              <option name="originalContent" value="FROM python:3.10-slim&#10;&#10;WORKDIR /app&#10;&#10;RUN apt-get update &amp;&amp; apt-get install -y \&#10;    build-essential \&#10;    ffmpeg \&#10;    libsndfile1 \&#10;    &amp;&amp; rm -rf /var/lib/apt/lists/*&#10;&#10;COPY requirements.txt .&#10;RUN pip install --no-cache-dir --upgrade pip \&#10;    &amp;&amp; pip install --no-cache-dir -r requirements.txt&#10;&#10;COPY . .&#10;&#10;ENV PYTHONPATH=&quot;/app/midas_repo:/app&quot;&#10;&#10;EXPOSE 8082&#10;&#10;CMD [&quot;uvicorn&quot;, &quot;main:app&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot;, &quot;8082&quot;]" />
+              <option name="updatedContent" value="FROM python:3.10-slim&#13;&#10;&#13;&#10;WORKDIR /app&#13;&#10;&#13;&#10;RUN apt-get update &amp;&amp; apt-get install -y \&#13;&#10;    build-essential \&#13;&#10;    ffmpeg \&#13;&#10;    libsndfile1 \&#13;&#10;    &amp;&amp; rm -rf /var/lib/apt/lists/*&#13;&#10;&#13;&#10;COPY requirements.txt .&#13;&#10;RUN pip install --no-cache-dir --upgrade pip \&#13;&#10;    &amp;&amp; pip install --no-cache-dir -r requirements.txt&#13;&#10;&#13;&#10;COPY . .&#13;&#10;&#13;&#10;ENV PYTHONPATH=&quot;/app&quot;&#13;&#10;&#13;&#10;EXPOSE 8082&#13;&#10;&#13;&#10;CMD [&quot;uvicorn&quot;, &quot;main:app&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot;, &quot;8082&quot;]" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

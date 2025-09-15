@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 from models.midas.dpt_depth import DPTDepthModel
 import torchvision.transforms as transforms
-from app.models.object_detect import DetectResponse, DetectClosestResponse, Detection
+from app.models.object_detect import DetectClosestResponse, Detection
 
 router = APIRouter()
 

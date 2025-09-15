@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 COPY . .
 
-ENV PYTHONPATH="/app/midas_repo:/app"
+ENV PYTHONPATH="/app"
 
 EXPOSE 8082
 
