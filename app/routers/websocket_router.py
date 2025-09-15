@@ -4,7 +4,6 @@ from pydantic import BaseModel
 from typing import Dict
 import json
 
-from app.services.robot_sdk_control.dance_service import run_dances_for_serial
 from app.services.socket.robot_websocket_service import robot_websocket_info_service
 from app.services.socket.connection_manager import connection_manager
 
