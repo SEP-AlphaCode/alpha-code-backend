@@ -53,6 +53,7 @@ jobs:
             set -e
             cd /home/norman/SEP
             # Chỉ pull & up service alpha-backend để không ảnh hưởng service khác
+            docker compose down alpha-backend
             docker compose pull alpha-backend
             docker compose up -d alpha-backend
           EOF
