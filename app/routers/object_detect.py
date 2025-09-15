@@ -1,5 +1,10 @@
 # app/routers/object_router.py
 from typing import List
+import sys
+import os
+
+# Add the models directory to Python path for import resolution
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'models'))
 
 import torch
 from PIL import Image
@@ -7,7 +12,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from ultralytics import YOLO
 import cv2
 import numpy as np
-from models.midas.dpt_depth import DPTDepthModel
+from midas.dpt_depth import DPTDepthModel
 import torchvision.transforms as transforms
 from app.models.object_detect import DetectClosestResponse, Detection
 
