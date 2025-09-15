@@ -3,8 +3,14 @@ from typing import List
 import sys
 import os
 
-# Add the models directory to Python path for import resolution
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'models'))
+# Add multiple paths to ensure midas can be found in any environment
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(os.path.dirname(current_dir))
+models_dir = os.path.join(project_root, 'models')
+
+# Add paths for import resolution
+sys.path.insert(0, models_dir)
+sys.path.insert(0, project_root)
 
 import torch
 from PIL import Image
@@ -12,7 +18,22 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from ultralytics import YOLO
 import cv2
 import numpy as np
-from midas.dpt_depth import DPTDepthModel
+
+# Try multiple import approaches for maximum compatibility
+try:
+    from midas.dpt_depth import DPTDepthModel
+except ImportError:
+    try:
+        from models.midas.dpt_depth import DPTDepthModel
+    except ImportError:
+        # Absolute path import as last resort
+        import importlib.util
+        midas_path = os.path.join(models_dir, 'midas', 'dpt_depth.py')
+        spec = importlib.util.spec_from_file_location("dpt_depth", midas_path)
+        dpt_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(dpt_module)
+        DPTDepthModel = dpt_module.DPTDepthModel
+
 import torchvision.transforms as transforms
 from app.models.object_detect import DetectClosestResponse, Detection
 
