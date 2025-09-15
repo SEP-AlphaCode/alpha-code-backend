@@ -52,9 +52,18 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << 'EOF'
             set -e
             cd /home/norman/SEP
-            # Chỉ pull & up service alpha-backend để không ảnh hưởng service khác
-            docker compose down alpha-backend
+
+            echo "🧹 Dọn container & image cũ..."
+            docker compose down alpha-backend || true
+            docker image prune -af
+            docker container prune -f
+
+            echo "⬇️ Pull image mới..."
             docker compose pull alpha-backend
+
+            echo "🚀 Khởi động lại alpha-backend..."
             docker compose up -d alpha-backend
+
+            echo "✅ Triển khai hoàn tất!"
           EOF
 
