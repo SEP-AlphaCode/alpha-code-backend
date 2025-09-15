@@ -3,10 +3,23 @@ from typing import List
 import sys
 import os
 
-# Add multiple paths to ensure midas can be found in any environment
+# Handle different directory structures between local and deployed environments
 current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.dirname(os.path.dirname(current_dir))
-models_dir = os.path.join(project_root, 'models')
+
+# Check if we're in a nested app/app structure (deployed) or app structure (local)
+if current_dir.endswith('/app/app/routers') or current_dir.endswith('\\app\\app\\routers'):
+    # Deployed environment: /app/app/routers -> /app/models
+    project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_dir)))
+    models_dir = os.path.join(project_root, 'models')
+else:
+    # Local environment: project_root/app/routers -> project_root/models
+    project_root = os.path.dirname(os.path.dirname(current_dir))
+    models_dir = os.path.join(project_root, 'models')
+
+print(f"DEBUG: Current dir: {current_dir}")
+print(f"DEBUG: Project root: {project_root}")
+print(f"DEBUG: Models dir: {models_dir}")
+print(f"DEBUG: Models dir exists: {os.path.exists(models_dir)}")
 
 # Add paths for import resolution
 sys.path.insert(0, models_dir)
@@ -21,18 +34,36 @@ import numpy as np
 
 # Try multiple import approaches for maximum compatibility
 try:
+    print("DEBUG: Trying first import approach...")
     from midas.dpt_depth import DPTDepthModel
-except ImportError:
+    print("DEBUG: First import successful")
+except ImportError as e1:
+    print(f"DEBUG: First import failed: {e1}")
     try:
+        print("DEBUG: Trying second import approach...")
         from models.midas.dpt_depth import DPTDepthModel
-    except ImportError:
-        # Absolute path import as last resort
-        import importlib.util
-        midas_path = os.path.join(models_dir, 'midas', 'dpt_depth.py')
-        spec = importlib.util.spec_from_file_location("dpt_depth", midas_path)
-        dpt_module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(dpt_module)
-        DPTDepthModel = dpt_module.DPTDepthModel
+        print("DEBUG: Second import successful")
+    except ImportError as e2:
+        print(f"DEBUG: Second import failed: {e2}")
+        try:
+            print("DEBUG: Trying third import approach (absolute path)...")
+            # Absolute path import as last resort
+            import importlib.util
+            midas_path = os.path.join(models_dir, 'midas', 'dpt_depth.py')
+            print(f"DEBUG: Trying to load from: {midas_path}")
+            print(f"DEBUG: File exists: {os.path.exists(midas_path)}")
+
+            if os.path.exists(midas_path):
+                spec = importlib.util.spec_from_file_location("dpt_depth", midas_path)
+                dpt_module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(dpt_module)
+                DPTDepthModel = dpt_module.DPTDepthModel
+                print("DEBUG: Third import successful")
+            else:
+                raise ImportError(f"Could not find midas module at {midas_path}")
+        except Exception as e3:
+            print(f"DEBUG: All import attempts failed. Errors: {e1}, {e2}, {e3}")
+            raise ImportError(f"Could not import DPTDepthModel. Tried multiple approaches. Last error: {e3}")
 
 import torchvision.transforms as transforms
 from app.models.object_detect import DetectClosestResponse, Detection
