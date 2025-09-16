@@ -38,11 +38,19 @@ polly_client = boto3.client(
     region_name=AWS_REGION
 )
 
-async def convert_audio_to_wav_and_upload(file: UploadFile):
+async def convert_audio_to_wav_and_upload(file: UploadFile, start_time: Optional[float] = None, end_time: Optional[float] = None):
     if not shutil.which("ffmpeg"):
         raise RuntimeError("ffmpeg is not installed or not in PATH. Please install ffmpeg.")
     if not shutil.which("ffprobe"):
         raise RuntimeError("ffprobe is required to calculate duration. Please install ffmpeg (includes ffprobe).")
+    
+    # Validate time parameters
+    if start_time is not None and start_time < 0:
+        raise ValueError("start_time must be non-negative")
+    if end_time is not None and end_time < 0:
+        raise ValueError("end_time must be non-negative")
+    if start_time is not None and end_time is not None and start_time >= end_time:
+        raise ValueError("start_time must be less than end_time")
 
     # Lưu file upload tạm
     suffix = os.path.splitext(file.filename)[1].lower()
@@ -56,14 +64,30 @@ async def convert_audio_to_wav_and_upload(file: UploadFile):
         temp_out_path = temp_out.name
 
     try:
-        # Convert sang WAV bằng ffmpeg
-        subprocess.run([
-            "ffmpeg", "-y",
-            "-i", temp_in_path,
-            "-ar", "16000",    # sample rate 16kHz (tùy chỉnh)
+        # Build ffmpeg command with optional trimming
+        ffmpeg_cmd = ["ffmpeg", "-y", "-i", temp_in_path]
+        
+        # Add start time if specified
+        if start_time is not None:
+            ffmpeg_cmd.extend(["-ss", str(start_time)])
+        
+        # Add end time if specified (calculate duration if both start and end are provided)
+        if end_time is not None:
+            if start_time is not None:
+                duration = end_time - start_time
+                ffmpeg_cmd.extend(["-t", str(duration)])
+            else:
+                ffmpeg_cmd.extend(["-t", str(end_time)])
+        
+        # Add output format settings
+        ffmpeg_cmd.extend([
+            "-ar", "16000",    # sample rate 16kHz
             "-ac", "1",        # mono
             temp_out_path
-        ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        ])
+        
+        # Convert to WAV with optional trimming
+        subprocess.run(ffmpeg_cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         # Tính duration bằng ffprobe
         result = subprocess.run([
