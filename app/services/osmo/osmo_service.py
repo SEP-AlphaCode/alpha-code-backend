@@ -107,9 +107,9 @@ async def card_to_action(card: ActionCard) -> dict:
         else:
             action_name = db_card.name  # fallback
 
-    # Thêm hướng nếu có
-    if card.direction and card.direction.direction:
-        action_name += "_" + card.direction.direction
+    # # Thêm hướng nếu có
+    # if card.direction and card.direction.direction:
+    #     action_name += "_" + card.direction.direction
 
     return {
         "action": action_name,
