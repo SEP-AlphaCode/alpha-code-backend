@@ -1,6 +1,7 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
+import json
 
 from app.routers.osmo_router import router as osmo_router
 from app.routers.audio_router import router as audio_router
@@ -12,6 +13,7 @@ from app.routers.marker_router import router as marker_router
 from app.routers.object_detect import router as object_router
 from app.routers.robot_info_router import router as robot_info_router
 from app.services.socket.connection_manager import connection_manager
+from app.services.socket.robot_websocket_service import robot_websocket_info_service
 from config.config import settings
 
 # Build FastAPI kwargs dynamically to avoid invalid empty URL in license
@@ -53,11 +55,32 @@ async def websocket_alias(websocket: WebSocket, serial: str):
     try:
         while True:
             data = await websocket.receive_text()
-            print(f"[Alias /ws] Client said: {data}")
+            
+            # Process robot messages
+            try:
+                message_data = json.loads(data)
+                message_type = message_data.get('type')
+                
+                # Handle direct system info messages from robot
+                if message_type == 'get_system_info' and 'data' in message_data:
+                    # Convert to response format that the service expects
+                    response_message = {
+                        'type': 'system_info_response',
+                        'data': message_data['data']
+                    }
+                    robot_websocket_info_service.handle_robot_response(response_message)
+                else:
+                    # Handle other message types
+                    robot_websocket_info_service.handle_robot_response(message_data)
+                    
+            except json.JSONDecodeError:
+                pass
+            except Exception as e:
+                pass
+                
     except WebSocketDisconnect:
         connection_manager.disconnect(serial)
     except Exception as e:
-        print(f"WebSocket alias error: {e}")
         connection_manager.disconnect(serial)
 
 

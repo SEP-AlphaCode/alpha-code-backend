@@ -30,18 +30,14 @@ async def close_connection(serial: str):
 @router.websocket("/ws/{serial}")
 async def websocket_endpoint(websocket: WebSocket, serial: str):
     try:
-        print("Incoming WS request:", websocket.url)
-        print("Parsed serial:", serial)
         if not serial:
             await websocket.close(code=1008)  # Policy Violation
             return
 
         await manager.connect(websocket, serial)
-        print(f"Robot {serial} connected")
 
         while True:
             data = await websocket.receive_text()
-            print(f"{serial} -> {data}")
             
             # Xử lý message từ robot
             try:
@@ -49,16 +45,14 @@ async def websocket_endpoint(websocket: WebSocket, serial: str):
                 # Kiểm tra nếu là response cho system info request
                 robot_websocket_info_service.handle_robot_response(message_data)
             except json.JSONDecodeError:
-                print(f"Invalid JSON from robot {serial}: {data}")
+                pass
             except Exception as e:
-                print(f"Error processing message from robot {serial}: {e}")
+                pass
 
     except WebSocketDisconnect:
-        print(f"Robot {serial} disconnected")
         manager.disconnect(serial)
 
     except Exception as e:
-        print(f"WebSocket error for {serial}: {e}")
         manager.disconnect(serial)
 
 

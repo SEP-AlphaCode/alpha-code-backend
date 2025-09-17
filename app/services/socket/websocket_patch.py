@@ -18,7 +18,6 @@ def apply_websocket_patch():
         # Find the class with the alive property that's causing issues
         for cls in classes:
             if hasattr(cls, 'alive'):
-                print(f"Found websocket class: {cls.__name__}")
 
                 # Store the original alive property
                 original_alive = cls.alive
@@ -60,11 +59,9 @@ def apply_websocket_patch():
                 # Apply the patch
                 patched_alive = create_patched_alive()
                 cls.alive = property(patched_alive)
-                print(f"Applied websocket patch to {cls.__name__}")
 
     except Exception as e:
         logging.error(f"Failed to apply websocket patch: {e}")
-        print(f"Websocket patch failed: {e}")
 
 # Auto-apply patch when module is imported
 if __name__ != "__main__":

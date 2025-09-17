@@ -22,7 +22,6 @@ async def transcribe_audio(data: ASRData):
     """
     try:
         resp = await transcribe_bytes(data)
-        print(resp.text)
         json_result = await process_text(resp.text)
         return json_result
     except Exception as e:

@@ -37,6 +37,7 @@ class RobotWebSocketInfoService:
                     'success': False,
                     'data': {
                         'battery_level': None,
+                        'is_charging': False,
                         'firmware_version': None,
                         'ctrl_version': None,
                         'serial_number': None
@@ -72,6 +73,7 @@ class RobotWebSocketInfoService:
                     'success': False,
                     'data': {
                         'battery_level': None,
+                        'is_charging': False,
                         'firmware_version': None,
                         'ctrl_version': None,
                         'serial_number': None
@@ -87,14 +89,18 @@ class RobotWebSocketInfoService:
                 if request_id in self.pending_requests:
                     response_data = self.pending_requests[request_id]['response']
                     del self.pending_requests[request_id]
-                    
+
+                    print(f"Received response from robot {serial}: {response_data}")
+
                     if response_data:
-                        return self.parse_robot_response(response_data)
+                        result = self.parse_robot_response(response_data)
+                        return result
                     else:
                         return {
                             'success': False,
                             'data': {
                                 'battery_level': None,
+                                'is_charging': False,
                                 'firmware_version': None,
                                 'ctrl_version': None,
                                 'serial_number': None
@@ -106,6 +112,7 @@ class RobotWebSocketInfoService:
                         'success': False,
                         'data': {
                             'battery_level': None,
+                            'is_charging': False,
                             'firmware_version': None,
                             'ctrl_version': None,
                             'serial_number': None
@@ -122,6 +129,7 @@ class RobotWebSocketInfoService:
                     'success': False,
                     'data': {
                         'battery_level': None,
+                        'is_charging': False,
                         'firmware_version': None,
                         'ctrl_version': None,
                         'serial_number': None
@@ -135,6 +143,7 @@ class RobotWebSocketInfoService:
                 'success': False,
                 'data': {
                     'battery_level': None,
+                    'is_charging': False,
                     'firmware_version': None,
                     'ctrl_version': None,
                     'serial_number': None
@@ -143,15 +152,28 @@ class RobotWebSocketInfoService:
             }
     
     @staticmethod
-    def parse_battery_info(battery_info: str) -> Optional[int]:
-        """Parse batteryInfo string để lấy mức pin (level)."""
+    def parse_battery_info(battery_info: str) -> Dict[str, Any]:
+        """Parse batteryInfo string để lấy mức pin và trạng thái sạc."""
         try:
+            battery_data = {
+                'level': None,
+                'is_charging': False
+            }
+            
             for line in battery_info.splitlines():
-                if line.strip().startswith("level:"):
-                    return int(line.split(":")[1].strip())
+                line = line.strip()
+                if line.startswith("level:"):
+                    battery_data['level'] = int(line.split(":")[1].strip())
+                elif line.startswith("status:"):
+                    status = int(line.split(":")[1].strip())
+                    battery_data['is_charging'] = (status == 2)  # status = 2 nghĩa là đang sạc
+            
+            return battery_data
         except Exception:
-            return None
-        return None
+            return {
+                'level': None,
+                'is_charging': False
+            }
 
     def parse_robot_response(self, response_data: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -160,14 +182,18 @@ class RobotWebSocketInfoService:
         try:
             data = response_data.get('data', {})
 
-            battery_level = None
+            battery_info = {
+                'level': None,
+                'is_charging': False
+            }
             if "batteryInfo" in data:
-                battery_level = self.parse_battery_info(data.get("batteryInfo", ""))
+                battery_info = self.parse_battery_info(data.get("batteryInfo", ""))
 
             return {
                 'success': True,
                 'data': {
-                    'battery_level': battery_level,
+                    'battery_level': battery_info['level'],
+                    'is_charging': battery_info['is_charging'],
                     'firmware_version': data.get('firmwareVersion'),
                     'ctrl_version': data.get('ctrlVersion'),
                     'serial_number': data.get('serialNumber')
@@ -181,6 +207,7 @@ class RobotWebSocketInfoService:
                 'success': False,
                 'data': {
                     'battery_level': None,
+                    'is_charging': False,
                     'firmware_version': None,
                     'ctrl_version': None,
                     'serial_number': None
@@ -241,6 +268,7 @@ async def get_robot_info_via_websocket(serial: str, timeout: int = 10) -> Dict[s
     """
     # Cleanup old requests trước khi thực hiện request mới
     robot_websocket_info_service.cleanup_old_requests()
-    
+    result = await robot_websocket_info_service.send_info_request(serial, timeout)
+    logging.info(f"get_robot_info_via_websocket result for {serial}: {result}")
     # Gửi request và chờ response
-    return await robot_websocket_info_service.send_info_request(serial, timeout)
+    return result

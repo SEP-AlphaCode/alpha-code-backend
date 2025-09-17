@@ -50,7 +50,8 @@ class ConnectionManager:
         """Ngắt kết nối robot"""
         if serial in self.clients:
             del self.clients[serial]
-            self.logger.info(f"Robot {serial} disconnected. Total: {len(self.clients)}")
+        else:
+            self.logger.warning(f"Attempted to disconnect robot {serial} but it was not connected")
     
     async def send_to_robot(self, serial: str, message: str) -> bool:
         """Gửi message tới robot"""
@@ -62,6 +63,8 @@ class ConnectionManager:
             except Exception as e:
                 self.logger.error(f"Send error to {serial}: {e}")
                 self.disconnect(serial)
+        else:
+            self.logger.warning(f"Cannot send message to {serial}: robot not connected")
         return False
     
     @property

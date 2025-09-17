@@ -6,21 +6,12 @@ API endpoint để lấy thông tin robot qua WebSocket
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse
 from typing import Optional
+import logging
 
 from app.services.socket.robot_websocket_service import get_robot_info_via_websocket
 
 router = APIRouter()
-
-
-def parse_battery_info(battery_info: str) -> Optional[int]:
-    """Parse batteryInfo string để lấy mức pin (level)."""
-    try:
-        for line in battery_info.splitlines():
-            if line.strip().startswith("level:"):
-                return int(line.split(":")[1].strip())
-    except Exception:
-        return None
-    return None
+logger = logging.getLogger(__name__)
 
 
 @router.post("/info/{serial}")
@@ -31,6 +22,7 @@ async def get_robot_info(
     """
     Lấy 4 thông tin cơ bản của robot qua WebSocket:
     - battery_level: Mức pin (%)  
+    - is_charging: Trạng thái sạc (true/false)
     - firmware_version: Phiên bản firmware
     - ctrl_version: Phiên bản control
     - serial_number: Serial number
@@ -38,6 +30,8 @@ async def get_robot_info(
     Robot phải đã kết nối WebSocket trước khi gọi API này.
     """
     try:
+        logger.info(f"API call: get_robot_info for serial {serial}, timeout {timeout}s")
+        
         # Validate input
         if not serial or len(serial.strip()) < 3:
             raise HTTPException(
@@ -52,9 +46,13 @@ async def get_robot_info(
             )
         
         # Get robot info via WebSocket
+        logger.info(f"Calling get_robot_info_via_websocket for {serial}")
         result = await get_robot_info_via_websocket(serial.strip(), timeout)
+        logger.info(f"get_robot_info_via_websocket result for {serial}: {result}")
+        logger.info(f"WebSocket result for {serial}: success={result.get('success')}, message={result.get('message')}")
 
         if not result.get("success"):
+            logger.warning(f"Failed to get robot info for {serial}: {result.get('message')}")
             return JSONResponse(
                 content={
                     "status": "error",
@@ -64,15 +62,19 @@ async def get_robot_info(
                 status_code=400
             )
 
-        data = result.get("data", {})
-        battery_level = parse_battery_info(data.get("batteryInfo", ""))
+        data = result.get('data')
+        battery_level = data.get("battery_level")  # Already parsed by service
+        is_charging = data.get("is_charging", False)  # Charging status
 
         response_data = {
-            "serial_number": data.get("serialNumber"),
-            "firmware_version": data.get("firmwareVersion"),
-            "ctrl_version": data.get("ctrlVersion"),
+            "serial_number": data.get('serial_number'),
+            "firmware_version": data.get('firmware_version'),
+            "ctrl_version": data.get('ctrl_version'),
             "battery_level": battery_level,
+            "is_charging": is_charging,
         }
+        
+        logger.info(f"Returning robot info for {serial}: battery={battery_level}%, charging={is_charging}, serial={data.get('serial_number')}")
 
         return JSONResponse(
             content={
@@ -86,6 +88,7 @@ async def get_robot_info(
     except HTTPException:
         raise
     except Exception as e:
+        logger.error(f"Internal server error getting robot info for {serial}: {str(e)}")
         raise HTTPException(
             status_code=500,
             detail=f"Internal server error: {str(e)}"
