@@ -22,23 +22,34 @@ class ConnectionManager:
         Kết nối WebSocket với robot
         Trả về True nếu kết nối thành công, False nếu từ chối
         """
-        # Kiểm tra nếu serial đã tồn tại
+        # Kiểm tra nếu serial đã tồn tại - ATOMIC CHECK
         if serial in self.clients:
             self.logger.warning(f"Từ chối kết nối từ robot {serial}, đã có kết nối active")
             
-            # Thông báo cho client lý do từ chối
+            # Thông báo cho client lý do từ chối mà không ảnh hưởng đến kết nối hiện tại
             try:
-                await websocket.close(code=1008)  # Policy Violation
+                # First try to send a message explaining the rejection
+                await websocket.accept()  # Accept first to send message
+                await websocket.send_text(f"Connection rejected: Robot {serial} is already connected")
+                await websocket.close(code=1008, reason="Robot with this serial is already connected")
             except Exception as e:
                 self.logger.error(f"Lỗi khi từ chối kết nối: {e}")
+                try:
+                    await websocket.close(code=1008)
+                except:
+                    pass  # Ignore if already closed
             
             return False
         
         # Nếu serial chưa tồn tại, cho phép kết nối
-        await websocket.accept()
-        self.clients[serial] = websocket
-        self.logger.info(f"Robot {serial} connected. Total: {len(self.clients)}")
-        return True
+        try:
+            await websocket.accept()
+            self.clients[serial] = websocket
+            self.logger.info(f"Robot {serial} connected. Total: {len(self.clients)}")
+            return True
+        except Exception as e:
+            self.logger.error(f"Lỗi khi chấp nhận kết nối: {e}")
+            return False
     
     def disconnect(self, serial: str):
         """Ngắt kết nối robot"""
