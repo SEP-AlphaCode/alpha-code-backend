@@ -22,14 +22,14 @@ class ConnectionManager:
         Kết nối WebSocket với robot
         Trả về True nếu kết nối thành công, False nếu từ chối
         """
-        # Kiểm tra nếu serial đã tồn tại và kết nối vẫn active
+        # Kiểm tra nếu serial đã tồn tại
         if serial in self.clients:
             existing_ws = self.clients[serial]
             
             # Kiểm tra xem kết nối hiện tại có còn active không
             try:
                 # Nếu không có lỗi, kết nối vẫn active
-                self.logger.warning(f"Từ chối kết nối từ robot {serial}, đã có kết nối active")
+                print(f"Từ chối kết nối từ robot {serial}, đã có kết nối active")
                 
                 # Thông báo cho client lý do từ chối
                 try:
@@ -37,12 +37,11 @@ class ConnectionManager:
                 except Exception as e:
                     self.logger.error(f"Lỗi khi từ chối kết nối: {e}")
                 return False
-            except Exception:
-                # Nếu có lỗi, kết nối cũ đã bị ngắt nhưng chưa được dọn dẹp
-                self.logger.info(f"Cleaning up stale connection for {serial}")
-                self.disconnect(serial)
-            print(self.clients)
             
+            except Exception as e:
+                # Nếu có lỗi, kết nối cũ đã bị ngắt nhưng chưa được dọn dẹp
+                self.logger.info(f"Cleaning up stale connection for {serial}: {e}")
+                self.disconnect(serial)
         # Nếu serial chưa tồn tại hoặc kết nối cũ đã bị ngắt, cho phép kết nối mới
         await websocket.accept()
         self.clients[serial] = websocket
