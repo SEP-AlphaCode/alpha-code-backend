@@ -28,11 +28,6 @@ class ConnectionManager:
             
             # Thông báo cho client lý do từ chối
             try:
-                error_msg = json.dumps({
-                    "type": "error",
-                    "message": f"Robot {serial} đã có kết nối active. Chỉ cho phép một kết nối duy nhất."
-                })
-                await websocket.send_text(error_msg)
                 await websocket.close(code=1008)  # Policy Violation
             except Exception as e:
                 self.logger.error(f"Lỗi khi từ chối kết nối: {e}")
