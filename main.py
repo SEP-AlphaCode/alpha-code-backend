@@ -51,10 +51,16 @@ app.include_router(robot_info_router, prefix="/robot", tags=["Robot Info"])
 # Backward-compatible alias path for websocket without /websocket prefix
 @app.websocket("/ws/{serial}")
 async def websocket_alias(websocket: WebSocket, serial: str):
-    await connection_manager.connect(websocket, serial)
+    # Accept the connection first (the connect method will handle acceptance)
+    success = await connection_manager.connect(websocket, serial)
+    
+    if not success:
+        return  # Connection was rejected
+    
     try:
         while True:
             data = await websocket.receive_text()
+            print(f"[{websocket.client}]: {data}")
             
             # Process robot messages
             try:
@@ -63,24 +69,23 @@ async def websocket_alias(websocket: WebSocket, serial: str):
                 
                 # Handle direct system info messages from robot
                 if message_type == 'get_system_info' and 'data' in message_data:
-                    # Convert to response format that the service expects
                     response_message = {
                         'type': 'system_info_response',
                         'data': message_data['data']
                     }
                     robot_websocket_info_service.handle_robot_response(response_message)
                 else:
-                    # Handle other message types
                     robot_websocket_info_service.handle_robot_response(message_data)
                     
             except json.JSONDecodeError:
                 pass
             except Exception as e:
                 pass
-                
     except WebSocketDisconnect:
+        print(f"WebSocket disconnected: {websocket.client}")
         connection_manager.disconnect(serial)
     except Exception as e:
+        print(f"WebSocket error: {websocket.client}, {e}")
         connection_manager.disconnect(serial)
 
 
