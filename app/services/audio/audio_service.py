@@ -101,7 +101,7 @@ async def convert_audio_to_wav_and_upload(file: UploadFile, start_time: Optional
 
         # Tên file khi upload lên S3
         timestamp = int(time.time() * 1000)
-        download_name = os.path.splitext(file.filename)[0] + "_" + str(timestamp) + ".wav"
+        download_name = os.path.splitext(file.filename)[0] + "_" + str(start_time) + "_" + str(end_time)
         s3_key = f"music/{download_name}"
 
         # Upload lên S3
