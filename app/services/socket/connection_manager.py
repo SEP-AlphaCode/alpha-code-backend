@@ -28,8 +28,6 @@ class ConnectionManager:
             
             # Kiểm tra xem kết nối hiện tại có còn active không
             try:
-                # Gửi ping để kiểm tra kết nối
-                await existing_ws.send_text("ping")
                 # Nếu không có lỗi, kết nối vẫn active
                 self.logger.warning(f"Từ chối kết nối từ robot {serial}, đã có kết nối active")
                 
@@ -38,13 +36,13 @@ class ConnectionManager:
                     await websocket.close(code=1008, reason="Robot with this serial is already connected")
                 except Exception as e:
                     self.logger.error(f"Lỗi khi từ chối kết nối: {e}")
-                await existing_ws.send_text("pong")
                 return False
             except Exception:
                 # Nếu có lỗi, kết nối cũ đã bị ngắt nhưng chưa được dọn dẹp
                 self.logger.info(f"Cleaning up stale connection for {serial}")
                 self.disconnect(serial)
-        
+            print(self.clients)
+            
         # Nếu serial chưa tồn tại hoặc kết nối cũ đã bị ngắt, cho phép kết nối mới
         await websocket.accept()
         self.clients[serial] = websocket
