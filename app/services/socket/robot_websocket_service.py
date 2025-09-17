@@ -142,41 +142,39 @@ class RobotWebSocketInfoService:
                 'message': f'Service error: {str(e)}'
             }
     
+    @staticmethod
+    def parse_battery_info(battery_info: str) -> Optional[int]:
+        """Parse batteryInfo string để lấy mức pin (level)."""
+        try:
+            for line in battery_info.splitlines():
+                if line.strip().startswith("level:"):
+                    return int(line.split(":")[1].strip())
+        except Exception:
+            return None
+        return None
+
     def parse_robot_response(self, response_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Parse response từ robot và trích xuất 4 thông tin cần thiết
-        
-        Args:
-            response_data: Raw response từ robot
-            
-        Returns:
-            Dict chứa 4 thông tin đã parse
+        Parse response từ robot và trích xuất 4 thông tin cần thiết.
         """
         try:
-            # Giả sử robot trả về format:
-            # {
-            #   "type": "system_info_response",
-            #   "data": {
-            #     "battery_level": 85,
-            #     "firmware_version": "v2.1.0", 
-            #     "ctrl_version": "v1.5.2",
-            #     "serial_number": "AM123456789"
-            #   }
-            # }
-            
             data = response_data.get('data', {})
-            
+
+            battery_level = None
+            if "batteryInfo" in data:
+                battery_level = self.parse_battery_info(data.get("batteryInfo", ""))
+
             return {
                 'success': True,
                 'data': {
-                    'battery_level': data.get('battery_level'),
-                    'firmware_version': data.get('firmware_version'),
-                    'ctrl_version': data.get('ctrl_version'),
-                    'serial_number': data.get('serial_number')
+                    'battery_level': battery_level,
+                    'firmware_version': data.get('firmwareVersion'),
+                    'ctrl_version': data.get('ctrlVersion'),
+                    'serial_number': data.get('serialNumber')
                 },
                 'message': 'Robot info retrieved successfully via WebSocket'
             }
-            
+
         except Exception as e:
             self.logger.error(f"Error parsing robot response: {e}")
             return {
@@ -193,20 +191,17 @@ class RobotWebSocketInfoService:
     def handle_robot_response(self, message_data: Dict[str, Any]):
         """
         Xử lý response từ robot (được gọi từ WebSocket handler)
-        
-        Args:
-            message_data: Message data từ robot
         """
         try:
             message_type = message_data.get('type')
-            request_id = message_data.get('request_id')
-            
-            if message_type == 'system_info_response' and request_id:
-                if request_id in self.pending_requests:
-                    # Lưu response và trigger event
+
+            # Robot thực tế trả về "status_res", không có request_id
+            if message_type in ('system_info_response', 'status_res'):
+                # Với message không có request_id, gán tất cả pending_requests đều resolve
+                for request_id, pending in list(self.pending_requests.items()):
                     self.pending_requests[request_id]['response'] = message_data
                     self.pending_requests[request_id]['event'].set()
-                    
+
         except Exception as e:
             self.logger.error(f"Error handling robot response: {e}")
     
