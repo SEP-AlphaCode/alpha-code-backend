@@ -1,8 +1,10 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Dict
 import json
+
+from starlette.status import HTTP_200_OK
 
 from app.services.socket.robot_websocket_service import robot_websocket_info_service
 from app.services.socket.connection_manager import connection_manager
@@ -15,7 +17,15 @@ class Command(BaseModel):
 
 # Sử dụng connection manager từ service
 manager = connection_manager
-
+@router.get("/ws/disconnect/{serial}")
+async def close_connection(serial: str):
+    try:
+        if serial in manager.clients:
+            await manager.clients[serial].close(reason="Disconnected by choice")
+            manager.disconnect(serial)
+        return "Ok"
+    except Exception as e:
+        raise HTTPException(500, e)
 # Robot connects here with serial number
 @router.websocket("/ws/{serial}")
 async def websocket_endpoint(websocket: WebSocket, serial: str):
