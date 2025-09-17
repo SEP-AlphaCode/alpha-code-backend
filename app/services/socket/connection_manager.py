@@ -28,7 +28,6 @@ class ConnectionManager:
             
             # Thông báo cho client lý do từ chối
             try:
-                await websocket.accept()
                 error_msg = json.dumps({
                     "type": "error",
                     "message": f"Robot {serial} đã có kết nối active. Chỉ cho phép một kết nối duy nhất."
