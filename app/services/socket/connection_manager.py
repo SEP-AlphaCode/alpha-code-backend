@@ -27,27 +27,27 @@ class ConnectionManager:
         Kết nối WebSocket với robot
         Trả về True nếu kết nối thành công, False nếu từ chối
         """
-        if websocket.headers.get('client_id') is None:
-            await websocket.close(code=1008, reason="Socket has no client id")
-            return False
+        # if websocket.headers.get('client_id') is None:
+        #     await websocket.close(code=1008, reason="Socket has no client id")
+        #     return False
         
         # Kiểm tra nếu serial đã tồn tại
-        if serial in self.clients:
-            try:
-                # Nếu không có lỗi, kết nối vẫn active
-                print(f"Từ chối kết nối từ robot {serial}, đã có kết nối active")
-                
-                # Thông báo cho client lý do từ chối
-                try:
-                    await websocket.close(code=1008, reason="Robot with this serial is already connected")
-                except Exception as e:
-                    self.logger.error(f"Lỗi khi từ chối kết nối: {e}")
-                return False
-            
-            except Exception as e:
-                # Nếu có lỗi, kết nối cũ đã bị ngắt nhưng chưa được dọn dẹp
-                self.logger.info(f"Cleaning up stale connection for {serial}: {e}")
-                await self.disconnect(serial)
+        # if serial in self.clients:
+        #     try:
+        #         # Nếu không có lỗi, kết nối vẫn active
+        #         print(f"Từ chối kết nối từ robot {serial}, đã có kết nối active")
+        #
+        #         # Thông báo cho client lý do từ chối
+        #         try:
+        #             await websocket.close(code=1008, reason="Robot with this serial is already connected")
+        #         except Exception as e:
+        #             self.logger.error(f"Lỗi khi từ chối kết nối: {e}")
+        #         return False
+        #
+        #     except Exception as e:
+        #         # Nếu có lỗi, kết nối cũ đã bị ngắt nhưng chưa được dọn dẹp
+        #         self.logger.info(f"Cleaning up stale connection for {serial}: {e}")
+        #         await self.disconnect(serial)
         # Nếu serial chưa tồn tại hoặc kết nối cũ đã bị ngắt, cho phép kết nối mới
         await websocket.accept()
         self.clients[serial] = WSMapEntry(websocket, websocket.headers.get('client_id'))
