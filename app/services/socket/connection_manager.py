@@ -8,13 +8,19 @@ from fastapi import WebSocket
 from typing import Dict, List
 import logging
 
+from pydantic.main import BaseModel
 
+
+class WSMapEntry(BaseModel):
+    websocket: WebSocket
+    client_id: str
+    
 class ConnectionManager:
     """Quản lý kết nối WebSocket với robot"""
     
     def __init__(self):
         # Store clients as {serial: websocket}
-        self.clients: Dict[str, WebSocket] = {}
+        self.clients: Dict[str, WSMapEntry] = {}
         self.logger = logging.getLogger(__name__)
     
     async def connect(self, websocket: WebSocket, serial: str) -> bool:
@@ -24,38 +30,41 @@ class ConnectionManager:
         """
         # Kiểm tra nếu serial đã tồn tại
         if serial in self.clients:
-            self.logger.warning(f"Từ chối kết nối từ robot {serial}, đã có kết nối active")
+            existing_ws = self.clients[serial].websocket
             
-            # Thông báo cho client lý do từ chối
+            # Kiểm tra xem kết nối hiện tại có còn active không
             try:
-                await websocket.accept()
-                error_msg = json.dumps({
-                    "type": "error",
-                    "message": f"Robot {serial} đã có kết nối active. Chỉ cho phép một kết nối duy nhất."
-                })
-                await websocket.send_text(error_msg)
-                await websocket.close(code=1008)  # Policy Violation
-            except Exception as e:
-                self.logger.error(f"Lỗi khi từ chối kết nối: {e}")
+                # Nếu không có lỗi, kết nối vẫn active
+                print(f"Từ chối kết nối từ robot {serial}, đã có kết nối active")
+                
+                # Thông báo cho client lý do từ chối
+                try:
+                    await websocket.close(code=1008, reason="Robot with this serial is already connected")
+                except Exception as e:
+                    self.logger.error(f"Lỗi khi từ chối kết nối: {e}")
+                return False
             
-            return False
-        
-        # Nếu serial chưa tồn tại, cho phép kết nối
+            except Exception as e:
+                # Nếu có lỗi, kết nối cũ đã bị ngắt nhưng chưa được dọn dẹp
+                self.logger.info(f"Cleaning up stale connection for {serial}: {e}")
+                self.disconnect(serial)
+        # Nếu serial chưa tồn tại hoặc kết nối cũ đã bị ngắt, cho phép kết nối mới
         await websocket.accept()
-        self.clients[serial] = websocket
+        self.clients[serial] = WSMapEntry(websocket=websocket, client_id=websocket.headers.get('client_id'))
         self.logger.info(f"Robot {serial} connected. Total: {len(self.clients)}")
         return True
     
     def disconnect(self, serial: str):
         """Ngắt kết nối robot"""
         if serial in self.clients:
+            self.clients[serial].websocket.close()
             del self.clients[serial]
         else:
             self.logger.warning(f"Attempted to disconnect robot {serial} but it was not connected")
     
     async def send_to_robot(self, serial: str, message: str) -> bool:
         """Gửi message tới robot"""
-        ws = self.clients.get(serial)
+        ws = self.clients.get(serial).websocket
         if ws:
             try:
                 await ws.send_text(message)
