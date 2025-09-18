@@ -1,7 +1,7 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from typing import Dict
+from typing import Dict, Set
 import json
 
 from starlette.status import HTTP_200_OK
@@ -92,3 +92,25 @@ async def trigger_robot_dances(serial: str, code: str):
     except Exception as e:
         # unexpected server error
         return JSONResponse({"error": str(e)}, status_code=500)
+
+@router.get("/ws/list-by-client/{client}")
+async def list_by_client(client_id: str):
+    result: Set[str] = set()
+    for s in connection_manager.clients.items():
+        if s[1].client_id == client_id:
+            result.add(s[0])
+    return {
+        'serials': result
+    }
+
+@router.get("/ws/disconnect-by-client/{client}")
+async def disconnect_by_client(client_id: str):
+    result: Set[str] = set()
+    for s in connection_manager.clients.items():
+        if s[1].client_id == client_id:
+            result.add(s[0])
+    for i in result:
+        await connection_manager.disconnect(i)
+    return {
+        'serials': result
+    }
