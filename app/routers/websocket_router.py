@@ -69,30 +69,6 @@ async def send_command(serial: str, command: Command):
         "active_clients": manager.active
     })
 
-@router.post("/ubt/dances/{serial}/{code}")
-async def trigger_robot_dances(serial: str, code: str):
-    """Connect to robot by serial tail, run predefined dances, and return results.
-
-    The router is included under the /websocket prefix in main.py, so the full path is POST /websocket/ubt/dances/{serial}/{code}
-    """
-    try:
-        result = await run_dances_for_serial(serial, code)
-        # If the service returned an error, map it to an appropriate HTTP status
-        err = result.get("error") if isinstance(result, dict) else None
-        if err:
-            # device not found/connect failed -> 404
-            if isinstance(err, str) and err.startswith("device_not_found_or_connect_failed"):
-                return JSONResponse(result, status_code=404)
-            # other expected errors -> 400
-            return JSONResponse(result, status_code=400)
-
-        # success path
-        return JSONResponse(result, status_code=200)
-
-    except Exception as e:
-        # unexpected server error
-        return JSONResponse({"error": str(e)}, status_code=500)
-
 @router.get("/ws/list-by-client/{client}")
 async def list_by_client(client_id: str):
     result: Set[str] = set()
