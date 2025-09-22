@@ -64,14 +64,18 @@ class ConnectionManager:
     
     async def send_to_robot(self, serial: str, message: str) -> bool:
         """Gửi message tới robot"""
-        ws = self.clients.get(serial).websocket
-        if ws:
-            try:
-                await ws.send_text(message)
-                return True
-            except Exception as e:
-                self.logger.error(f"Send error to {serial}: {e}")
-                await self.disconnect(serial)
+        client = self.clients.get(serial)
+        if client and hasattr(client, 'websocket'):
+            ws = client.websocket
+            if ws:
+                try:
+                    await ws.send_text(message)
+                    return True
+                except Exception as e:
+                    self.logger.error(f"Send error to {serial}: {e}")
+                    await self.disconnect(serial)
+            else:
+                self.logger.warning(f"Cannot send message to {serial}: websocket not available")
         else:
             self.logger.warning(f"Cannot send message to {serial}: robot not connected")
         return False
