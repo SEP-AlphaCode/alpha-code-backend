@@ -24,8 +24,8 @@ async def generate_dance_plan(req: MusicRequest):
 @router.post('/upload-music-and-generate-plan')
 async def upload_music_and_generate_plan(
         file: UploadFile = File(...),
-        start_time: Optional[float] = Query(None, description="Start time in seconds (optional)", ge=0),
-        end_time: Optional[float] = Query(None, description="End time in seconds (optional)", ge=0)):
+        start_time: Optional[float] = Body(None, description="Start time in seconds (optional)", ge=0),
+        end_time: Optional[float] = Body(None, description="End time in seconds (optional)", ge=0)):
     # Chỉ cho phép mp3 và mp4
     if not (file.filename.lower().endswith(".mp3") or file.filename.lower().endswith(".mp4")):
         raise HTTPException(status_code=400, detail="Only .mp3 or .mp4 files are supported.")
