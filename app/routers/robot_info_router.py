@@ -14,7 +14,7 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 
-@router.post("/info/{serial}")
+@router.get("/info/{serial}")
 async def get_robot_info(
     serial: str,
     timeout: Optional[int] = Query(default=10, description="Timeout in seconds for robot response")

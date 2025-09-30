@@ -57,25 +57,42 @@ class ConnectionManager:
     async def disconnect(self, serial: str):
         """Ngắt kết nối robot"""
         if serial in self.clients:
-            await self.clients[serial].websocket.close()
+            ws = self.clients[serial].websocket
+            try:
+                if not ws.client_state.name == "DISCONNECTED":
+                    await ws.close()
+            except RuntimeError as e:
+                self.logger.warning(f"WebSocket for {serial} already closed: {e}")
+            except Exception as e:
+                self.logger.error(f"Unexpected error closing WebSocket for {serial}: {e}")
             del self.clients[serial]
         else:
             self.logger.warning(f"Attempted to disconnect robot {serial} but it was not connected")
-    
+
     async def send_to_robot(self, serial: str, message: str) -> bool:
         """Gửi message tới robot"""
-        ws = self.clients.get(serial).websocket
-        if ws:
-            try:
-                await ws.send_text(message)
-                return True
-            except Exception as e:
-                self.logger.error(f"Send error to {serial}: {e}")
-                await self.disconnect(serial)
+        client = self.clients.get(serial)
+        if client and hasattr(client, 'websocket'):
+            ws = client.websocket
+            if ws:
+                try:
+                    if ws.client_state.name == "CONNECTED":
+                        await ws.send_text(message)
+                        return True
+                    else:
+                        self.logger.warning(f"Cannot send message to {serial}: websocket not connected")
+                except RuntimeError as e:
+                    self.logger.error(f"Send error to {serial}: {e}")
+                    await self.disconnect(serial)
+                except Exception as e:
+                    self.logger.error(f"Unexpected send error to {serial}: {e}")
+                    await self.disconnect(serial)
+            else:
+                self.logger.warning(f"Cannot send message to {serial}: websocket not available")
         else:
             self.logger.warning(f"Cannot send message to {serial}: robot not connected")
         return False
-    
+
     @property
     def active(self) -> int:
         """Số lượng robot đang kết nối"""
