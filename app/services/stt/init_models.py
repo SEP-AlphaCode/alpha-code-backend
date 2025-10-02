@@ -2,10 +2,10 @@
 import logging
 import whisper
 from typing import Tuple, Optional, Dict, Any
+import torch
 
 # Try to import Vietnamese model dependencies
 try:
-    import torch
     from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
     
     VIETNAMESE_AVAILABLE = True
@@ -17,6 +17,8 @@ except ImportError:
     Wav2Vec2Processor = None
     Wav2Vec2ForCTC = None
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
+print(device)
 
 class STTModels:
     """Class to manage all STT model instances"""
@@ -32,11 +34,11 @@ class STTModels:
         """Load all STT models"""
         try:
             logging.info("Loading Whisper base model...")
-            self.base_model = whisper.load_model('tiny')
+            self.base_model = whisper.load_model('small', device)
             
             logging.info("Loading Whisper English model...")
-            self.english_model = whisper.load_model('base')  # or 'large' for best accuracy
-            model_name = "nguyenvulebinh/wav2vec2-large-vi"
+            self.english_model = whisper.load_model('base.en', device)  # or 'large' for best accuracy
+            model_name = "nguyenvulebinh/wav2vec2-base-vi-vlsp2020"
             if VIETNAMESE_AVAILABLE:
                 logging.info("Loading Vietnamese model...")
                 self.vietnamese_processor = Wav2Vec2Processor.from_pretrained(
