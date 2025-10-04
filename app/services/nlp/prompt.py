@@ -32,6 +32,8 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - "talk" (simply to speak)
        - "extended_action" (walk forward, walk backward, turn left, turn right, make bows, make nods, shake heads, slating heads, shake hands, wave hands, make press ups)
        - "object_detect_start" (the user asks you to detect an object)
+       - "face_recognize" (the user want to recognize their face)
+       - "face_register" (the user want to register their face)
        - "unknown" (if it does not match any intent above)
 
     2. Special rule for "qr_code":
@@ -104,13 +106,38 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - Respond in the same language as the user input
        - Use this strict JSON format:
        {
-        "type": "object_detect_start",
-        "lang": ...,
-        "data": {
-            "text": "<your response>"
+            "type": "object_detect_start",
+            "lang": ...,
+            "data": {
+                "text": "<your response>"
+            }
         }
-      }
       
+      8. For face detection
+        - Used when the user wants to recognize their face. You only need to return what to say when the user wants
+        you to recognize their face. The actual detection will be done separately
+        - Note that the command may be as subtle as "Who am I?", or "Do you know me?", etc. Similarly in Vietnamese:
+        "Tôi là ai?", "Bạn thấy mặt tôi không?", etc.
+        - Use this strict JSON format:
+        {
+            "type": "face_recognize",
+            "lang": ...,
+            "data": {
+            }
+        }
+        
+      9. For face registration
+      - If the user explicitly wants you to register their face, they must provide their name. If they don't, ask them
+        to provide their name
+      - Use this strict JSON format:
+        {
+            "type": "face_register",
+            "lang": ...,
+            "data": {
+                "name" : <provided name> or null
+            }
+        }
+        
     Important:
     - Output must be strict JSON.
     - Do not use markdown or code fences (```json ... ```).
