@@ -71,7 +71,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - Be friendly and suitable for students.
        - Use this strict JSON format:
        {
-         "type": "<one_of: greeting | study | dance | dance-with-music | talk | unknown>",
+         "type": "<one_of: greeting | talk | unknown>",
          "lang": ...,
          "data": {
            "text": "<your response in the same language as user input>"
