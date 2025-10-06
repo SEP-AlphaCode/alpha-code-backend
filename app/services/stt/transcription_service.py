@@ -210,47 +210,50 @@ async def transcribe_vietnamese2(audio_array: np.ndarray, sample_rate: int = 160
 
 async def transcribe_vietnamese(audio_array: np.ndarray, sample_rate: int = 16000) -> Tuple[str, float]:
     """
-    Transcribe English audio using specialized English model
+    Transcribe Vietnamese audio using specialized Vietnamese model
     """
+    if not VIETNAMESE_AVAILABLE or not stt_models.vietnamese_model:
+        logging.warning("Vietnamese model not available, falling back to Whisper")
+        result = stt_models.base_model.transcribe(audio_array, language='vi', fp16=False)
+        avg_confidence = calculate_confidence(result)
+        return result["text"].strip(), avg_confidence
+    
     try:
-        if not stt_models.base_model:
-            raise RuntimeError("English model not loaded")
-        
-        # Resample to 16kHz if needed
+        # Resample to 16kHz for wav2vec2 model
         if sample_rate != 16000:
             audio_array = librosa.resample(audio_array, orig_sr=sample_rate, target_sr=16000)
         
-        # Ensure proper format
-        audio_float = audio_array.astype(np.float32)
-        if audio_float.ndim > 1:
-            audio_float = audio_float.mean(axis=1)  # Convert to mono
-            
-            # Ensure model is on GPU
-        stt_models.base_model = stt_models.base_model.to("cuda")
+        # Convert to mono if stereo
+        if audio_array.ndim > 1:
+            audio_array = audio_array.mean(axis=1)
         
-        # Transcribe with English-optimized model on GPU
-        result = stt_models.base_model.transcribe(
-            audio_float,
-            language='vi',
-            fp16=True,  # Use FP16 for faster inference on GPU
-            best_of=5,
-            beam_size=5
-        )
+        # Normalize audio
+        audio_array = audio_array / np.max(np.abs(audio_array))
         
-        # Safe confidence calculation with multiple fallbacks
-        avg_confidence = calculate_confidence(result)
+        # Process with Vietnamese model
+        input_values = stt_models.vietnamese_processor(
+            audio_array,
+            sampling_rate=16000,
+            return_tensors="pt",
+            padding=True
+        ).input_values
         
-        return result["text"].strip(), avg_confidence
+        # Get logits
+        with torch.no_grad():
+            logits = stt_models.vietnamese_model(input_values).logits
+        
+        # Get predicted tokens
+        predicted_ids = torch.argmax(logits, dim=-1)
+        transcription = stt_models.vietnamese_processor.batch_decode(predicted_ids)[0]
+        
+        # For wav2vec2, we don't get confidence scores easily, so use a default
+        confidence = 0.8  # Default confidence for Vietnamese model
+        
+        return transcription.strip(), confidence
     
     except Exception as e:
-        logging.error(f"English transcription failed: {e}, falling back to base model")
-        # Ensure base model is on GPU
-        stt_models.base_model = stt_models.base_model.to("cuda")
-        result = stt_models.base_model.transcribe(
-            audio_array,
-            language='en',
-            fp16=True  # Use FP16 on GPU
-        )
+        logging.error(f"Vietnamese transcription failed: {e}, falling back to Whisper")
+        result = stt_models.base_model.transcribe(audio_array, language='vi', fp16=False)
         avg_confidence = calculate_confidence(result)
         return result["text"].strip(), avg_confidence
 

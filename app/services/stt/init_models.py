@@ -34,7 +34,7 @@ class STTModels:
         """Load all STT models"""
         try:
             logging.info("Loading Whisper base model...")
-            self.base_model = whisper.load_model('small', device)
+            self.base_model = whisper.load_model('tiny', device)
             
             logging.info("Loading Whisper English model...")
             self.english_model = whisper.load_model('base.en', device)  # or 'large' for best accuracy
