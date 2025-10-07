@@ -51,13 +51,16 @@ class ConnectionManager:
         # Nếu serial chưa tồn tại hoặc kết nối cũ đã bị ngắt, cho phép kết nối mới
         await websocket.accept()
         self.clients[serial] = WSMapEntry(websocket, websocket.headers.get('client_id'))
-        self.logger.info(f"Robot {serial} connected. Total: {len(self.clients)}")
+        print(f"Robot {serial} connected. Total: {len(self.clients)}")
         return True
     
     async def disconnect(self, serial: str):
+        print(serial, 'disconnecting')
         """Ngắt kết nối robot"""
         if serial in self.clients:
+            print(serial, 'detected')
             await self.clients[serial].websocket.close()
+            print(serial, 'disconnected. Deleting it from client map')
             del self.clients[serial]
         else:
             self.logger.warning(f"Attempted to disconnect robot {serial} but it was not connected")

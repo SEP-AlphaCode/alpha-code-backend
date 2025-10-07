@@ -24,3 +24,11 @@ async def transcribe_audio(data: ASRData):
         return json_result
     except Exception as e:
         raise HTTPException(status_code=500, detail=e)
+    
+@router.post('/transcribe')
+async def stub(data: ASRData):
+    try:
+        resp = await transcribe_bytes(data)
+        return resp.text
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=e)

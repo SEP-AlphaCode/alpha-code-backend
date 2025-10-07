@@ -114,3 +114,7 @@ async def disconnect_by_client(client_id: str):
     return {
         'serials': result
     }
+
+@router.get('/ws/info')
+async def get_all_clients():
+    return connection_manager.clients

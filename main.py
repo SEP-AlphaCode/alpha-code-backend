@@ -54,6 +54,7 @@ app.include_router(robot_info_router, prefix="/robot", tags=["Robot Info"])
 # Backward-compatible alias path for websocket without /websocket prefix
 @app.websocket("/ws/{serial}")
 async def websocket_alias(websocket: WebSocket, serial: str):
+    # websocket.max_message_size = 10 * 1024 * 1024
     success = await connection_manager.connect(websocket, serial)
     if not success:
         return  # Connection was rejected
@@ -62,19 +63,21 @@ async def websocket_alias(websocket: WebSocket, serial: str):
         while True:
             # Accept both text and binary messages
             message = await websocket.receive()
-            
+            if message["type"] == "websocket.disconnect":
+                break
+                
             if message["type"] == "websocket.receive":
                 if "text" in message:
                     await handle_text_message(message["text"], serial)
                 elif "bytes" in message:
-                    await handle_binary_message(message["bytes"], serial)
-    
+                    await handle_binary_message(websocket, message["bytes"], serial)
+            # print('Done process message')
     except WebSocketDisconnect:
         print(f"WebSocket disconnected: {websocket.client}")
-        connection_manager.disconnect(serial)
+        await connection_manager.disconnect(serial)
     except Exception as e:
         print(f"WebSocket error: {websocket.client}, {e}")
-        connection_manager.disconnect(serial)
+        await connection_manager.disconnect(serial)
 
 
 @app.get("/", include_in_schema=False)
