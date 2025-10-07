@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+
+
+message RobotMessage {
+  string type = 1;
+  string lang = 2;
+  google.protobuf.Struct data = 3;
+}

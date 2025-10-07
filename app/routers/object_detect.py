@@ -3,7 +3,6 @@ from typing import List
 import sys
 import os
 
-
 import torch
 from PIL import Image
 from fastapi import APIRouter, UploadFile, File, HTTPException
@@ -36,17 +35,17 @@ midas.eval()
 
 def estimate_depth(image: np.ndarray) -> np.ndarray:
     """Run MiDaS depth estimation and return normalized depth map."""
-
+    
     # Convert OpenCV BGR -> RGB and then to PIL
     img_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     pil_image = Image.fromarray(img_rgb)
-
+    
     # Apply MiDaS transform (returns a tensor, shape [3, H, W])
     input_tensor = midas_transform(pil_image)
-
+    
     # Add batch dimension: [1, 3, H, W]
     input_batch = input_tensor.unsqueeze(0).to(device)
-
+    
     with torch.no_grad():
         prediction = midas(input_batch)
         prediction = torch.nn.functional.interpolate(
@@ -55,12 +54,13 @@ def estimate_depth(image: np.ndarray) -> np.ndarray:
             mode="bicubic",
             align_corners=False,
         ).squeeze()
-
+    
     depth_map = prediction.cpu().numpy()
     # Normalize for easier comparison
     depth_map = (depth_map - depth_map.min()) / (depth_map.max() - depth_map.min())
-
+    
     return depth_map
+
 
 @router.post("/detect_closest")
 async def detect_closest_objects(file: UploadFile = File(...), k: int = 3) -> DetectClosestResponse:
@@ -76,14 +76,11 @@ async def detect_closest_objects(file: UploadFile = File(...), k: int = 3) -> De
         nparr = np.frombuffer(image_bytes, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         
-        
         # Step 1: Run YOLO
         results = yolo_model(img)
         
-        
         # Step 2: Run depth estimation
         depth_map = estimate_depth(img)
-        
         
         # Step 3: Collect detections with depth metrics
         detections: List[Detection] = []
@@ -108,16 +105,37 @@ async def detect_closest_objects(file: UploadFile = File(...), k: int = 3) -> De
                 median_depth = float(np.median(roi))
                 
                 detections.append(Detection(
-                        label=label,
-                        confidence=conf,
-                        bbox=[x1, y1, x2, y2],
-                        depth_avg=avg_depth,
-                        depth_min=min_depth,
-                        depth_median=median_depth,
-                    ))
-        filtered = [d for d in detections if d.label.lower() != "person"]
+                    label=label,
+                    confidence=conf,
+                    bbox=[x1, y1, x2, y2],
+                    depth_avg=avg_depth,
+                    depth_min=min_depth,
+                    depth_median=median_depth,
+                ))
+        filtered = [d for d in detections if d.label.lower() != "person" and d.confidence > 0.4]
         # Step 4: Sort by "closeness" (lowest depth = closest)
-        detections_sorted = sorted(filtered, key=lambda d: d.depth_min or 9999.0)
-        return DetectClosestResponse(closest_objects=detections_sorted[:k], all_objects=detections_sorted)
+        detections_sorted = sorted(filtered, key=lambda d: d.depth_median or 9999.0)
+        
+        if not detections_sorted:
+            return DetectClosestResponse(closest_objects=[], all_objects=[])
+        
+        # Compute dynamic cutoff — e.g. within 1.5× of the closest object
+        closest_depth = detections_sorted[0].depth_median or 0
+        depth_cutoff = closest_depth * 1.5
+        
+        # Filter out detections that are too far away
+        closest_objects = [
+            d for d in detections_sorted
+            if (d.depth_median or 9999.0) <= depth_cutoff
+        ]
+        
+        # Fallback: ensure we still have at least 'k' elements if all are similar
+        if len(closest_objects) < k:
+            closest_objects = detections_sorted[:k]
+        
+        return DetectClosestResponse(
+            closest_objects=closest_objects,
+            all_objects=detections_sorted
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
