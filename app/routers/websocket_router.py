@@ -94,12 +94,19 @@ async def close_connection(serial: str):
 robot_connections: Dict[str, WebSocket] = {}
 web_connections: Dict[str, WebSocket] = {}
 
+from fastapi import WebSocket, WebSocketDisconnect
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
 @router.websocket("/ws/signaling/{serial}/{client_type}")
 async def signaling(ws: WebSocket, serial: str, client_type: str):
     """
     client_type: "robot" hoặc "web"
     """
     await ws.accept()
+    logging.info(f"New WebSocket connection: serial={serial}, type={client_type}")
+
     if client_type == "robot":
         robot_connections[serial] = ws
     else:
@@ -108,13 +115,20 @@ async def signaling(ws: WebSocket, serial: str, client_type: str):
     try:
         while True:
             data = await ws.receive_json()
+            logging.info(f"Received data from {client_type} {serial}: {data}")
+
             # Relay data tới đối tượng còn lại
             if client_type == "robot" and serial in web_connections:
                 await web_connections[serial].send_json(data)
+                logging.info(f"Relayed data to web {serial}")
             elif client_type == "web" and serial in robot_connections:
                 await robot_connections[serial].send_json(data)
+                logging.info(f"Relayed data to robot {serial}")
+
     except WebSocketDisconnect:
+        logging.info(f"WebSocket disconnected: serial={serial}, type={client_type}")
         if client_type == "robot":
             robot_connections.pop(serial, None)
         else:
             web_connections.pop(serial, None)
+
