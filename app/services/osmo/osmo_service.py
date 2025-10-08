@@ -20,7 +20,7 @@ async def recognize_action_cards_from_image(
         "mime_type": "image/jpeg",
         "data": open(image_path, "rb").read()
     }
-
+    print('recognizing')
     prompt = """
     Detect Osmo action cards from this photo.
     Return JSON array only. Each item has:
@@ -49,7 +49,7 @@ async def recognize_action_cards_from_image(
             direction=OsmoCard(color="gray", direction=c.get("direction")) if c.get("direction") else None,
             step=OsmoCard(color="yellow", value=c.get("value", 1))
         ))
-
+    print('Done')
     return ActionCardList(action_cards=action_cards)
 
 def parse_osmo_cards(card_sequence: OsmoCardSequence) -> AlphaMiniActionList:
