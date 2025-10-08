@@ -4,63 +4,53 @@ from pydantic import BaseModel
 from typing import Dict, Set
 import json
 
-from starlette.status import HTTP_200_OK
-
 from app.services.socket.robot_websocket_service import robot_websocket_info_service
 from app.services.socket.connection_manager import connection_manager
 
 router = APIRouter()
 
+# Pydantic model cho command
 class Command(BaseModel):
     type: str
     data: dict
 
-# Sử dụng connection manager từ service
+# Dùng connection manager
 manager = connection_manager
-@router.get("/ws/disconnect/{serial}")
-async def close_connection(serial: str):
-    try:
-        if serial in manager.clients:
-            await manager.clients[serial].close(reason="Disconnected by choice")
-            manager.disconnect(serial)
-        return "Ok"
-    except Exception as e:
-        raise HTTPException(500, e)
-# Robot connects here with serial number
+
+# --- WebSocket robot connect ---
 @router.websocket("/ws/{serial}")
 async def websocket_endpoint(websocket: WebSocket, serial: str):
+    if not serial:
+        await websocket.close(code=1008)
+        return
+
+    success = await manager.connect(websocket, serial)
+    if not success:
+        return
+
     try:
-        if not serial:
-            await websocket.close(code=1008)  # Policy Violation
-            return
-
-        await manager.connect(websocket, serial)
-
         while True:
-            data = await websocket.receive_text()
-            
-            # Xử lý message từ robot
-            try:
-                message_data = json.loads(data)
-                # Kiểm tra nếu là response cho system info request
-                robot_websocket_info_service.handle_robot_response(message_data)
-            except json.JSONDecodeError:
-                pass
-            except Exception as e:
-                pass
-
+            message = await websocket.receive()
+            if message["type"] == "websocket.disconnect":
+                break
+            elif message["type"] == "websocket.receive":
+                if "text" in message:
+                    try:
+                        data = json.loads(message["text"])
+                        # Xử lý response từ robot
+                        robot_websocket_info_service.handle_robot_response(data)
+                    except json.JSONDecodeError:
+                        pass
+                elif "bytes" in message:
+                    await manager.handle_binary(websocket, message["bytes"], serial)
     except WebSocketDisconnect:
-        manager.disconnect(serial)
+        await manager.disconnect(serial)
+    except Exception:
+        await manager.disconnect(serial)
 
-    except Exception as e:
-        manager.disconnect(serial)
-
-
-
-# Send a command to a specific robot
+# --- Send command to a robot ---
 @router.post("/command/{serial}")
 async def send_command(serial: str, command: Command):
-    # Use pydantic v2 model_dump_json / model_dump to avoid deprecation warnings
     ok = await manager.send_to_robot(serial, command.model_dump_json())
     return JSONResponse({
         "status": "sent" if ok else "failed",
@@ -69,27 +59,40 @@ async def send_command(serial: str, command: Command):
         "active_clients": manager.active
     })
 
-@router.get("/ws/list-by-client/{client}")
+# --- List serials by client_id ---
+@router.get("/ws/list-by-client/{client_id}")
 async def list_by_client(client_id: str):
     result: Set[str] = set()
-    for s in connection_manager.clients.items():
-        if s[1].client_id == client_id:
-            result.add(s[0])
-    return {
-        'serials': result
-    }
+    for serial, info in manager.clients.items():
+        if info.client_id == client_id:
+            result.add(serial)
+    return {"serials": result}
 
-@router.get("/ws/disconnect-by-client/{client}")
+# --- Disconnect all robots by client_id ---
+@router.get("/ws/disconnect-by-client/{client_id}")
 async def disconnect_by_client(client_id: str):
     result: Set[str] = set()
-    for s in connection_manager.clients.items():
-        if s[1].client_id == client_id:
-            result.add(s[0])
-    for i in result:
-        await connection_manager.disconnect(i)
-    return {
-        'serials': result
-    }
+    for serial, info in manager.clients.items():
+        if info.client_id == client_id:
+            result.add(serial)
+    for serial in result:
+        await manager.disconnect(serial)
+    return {"serials": result}
+
+# --- Disconnect single robot ---
+@router.get("/ws/disconnect/{serial}")
+async def close_connection(serial: str):
+    try:
+        if serial in manager.clients:
+            await manager.clients[serial].close(reason="Disconnected by choice")
+            await manager.disconnect(serial)
+        return {"status": "ok"}
+    except Exception as e:
+        raise HTTPException(500, str(e))
+
+# --- WebRTC signaling between robot <-> web ---
+robot_connections: Dict[str, WebSocket] = {}
+web_connections: Dict[str, WebSocket] = {}
 
 @router.websocket("/ws/signaling/{serial}/{client_type}")
 async def signaling(ws: WebSocket, serial: str, client_type: str):
@@ -115,4 +118,3 @@ async def signaling(ws: WebSocket, serial: str, client_type: str):
             robot_connections.pop(serial, None)
         else:
             web_connections.pop(serial, None)
-
