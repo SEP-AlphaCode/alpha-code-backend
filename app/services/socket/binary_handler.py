@@ -14,9 +14,9 @@ async def handle_binary_message(websocket: WebSocket, data: bytes, serial: str) 
         request = RobotRequest()
         request.ParseFromString(data)
         asr = ASRData(arr=list(request.asr))
-        rs = await transcribe_bytes(asr)
+        rs = await process_speech(asr)
         #print(rs)
-        await websocket.send_text(rs.text)
+        await websocket.send_text(json.dumps(rs))
         # print('Done!')
         return
     except UnicodeDecodeError as ue:
