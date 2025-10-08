@@ -91,13 +91,28 @@ async def disconnect_by_client(client_id: str):
         'serials': result
     }
 
-@router.websocket("/ws/video/{serial}")
-async def video_stream(websocket: WebSocket, serial: str):
-    await websocket.accept()
-    try:
-        while True:
-            frame = await websocket.receive_bytes()
-            print(f"[{serial}] received frame: {len(frame)} bytes")
-            await manager.broadcast_video(serial, frame)
-    except WebSocketDisconnect:
-        manager.disconnect_video(serial)
+    @app.websocket("/ws/signaling/{serial}/{client_type}")
+    async def signaling(ws: WebSocket, serial: str, client_type: str):
+        """
+        client_type: "robot" hoặc "web"
+        """
+        await ws.accept()
+        if client_type == "robot":
+            robot_connections[serial] = ws
+        else:
+            web_connections[serial] = ws
+
+        try:
+            while True:
+                data = await ws.receive_json()
+                # Relay data tới đối tượng còn lại
+                if client_type == "robot" and serial in web_connections:
+                    await web_connections[serial].send_json(data)
+                elif client_type == "web" and serial in robot_connections:
+                    await robot_connections[serial].send_json(data)
+        except WebSocketDisconnect:
+            if client_type == "robot":
+                robot_connections.pop(serial, None)
+            else:
+                web_connections.pop(serial, None)
+
