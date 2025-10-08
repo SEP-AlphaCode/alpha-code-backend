@@ -12,8 +12,10 @@ from app.routers.stt_router import router as stt_router
 from app.routers.marker_router import router as marker_router
 from app.routers.object_detect import router as object_router
 from app.routers.robot_info_router import router as robot_info_router
+from app.services.socket.binary_handler import handle_binary_message
 from app.services.socket.connection_manager import connection_manager
 from app.services.socket.robot_websocket_service import robot_websocket_info_service
+from app.services.socket.text_handler import handle_text_message
 from config.config import settings
 
 # Build FastAPI kwargs dynamically to avoid invalid empty URL in license
@@ -48,45 +50,28 @@ app.include_router(marker_router, prefix="/marker", tags=["Marker"])
 app.include_router(object_router, prefix="/object", tags=["Object Detection"])
 app.include_router(robot_info_router, prefix="/robot", tags=["Robot Info"])
 
+
 # Backward-compatible alias path for websocket without /websocket prefix
 @app.websocket("/ws/{serial}")
 async def websocket_alias(websocket: WebSocket, serial: str):
-    # Lấy header ngay khi vừa kết nối
-    auth_header = websocket.headers.get("authorization")
-    user_agent = websocket.headers.get("user-agent")
-    print(f"Client {serial} connected with Authorization={auth_header}, User-Agent={user_agent}")
-
+    # websocket.max_message_size = 10 * 1024 * 1024
     success = await connection_manager.connect(websocket, serial)
     if not success:
         return  # Connection was rejected
-
+    
     try:
         while True:
-            data = await websocket.receive_text()
-            print(f"[{websocket.client}]: {data}")
-
-            # --- Có thể log header theo từng message nếu cần ---
-            headers_dict = dict(websocket.headers)
-            print(f"Headers: {headers_dict}")
-
-            # Process robot messages
-            try:
-                message_data = json.loads(data)
-                message_type = message_data.get('type')
-
-                if message_type == 'get_system_info' and 'data' in message_data:
-                    response_message = {
-                        'type': 'system_info_response',
-                        'data': message_data['data']
-                    }
-                    robot_websocket_info_service.handle_robot_response(response_message)
-                else:
-                    robot_websocket_info_service.handle_robot_response(message_data)
-
-            except json.JSONDecodeError:
-                pass
-            except Exception:
-                pass
+            # Accept both text and binary messages
+            message = await websocket.receive()
+            if message["type"] == "websocket.disconnect":
+                break
+                
+            if message["type"] == "websocket.receive":
+                if "text" in message:
+                    await handle_text_message(message["text"], serial)
+                elif "bytes" in message:
+                    await handle_binary_message(websocket, message["bytes"], serial)
+            # print('Done process message')
     except WebSocketDisconnect:
         print(f"WebSocket disconnected: {websocket.client}")
         await connection_manager.disconnect(serial)
@@ -95,9 +80,9 @@ async def websocket_alias(websocket: WebSocket, serial: str):
         await connection_manager.disconnect(serial)
 
 
-
 @app.get("/", include_in_schema=False)
 async def root():
     return RedirectResponse(url="/docs")
+
 
 """Main application entrypoint. WebSocket logic moved to routers.websocket_router."""
