@@ -104,13 +104,12 @@ async def signaling(ws: WebSocket, serial: str, client_type: str):
     """
     client_type: "robot" hoặc "web"
     """
-    await ws.accept()
-    logging.info(f"New WebSocket connection: serial={serial}, type={client_type}")
+    success = await connection_manager.connect(ws, serial, client_type)
+    if not success:
+        await ws.close(code=1008)
+        return
 
-    if client_type == "robot":
-        robot_connections[serial] = ws
-    else:
-        web_connections[serial] = ws
+    logging.info(f"New WebSocket connection: serial={serial}, type={client_type}")
 
     try:
         while True:
@@ -118,17 +117,12 @@ async def signaling(ws: WebSocket, serial: str, client_type: str):
             logging.info(f"Received data from {client_type} {serial}: {data}")
 
             # Relay data tới đối tượng còn lại
-            if client_type == "robot" and serial in web_connections:
-                await web_connections[serial].send_json(data)
-                logging.info(f"Relayed data to web {serial}")
-            elif client_type == "web" and serial in robot_connections:
-                await robot_connections[serial].send_json(data)
-                logging.info(f"Relayed data to robot {serial}")
+            if client_type == "robot" and connection_manager.is_connected(serial, "web"):
+                await connection_manager.send_to_client(serial, json.dumps(data), "web")
+            elif client_type == "web" and connection_manager.is_connected(serial, "robot"):
+                await connection_manager.send_to_client(serial, json.dumps(data), "robot")
 
     except WebSocketDisconnect:
         logging.info(f"WebSocket disconnected: serial={serial}, type={client_type}")
-        if client_type == "robot":
-            robot_connections.pop(serial, None)
-        else:
-            web_connections.pop(serial, None)
+        await connection_manager.disconnect(serial, client_type)
 
