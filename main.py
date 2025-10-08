@@ -89,10 +89,10 @@ async def websocket_alias(websocket: WebSocket, serial: str):
                 pass
     except WebSocketDisconnect:
         print(f"WebSocket disconnected: {websocket.client}")
-        connection_manager.disconnect(serial)
+        await connection_manager.disconnect(serial)
     except Exception as e:
         print(f"WebSocket error: {websocket.client}, {e}")
-        connection_manager.disconnect(serial)
+        await connection_manager.disconnect(serial)
 
 
 
