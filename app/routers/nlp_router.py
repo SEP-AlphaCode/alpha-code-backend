@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, Response, HTTPException
 
 from app.services.audio.audio_service import text_to_mp3_bytes
-from app.services.nlp.nlp_service import process_text, process_audio
+from app.services.nlp.nlp_service import process_text, process_audio, process_obj_detect
 from app.models.nlp import NLPRequest
 
 router = APIRouter()
@@ -44,3 +44,7 @@ async def do_tts(input_text: NLPRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.post('/object-detect-result')
+async def process_text_endpoint(label: str, lang: str):
+    return await process_obj_detect(label, lang)

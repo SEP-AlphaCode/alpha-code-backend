@@ -16,3 +16,4 @@ async def detect_closest_objects(file: UploadFile = File(...), k: int = 3) -> De
         return detect_closest_objects_from_bytes(image_bytes, k)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
