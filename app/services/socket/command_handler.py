@@ -1,3 +1,4 @@
+from app.models.proto.robot_command_pb2 import RobotRequest
 from app.models.stt import ASRData, STTResponse
 from app.services.nlp.nlp_service import process_text
 from app.services.object_detect.object_detect_service import detect_closest_objects_from_bytes
@@ -5,7 +6,7 @@ from app.services.osmo.osmo_service import recognize_action_cards_from_image, pa
 from app.services.stt.stt_service import transcribe_bytes
 
 
-async def process_speech(asr: ASRData):
+async def process_speech(asr: ASRData): #process-speech
     try:
         text: STTResponse = await transcribe_bytes(asr)
         resp = await process_text(text.text)
@@ -14,7 +15,7 @@ async def process_speech(asr: ASRData):
         raise e
 
 
-async def detect_object(img: bytes):
+async def detect_object(img: bytes): #detect-object
     try:
         rs = detect_closest_objects_from_bytes(img)
         return rs
@@ -22,7 +23,7 @@ async def detect_object(img: bytes):
         raise e
 
 
-async def parse_osmo(img: bytes):
+async def parse_osmo(img: bytes): #parse-osmo
     import tempfile, os
     
     # Create temporary file for the image
@@ -42,3 +43,25 @@ async def parse_osmo(img: bytes):
         return {"error": str(e)}
     finally:
         os.remove(temp_path)
+
+
+async def handle_command(req: RobotRequest):
+    try:
+        command_type = req.type
+        print(command_type)
+        if command_type == "process-speech":
+            # Convert asr bytes to ASRData object
+            asr_data = ASRData(arr=list(req.asr))
+            return await process_speech(asr_data)
+        
+        elif command_type == "detect-object":
+            return await detect_object(req.image)
+        
+        elif command_type == "parse-osmo":
+            return await parse_osmo(req.image)
+        
+        else:
+            return {"error": f"Unknown command type: {command_type}"}
+    
+    except Exception as e:
+        return {"error": str(e)}
