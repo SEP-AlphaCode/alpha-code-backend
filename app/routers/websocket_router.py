@@ -90,3 +90,14 @@ async def disconnect_by_client(client_id: str):
     return {
         'serials': result
     }
+
+@router.websocket("/ws/video/{serial}")
+async def video_stream(websocket: WebSocket, serial: str):
+    await websocket.accept()
+    try:
+        while True:
+            frame = await websocket.receive_bytes()
+            print(f"[{serial}] received frame: {len(frame)} bytes")
+            await manager.broadcast_video(serial, frame)
+    except WebSocketDisconnect:
+        manager.disconnect_video(serial)
