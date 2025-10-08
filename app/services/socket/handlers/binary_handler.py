@@ -1,13 +1,9 @@
 import json
 
-from pydantic.main import BaseModel
 from starlette.websockets import WebSocket
 
 from app.models.proto.robot_command_pb2 import RobotRequest
-from app.models.stt import ASRData
-from app.services.nlp.nlp_service import process_text
-from app.services.socket.command_handler import process_speech, handle_command
-from app.services.stt.stt_service import transcribe_bytes
+from app.services.socket.handlers.controller import handle_command
 
 
 async def handle_binary_message(websocket: WebSocket, data: bytes, serial: str) -> None:

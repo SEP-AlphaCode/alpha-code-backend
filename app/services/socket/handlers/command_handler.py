@@ -3,6 +3,7 @@ from app.models.stt import ASRData, STTResponse
 from app.services.nlp.nlp_service import process_text
 from app.services.object_detect.object_detect_service import detect_closest_objects_from_bytes
 from app.services.osmo.osmo_service import recognize_action_cards_from_image, parse_action_card_list
+from app.services.socket import connection_manager
 from app.services.stt.stt_service import transcribe_bytes
 
 
@@ -40,28 +41,15 @@ async def parse_osmo(img: bytes): #parse-osmo
             "actions": actions
         }
     except Exception as e:
-        return {"error": str(e)}
+        raise e
     finally:
         os.remove(temp_path)
 
-
-async def handle_command(req: RobotRequest):
+async def notify_shutdown(serial: str): #notify-shutdown
+    manager = connection_manager
     try:
-        command_type = req.type
-        print(command_type)
-        if command_type == "process-speech":
-            # Convert asr bytes to ASRData object
-            asr_data = ASRData(arr=list(req.asr))
-            return await process_speech(asr_data)
-        
-        elif command_type == "detect-object":
-            return await detect_object(req.image)
-        
-        elif command_type == "parse-osmo":
-            return await parse_osmo(req.image)
-        
-        else:
-            return {"error": f"Unknown command type: {command_type}"}
-    
+        if serial in manager.clients:
+            await manager.disconnect_with_reason(serial, "Shut down")
+        return {'serial': serial}
     except Exception as e:
-        return {"error": str(e)}
+        raise e

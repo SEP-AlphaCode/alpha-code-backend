@@ -10,10 +10,12 @@ import logging
 class WSMapEntry:
     websocket: WebSocket
     client_id: str
+    
     def __init__(self, websocket, client_id):
         self.client_id = client_id
         self.websocket = websocket
-    
+
+
 class ConnectionManager:
     """Quản lý kết nối WebSocket với robot"""
     
@@ -69,7 +71,23 @@ class ConnectionManager:
             del self.clients[serial]
         else:
             self.logger.warning(f"Attempted to disconnect robot {serial} but it was not connected")
-
+        
+    async def disconnect_with_reason(self, serial: str, reason: str):
+        print(serial, 'disconnecting')
+        """Ngắt kết nối robot"""
+        if serial in self.clients:
+            ws: WebSocket = self.clients[serial].websocket
+            try:
+                if not ws.client_state.name == "DISCONNECTED":
+                    await ws.close(reason=reason)
+            except RuntimeError as e:
+                self.logger.warning(f"WebSocket for {serial} already closed: {e}")
+            except Exception as e:
+                self.logger.error(f"Unexpected error closing WebSocket for {serial}: {e}")
+            del self.clients[serial]
+        else:
+            self.logger.warning(f"Attempted to disconnect robot {serial} but it was not connected")
+    
     async def send_to_robot(self, serial: str, message: str) -> bool:
         """Gửi message tới robot"""
         client = self.clients.get(serial)
@@ -93,7 +111,7 @@ class ConnectionManager:
         else:
             self.logger.warning(f"Cannot send message to {serial}: robot not connected")
         return False
-
+    
     @property
     def active(self) -> int:
         """Số lượng robot đang kết nối"""
