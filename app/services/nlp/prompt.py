@@ -71,7 +71,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - Be friendly and suitable for students.
        - Use this strict JSON format:
        {
-         "type": "<one_of: greeting | study | dance | dance-with-music | talk | unknown>",
+         "type": "<one_of: greeting | talk | unknown>",
          "lang": ...,
          "data": {
            "text": "<your response in the same language as user input>"
@@ -86,7 +86,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
          "data": {
            "actions": [
              {
-               "name": "<one_of: walk_forward | walk_backward | turn_left | turn_right | make_bows | make_nods | shake_heads | slating_heads | shake_hands | wave_hands | make_press_ups>",
+               "code": "<one_of: walk_forward | walk_backward | turn_left | turn_right | make_bows | make_nods | shake_heads | slating_heads | shake_hands | wave_hands | make_press_ups>",
                "step": <integer 1 to 10, default 1 if not specified in voice command>
              },
              ...

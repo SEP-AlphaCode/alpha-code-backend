@@ -14,7 +14,7 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 
-@router.post("/info/{serial}")
+@router.get("/info/{serial}")
 async def get_robot_info(
     serial: str,
     timeout: Optional[int] = Query(default=10, description="Timeout in seconds for robot response")
@@ -51,20 +51,28 @@ async def get_robot_info(
         logger.info(f"get_robot_info_via_websocket result for {serial}: {result}")
         logger.info(f"WebSocket result for {serial}: success={result.get('success')}, message={result.get('message')}")
 
+        # ✅ Robot offline → HTTP 200, status=error
         if not result.get("success"):
             logger.warning(f"Failed to get robot info for {serial}: {result.get('message')}")
             return JSONResponse(
                 content={
                     "status": "error",
-                    "message": result.get("message", "Failed to get robot info"),
-                    "data": None
+                    "message": f"Robot {serial} not connected via WebSocket",
+                    "data": {
+                        "serial_number": serial,
+                        "firmware_version": None,
+                        "ctrl_version": None,
+                        "battery_level": None,
+                        "is_charging": False
+                    }
                 },
-                status_code=400
+                status_code=200
             )
 
+        # ✅ Robot online
         data = result.get('data')
-        battery_level = data.get("battery_level")  # Already parsed by service
-        is_charging = data.get("is_charging", False)  # Charging status
+        battery_level = data.get("battery_level")
+        is_charging = data.get("is_charging", False)
 
         response_data = {
             "serial_number": data.get('serial_number'),
