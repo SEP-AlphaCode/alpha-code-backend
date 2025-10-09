@@ -127,12 +127,8 @@ async def parse_action_card_list(action_card_list):
                 actions_inside = await card_to_action(cards[j])
                 loop_body.extend(actions_inside)
 
-            result.append({
-                "type": "loop",
-                "times": times,
-                "actions": loop_body
-            })
-            break
+            result.extend(loop_body * times)
+            break 
 
         # ---- ACTION THƯỜNG ----
         actions = await card_to_action(card)
