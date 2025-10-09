@@ -80,6 +80,65 @@ async def websocket_alias(websocket: WebSocket, serial: str):
         await connection_manager.disconnect(serial)
 
 
+# Add signaling endpoint directly to main app (without /websocket prefix)
+@app.websocket("/ws/signaling/{serial}/{client_type}")
+async def signaling_main(ws: WebSocket, serial: str, client_type: str):
+    """
+    WebSocket signaling giữa robot và web client - Direct route
+    client_type: "robot" hoặc "web"
+    """
+    import logging
+    logging.info(f"=== MAIN APP signaling connection attempt ===")
+    logging.info(f"Serial: {serial}, Client type: {client_type}")
+
+    # Accept connection immediately
+    await ws.accept()
+    logging.info(f"Signaling accepted: {serial}/{client_type}")
+
+    try:
+        # Validate
+        if client_type not in ["robot", "web"]:
+            await ws.close(code=1008, reason="Invalid client_type")
+            return
+
+        # Add to connection manager
+        if serial not in connection_manager.clients:
+            connection_manager.clients[serial] = {}
+
+        # Close old connection of same type
+        if client_type in connection_manager.clients[serial]:
+            try:
+                old_ws = connection_manager.clients[serial][client_type].websocket
+                if old_ws.client_state.name != "DISCONNECTED":
+                    await old_ws.close(reason=f"New {client_type} connection")
+            except:
+                pass
+
+        from app.services.socket.connection_manager import WSMapEntry
+        connection_manager.clients[serial][client_type] = WSMapEntry(ws, ws.headers.get("client_id"))
+        logging.info(f"✅ Signaling connection established: {serial}/{client_type}")
+
+        # Message loop
+        while True:
+            data = await ws.receive_json()
+            logging.info(f"Signaling data from {client_type}: {data}")
+
+            # Relay to other side
+            target_type = "web" if client_type == "robot" else "robot"
+            if connection_manager.is_connected(serial, target_type):
+                await connection_manager.send_to_client(serial, json.dumps(data), target_type)
+
+    except WebSocketDisconnect:
+        logging.info(f"Signaling disconnected: {serial}/{client_type}")
+    except Exception as e:
+        logging.error(f"Signaling error: {e}")
+    finally:
+        try:
+            await connection_manager.disconnect(serial, client_type)
+        except:
+            pass
+
+
 @app.get("/", include_in_schema=False)
 async def root():
     return RedirectResponse(url="/docs")

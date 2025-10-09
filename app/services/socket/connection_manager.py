@@ -29,21 +29,42 @@ class ConnectionManager:
         Kết nối WebSocket với robot hoặc signaling
         Trả về True nếu kết nối thành công, False nếu từ chối
         """
-        await websocket.accept()
-        if serial not in self.clients:
-            self.clients[serial] = {}
-        # Nếu cùng client_type đã tồn tại, disconnect cũ
-        if client_type in self.clients[serial]:
-            try:
-                old_ws = self.clients[serial][client_type].websocket
-                if old_ws.client_state.name != "DISCONNECTED":
-                    await old_ws.close(reason=f"New {client_type} connection established")
-            except Exception as e:
-                self.logger.warning(f"Error closing old {client_type} websocket for {serial}: {e}")
+        try:
+            # Validate client_type
+            if client_type not in ["robot", "web"]:
+                self.logger.warning(f"Invalid client_type: {client_type}")
+                return False
 
-        self.clients[serial][client_type] = WSMapEntry(websocket, websocket.headers.get("client_id"))
-        self.logger.info(f"{client_type} connected for serial {serial}. Total client types: {list(self.clients[serial].keys())}")
-        return True
+            # Validate serial
+            if not serial or len(serial.strip()) == 0:
+                self.logger.warning(f"Invalid serial: {serial}")
+                return False
+
+            await websocket.accept()
+
+            if serial not in self.clients:
+                self.clients[serial] = {}
+
+            # Nếu cùng client_type đã tồn tại, disconnect cũ
+            if client_type in self.clients[serial]:
+                try:
+                    old_ws = self.clients[serial][client_type].websocket
+                    if old_ws.client_state.name != "DISCONNECTED":
+                        await old_ws.close(reason=f"New {client_type} connection established")
+                except Exception as e:
+                    self.logger.warning(f"Error closing old {client_type} websocket for {serial}: {e}")
+
+            self.clients[serial][client_type] = WSMapEntry(websocket, websocket.headers.get("client_id"))
+            self.logger.info(f"{client_type} connected for serial {serial}. Total client types: {list(self.clients[serial].keys())}")
+            return True
+
+        except Exception as e:
+            self.logger.error(f"Failed to connect {client_type} for serial {serial}: {e}")
+            try:
+                await websocket.close(code=1008, reason=f"Connection failed: {str(e)}")
+            except:
+                pass
+            return False
 
     async def disconnect(self, serial: str, client_type: str = None):
         """
@@ -86,6 +107,10 @@ class ConnectionManager:
             self.logger.error(f"Send error to {serial} [{client_type}]: {e}")
             await self.disconnect(serial, client_type)
         return False
+
+    async def send_to_client(self, serial: str, message: str, client_type: str = "robot") -> bool:
+        """Gửi message tới client theo loại (robot hoặc web)"""
+        return await self.send_to_robot(serial, message, client_type)
 
     @property
     def active(self) -> int:

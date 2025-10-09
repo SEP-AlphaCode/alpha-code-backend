@@ -63,34 +63,3 @@ async def close_connection(serial: str):
         return {"status": "ok"}
     except Exception as e:
         raise HTTPException(500, str(e))
-
-# --- WebSocket signaling robot <-> web ---
-@router.websocket("/ws/signaling/{serial}/{client_type}")
-async def signaling(ws: WebSocket, serial: str, client_type: str):
-    """
-    WebSocket signaling giữa robot và web client
-    client_type: "robot" hoặc "web"
-    """
-    success = await connection_manager.connect(ws, serial, client_type)
-    if not success:
-        await ws.close(code=1008, reason="Connection rejected")
-        return
-
-    logging.info(f"New WebSocket connection: serial={serial}, type={client_type}")
-
-    try:
-        while True:
-            data = await ws.receive_json()
-            logging.info(f"Received data from {client_type} {serial}: {data}")
-
-            # Relay dữ liệu đến bên còn lại
-            target_type = "web" if client_type == "robot" else "robot"
-            if connection_manager.is_connected(serial, target_type):
-                await connection_manager.send_to_client(serial, json.dumps(data), target_type)
-
-    except WebSocketDisconnect:
-        logging.info(f"WebSocket disconnected: serial={serial}, type={client_type}")
-        await connection_manager.disconnect(serial, client_type)
-    except Exception as e:
-        logging.error(f"Unexpected error for {client_type} {serial}: {e}")
-        await connection_manager.disconnect(serial, client_type)
