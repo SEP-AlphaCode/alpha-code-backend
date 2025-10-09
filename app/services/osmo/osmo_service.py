@@ -20,7 +20,6 @@ async def recognize_action_cards_from_image(
         "mime_type": "image/jpeg",
         "data": open(image_path, "rb").read()
     }
-    print('recognizing')
     prompt = """
     Detect Osmo action cards from this photo.
     Return JSON array only. Each item has:
@@ -182,7 +181,12 @@ async def card_to_action(card: ActionCard) -> List[dict]:
         result.append({
             "type": action_type,
             "code": action_code,
-            "color": rgb_color
+            "color": {
+                'a': 0,
+                'r': rgb_color[0],
+                'g': rgb_color[1],
+                'b': rgb_color[2]
+            }
         })
 
     return result

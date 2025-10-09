@@ -9,7 +9,7 @@ from app.services.socket import connection_manager
 from app.services.stt.stt_service import transcribe_bytes
 
 
-async def process_speech(asr: ASRData): #process-speech
+async def process_speech(asr: ASRData):  # process-speech
     try:
         text: STTResponse = await transcribe_bytes(asr)
         resp = await process_text(text.text)
@@ -18,7 +18,7 @@ async def process_speech(asr: ASRData): #process-speech
         raise e
 
 
-async def detect_object(img: bytes, lang: str): #detect-object
+async def detect_object(img: bytes, lang: str):  # detect-object
     try:
         obj = detect_closest_objects_from_bytes(img)
         if len(obj.closest_objects) == 0:
@@ -30,7 +30,7 @@ async def detect_object(img: bytes, lang: str): #detect-object
         raise e
 
 
-async def parse_osmo(img: bytes): #parse-osmo
+async def parse_osmo(img: bytes):  # parse-osmo
     import tempfile, os
     
     # Create temporary file for the image
@@ -42,16 +42,14 @@ async def parse_osmo(img: bytes): #parse-osmo
         # Use your existing logic functions
         action_card_list = await recognize_action_cards_from_image(temp_path)
         actions = await parse_action_card_list(action_card_list)
-        return {
-            "action_cards": action_card_list.action_cards,
-            "actions": actions
-        }
+        return {'data': {'actions': actions}, 'type': 'do_osmo_actions'}
     except Exception as e:
         raise e
     finally:
         os.remove(temp_path)
 
-async def notify_shutdown(serial: str): #notify-shutdown
+
+async def notify_shutdown(serial: str):  # notify-shutdown
     manager = connection_manager
     try:
         if serial in manager.clients:
@@ -59,8 +57,9 @@ async def notify_shutdown(serial: str): #notify-shutdown
         return {'serial': serial}
     except Exception as e:
         raise e
-    
-async def parse_qr(img: bytes): #parse-qr
+
+
+async def parse_qr(img: bytes):  # parse-qr
     try:
         code = detect_qr_from_bytes(img)
         activities = await get_activity_from_qr(code)
