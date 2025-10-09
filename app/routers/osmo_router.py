@@ -30,6 +30,7 @@ async def recognize_action_cards_from_image_api(image: UploadFile = File(...)):
     try:
         action_card_list = await recognize_action_cards_from_image(temp_path)
         actions = await parse_action_card_list(action_card_list)
+        print(actions)
         return {
             # "action_cards": action_card_list.action_cards,
             # "actions":

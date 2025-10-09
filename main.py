@@ -11,10 +11,10 @@ from app.routers.stt_router import router as stt_router
 from app.routers.marker_router import router as marker_router
 from app.routers.object_detect import router as object_router
 from app.routers.robot_info_router import router as robot_info_router
-from app.services.socket.handler.binary_handler import handle_binary_message
+from app.services.socket.handlers.binary_handler import handle_binary_message
 from app.services.socket.connection_manager import connection_manager, signaling_manager
 from app.services.socket.robot_websocket_service import robot_websocket_info_service
-from app.services.socket.handler.text_handler import handle_text_message
+from app.services.socket.handlers.text_handler import handle_text_message
 from config.config import settings
 
 # Build FastAPI kwargs dynamically to avoid invalid empty URL in license
