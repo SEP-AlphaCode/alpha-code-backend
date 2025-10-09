@@ -41,7 +41,7 @@ async def parse_osmo(img: bytes):  # parse-osmo
         # Use your existing logic functions
         action_card_list = await recognize_action_cards_from_image(temp_path)
         actions = await parse_action_card_list(action_card_list)
-        return {'data': {'actions': actions}, 'type': 'do_osmo_actions'}
+        return actions
     except Exception as e:
         raise e
     finally:

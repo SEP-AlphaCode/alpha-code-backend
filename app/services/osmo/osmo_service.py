@@ -48,7 +48,6 @@ async def recognize_action_cards_from_image(
             direction=OsmoCard(color="gray", direction=c.get("direction")) if c.get("direction") else None,
             step=OsmoCard(color="yellow", value=c.get("value", 1))
         ))
-    print('Done')
     return ActionCardList(action_cards=action_cards)
 
 def parse_osmo_cards(card_sequence: OsmoCardSequence) -> AlphaMiniActionList:
@@ -142,7 +141,7 @@ async def parse_action_card_list(action_card_list):
 
     return {
         "type": "osmo_card",
-        "data": result
+        "data": {'actions': result}
     }
 
 async def card_to_action(card: ActionCard) -> List[dict]:
