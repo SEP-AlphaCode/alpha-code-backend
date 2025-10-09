@@ -8,7 +8,12 @@ async def handle_command(req: RobotRequest):
     try:
         command_type = req.type
         print(command_type)
-        if command_type == "process-speech":
+        if command_type == 'ping':
+            return {
+                'type': 'get_system_info',
+                'data': {}
+            }
+        elif command_type == "process-speech":
             # Convert asr bytes to ASRData object
             asr_data = ASRData(arr=list(req.asr))
             return await process_speech(asr_data)
