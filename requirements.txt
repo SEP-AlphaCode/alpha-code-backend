@@ -1,4 +1,6 @@
-﻿alembic
+﻿django-qrcode
+pyzbar
+alembic
 alphamini
 asyncpg
 boto3

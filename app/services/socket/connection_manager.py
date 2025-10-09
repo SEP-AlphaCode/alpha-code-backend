@@ -73,7 +73,7 @@ class ConnectionManager:
             self.logger.warning(f"Attempted to disconnect robot {serial} but it was not connected")
         
     async def disconnect_with_reason(self, serial: str, reason: str):
-        print(serial, 'disconnecting')
+        print(serial, 'disconnecting with reason', reason)
         """Ngắt kết nối robot"""
         if serial in self.clients:
             ws: WebSocket = self.clients[serial].websocket
