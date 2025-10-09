@@ -7,7 +7,6 @@ from app.services.socket.handlers.command_pool import process_speech, detect_obj
 async def handle_command(req: RobotRequest):
     try:
         command_type = req.type
-        print(command_type)
         if command_type == 'ping':
             return {
                 'type': 'get_system_info',

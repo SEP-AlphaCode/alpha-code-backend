@@ -1,6 +1,4 @@
-﻿django-qrcode
-pyzbar
-alembic
+﻿alembic
 alphamini
 asyncpg
 boto3
@@ -32,3 +30,5 @@ torchvision
 ultralytics
 uvicorn[standard]
 whisper
+django-qrcode
+pyzbar
