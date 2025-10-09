@@ -11,9 +11,10 @@ from app.routers.stt_router import router as stt_router
 from app.routers.marker_router import router as marker_router
 from app.routers.object_detect import router as object_router
 from app.routers.robot_info_router import router as robot_info_router
-from app.services.socket.handlers.binary_handler import handle_binary_message
-from app.services.socket.connection_manager import connection_manager
-from app.services.socket.handlers.text_handler import handle_text_message
+from app.services.socket.handler.binary_handler import handle_binary_message
+from app.services.socket.connection_manager import connection_manager, signaling_manager
+from app.services.socket.robot_websocket_service import robot_websocket_info_service
+from app.services.socket.handler.text_handler import handle_text_message
 from config.config import settings
 
 # Build FastAPI kwargs dynamically to avoid invalid empty URL in license
@@ -76,6 +77,65 @@ async def websocket_alias(websocket: WebSocket, serial: str):
     except Exception as e:
         print(f"WebSocket error: {websocket.client}, {e}")
         await connection_manager.disconnect(serial)
+
+
+# Add signaling endpoint directly to main app (without /websocket prefix)
+@app.websocket("/ws/signaling/{serial}/{client_type}")
+async def signaling_main(ws: WebSocket, serial: str, client_type: str):
+    """
+    WebSocket signaling giữa robot và web client - Direct route
+    client_type: "robot" hoặc "web"
+    """
+    import logging
+    logging.info(f"=== MAIN APP signaling connection attempt ===")
+    logging.info(f"Serial: {serial}, Client type: {client_type}")
+
+    # Accept connection immediately
+    await ws.accept()
+    logging.info(f"Signaling accepted: {serial}/{client_type}")
+
+    try:
+        # Validate
+        if client_type not in ["robot", "web"]:
+            await ws.close(code=1008, reason="Invalid client_type")
+            return
+
+        # Add to connection manager
+        if serial not in signaling_manager.clients:
+            signaling_manager.clients[serial] = {}
+
+        # Close old connection of same type
+        if client_type in signaling_manager.clients[serial]:
+            try:
+                old_ws = signaling_manager.clients[serial][client_type].websocket
+                if old_ws.client_state.name != "DISCONNECTED":
+                    await old_ws.close(reason=f"New {client_type} connection")
+            except:
+                pass
+
+        from app.services.socket.connection_manager import WSMapEntry
+        signaling_manager.clients[serial][client_type] = WSMapEntry(ws, ws.headers.get("client_id"))
+        logging.info(f"✅ Signaling connection established: {serial}/{client_type}")
+
+        # Message loop
+        while True:
+            data = await ws.receive_json()
+            logging.info(f"Signaling data from {client_type}: {data}")
+
+            # Relay to other side
+            target_type = "web" if client_type == "robot" else "robot"
+            if signaling_manager.is_connected(serial, target_type):
+                await signaling_manager.send_to_client(serial, json.dumps(data), target_type)
+
+    except WebSocketDisconnect:
+        logging.info(f"Signaling disconnected: {serial}/{client_type}")
+    except Exception as e:
+        logging.error(f"Signaling error: {e}")
+    finally:
+        try:
+            await signaling_manager.disconnect(serial, client_type)
+        except:
+            pass
 
 
 @app.get("/", include_in_schema=False)

@@ -46,8 +46,10 @@ class OsmoCardRead(BaseModel):
     expression_id: Optional[UUID]
     action_id: Optional[UUID]
     dance_id: Optional[UUID]
+    skill_id: Optional[UUID]
+    extended_action_id: Optional[UUID]
     created_date: datetime
-    last_update: Optional[datetime]
+    last_updated: Optional[datetime]
 
     class Config:
         orm_mode = True

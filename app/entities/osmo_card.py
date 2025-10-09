@@ -19,8 +19,12 @@ class OsmoCard(Base):
     expression_id = Column(PG_UUID(as_uuid=True), ForeignKey("expressions.id"), nullable=True)
     action_id = Column(PG_UUID(as_uuid=True), ForeignKey("actions.id"), nullable=True)
     dance_id = Column(PG_UUID(as_uuid=True), ForeignKey("dances.id"), nullable=True)
+    skill_id = Column(PG_UUID(as_uuid=True), ForeignKey("skills.id"), nullable=True)
+    extended_action_id = Column(PG_UUID(as_uuid=True), ForeignKey("extended_actions.id"), nullable=True)
 
     # Relationships (Expression/Action/Dance model phải tồn tại ở Python)
     expression = relationship("Expression", back_populates="osmo_cards", lazy="selectin")
     action = relationship("Action", back_populates="osmo_cards", lazy="selectin")
     dance = relationship("Dance", back_populates="osmo_cards", lazy="selectin")
+    skill = relationship("Skill", back_populates="osmo_card", lazy="selectin")
+    extended_action = relationship("ExtendedAction", back_populates="osmo_card", lazy="selectin")

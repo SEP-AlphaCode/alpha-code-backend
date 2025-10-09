@@ -31,8 +31,9 @@ async def recognize_action_cards_from_image_api(image: UploadFile = File(...)):
         action_card_list = await recognize_action_cards_from_image(temp_path)
         actions = await parse_action_card_list(action_card_list)
         return {
-            "action_cards": action_card_list.action_cards,
-            "actions": actions
+            # "action_cards": action_card_list.action_cards,
+            # "actions":
+            actions
 
         }
     except Exception as e:
