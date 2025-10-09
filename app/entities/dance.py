@@ -21,7 +21,5 @@ class Dance(Base):
     icon = Column(String(255), nullable=False)
     robotModelId = Column(PG_UUID(as_uuid=True), nullable=True)
 
-    osmo_card_id = Column(PG_UUID(as_uuid=True), ForeignKey("osmo_card.id"), nullable=True)
-
     # Relationships
     osmo_cards = relationship("OsmoCard", back_populates="dance", lazy="selectin")

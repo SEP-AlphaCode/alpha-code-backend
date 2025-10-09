@@ -17,7 +17,6 @@ class ExtendedAction(Base):
     last_update = Column(DateTime(timezone=True), nullable=True, onupdate=func.now())
     created_date = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
-    osmo_card_id = Column(PG_UUID(as_uuid=True), ForeignKey("osmo_card.id"), nullable=True)
 
     # Relationships
     osmo_card = relationship("OsmoCard", back_populates="extended_action", lazy="selectin")
