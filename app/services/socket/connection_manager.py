@@ -137,4 +137,5 @@ class ConnectionManager:
 
 
 # Tạo instance global
-connection_manager = ConnectionManager()
+connection_manager = ConnectionManager()        # Dùng cho control / data / robot API
+signaling_manager = ConnectionManager()
