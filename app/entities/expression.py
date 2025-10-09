@@ -1,6 +1,6 @@
 # app/db/models/expression.py
 import uuid
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -15,6 +15,7 @@ class Expression(Base):
     image_url = Column(String(255), nullable=False)
     status = Column(Integer, nullable=False)
     robotModelId = Column(PG_UUID(as_uuid=True), nullable=True)
+    osmo_card_id = Column(PG_UUID(as_uuid=True), ForeignKey("osmo_card.id"), nullable=True)
 
     created_date = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     last_update = Column(DateTime(timezone=True), onupdate=func.now())

@@ -1,6 +1,6 @@
 # app/db/models/action.py
 import uuid
-from sqlalchemy import Column, String, Integer, DateTime, Boolean
+from sqlalchemy import Column, String, Integer,ForeignKey, DateTime, Boolean
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -20,6 +20,7 @@ class Action(Base):
     created_date = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     can_interrupt = Column(Boolean, nullable=False, default=False)
     robotModelId = Column(PG_UUID(as_uuid=True), nullable=True)
+    osmo_card_id = Column(PG_UUID(as_uuid=True), ForeignKey("osmo_card.id"), nullable=True)
 
     # - osmo_cards: quan hệ ngược với OsmoCard
     osmo_cards = relationship("OsmoCard", back_populates="action", lazy="selectin")

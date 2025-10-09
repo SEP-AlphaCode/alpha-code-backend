@@ -1,6 +1,6 @@
 # app/db/models/dance.py
 import uuid
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.dialects.mysql import DOUBLE
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
@@ -20,6 +20,8 @@ class Dance(Base):
     duration = Column(DOUBLE, nullable=False)
     icon = Column(String(255), nullable=False)
     robotModelId = Column(PG_UUID(as_uuid=True), nullable=True)
+
+    osmo_card_id = Column(PG_UUID(as_uuid=True), ForeignKey("osmo_card.id"), nullable=True)
 
     # Relationships
     osmo_cards = relationship("OsmoCard", back_populates="dance", lazy="selectin")
