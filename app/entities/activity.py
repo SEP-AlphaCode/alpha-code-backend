@@ -20,3 +20,6 @@ class Activity(Base):
 
     # Relationships
     qr_codes = relationship("QRCode", back_populates="activity", lazy="selectin")
+    
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}

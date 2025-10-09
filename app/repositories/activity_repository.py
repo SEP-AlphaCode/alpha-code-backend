@@ -7,7 +7,6 @@ from typing import Optional, Dict, Any
 
 from app.entities.qr_code import QRCode
 
-
 async def get_activity_from_qr(
         qr_code_value: str
 ) -> Optional[QRCode]:
@@ -42,9 +41,9 @@ async def get_activity_from_qr(
                 return None
             
             # Extract the data - row[0] is the JSONB data field
-            activity_data = row[0]
+            activity_data:Activity = row[0]
             
-            return activity_data
+            return activity_data.as_dict()
         
         except Exception as e:
             print(f"Error retrieving activity data from QR code: {e}")
