@@ -1,10 +1,9 @@
-from app.models.proto.robot_command_pb2 import RobotRequest
 from app.models.stt import ASRData, STTResponse
 from app.repositories.activity_repository import get_activity_from_qr
 from app.services.nlp.nlp_service import process_text, process_obj_detect
 from app.services.object_detect.object_detect_service import detect_closest_objects_from_bytes
 from app.services.osmo.osmo_service import recognize_action_cards_from_image, parse_action_card_list
-from app.services.qr_code.qr_code_service import detect_qr_from_bytes
+from app.services.qr_code.qr_code_service import detect_qr_code
 from app.services.socket import connection_manager
 from app.services.stt.stt_service import transcribe_bytes
 
@@ -61,7 +60,7 @@ async def notify_shutdown(serial: str):  # notify-shutdown
 
 async def parse_qr(img: bytes):  # parse-qr
     try:
-        code = detect_qr_from_bytes(img)
+        code = detect_qr_code(img)
         activities = await get_activity_from_qr(code)
         return activities
     except Exception as e:
