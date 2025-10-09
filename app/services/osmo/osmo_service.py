@@ -124,46 +124,68 @@ async def parse_action_card_list(action_card_list):
 
             # Lấy toàn bộ các thẻ sau loop
             for j in range(i + 1, len(cards)):
-                loop_body.append(await card_to_action(cards[j]))
+                actions_inside = await card_to_action(cards[j])
+                loop_body.extend(actions_inside)
 
             result.append({
-                "action": "loop",
+                "type": "loop",
                 "times": times,
                 "actions": loop_body
             })
-            break  # dừng vì đã xử lý xong
+            break
 
         # ---- ACTION THƯỜNG ----
-        result.append(await card_to_action(card))
+        actions = await card_to_action(card)
+        result.extend(actions)
         i += 1
 
     return result
 
-async def card_to_action(card: ActionCard) -> dict:
-    """Chuyển 1 ActionCard sang dict hành động, lookup DB thay vì hardcode."""
+async def card_to_action(card: ActionCard) -> List[dict]:
+    """Convert 1 ActionCard sang list các dict action (mỗi step = 1 item)."""
     db_card = await get_osmo_card_by_color(card.action.color)
+    step_count = card.step.value if card.step else 1
 
-    if not db_card:
-        action_name = "unknown"
-    else:
-        # Ưu tiên action.name nếu có, rồi đến dance.name, expression.name
-        if db_card.action:
-            action_name = db_card.action.name
-        elif db_card.dance:
-            action_name = db_card.dance.name
-        elif db_card.expression:
-            action_name = db_card.expression.name
-        else:
-            action_name = db_card.name  # fallback
-
-    # # Thêm hướng nếu có
-    # if card.direction and card.direction.direction:
-    #     action_name += "_" + card.direction.direction
-
-    return {
-        "action": action_name,
-        "value": card.step.value if card.step else 1
+    # Map màu sang RGB
+    color_map = {
+        "blue": [0, 0, 255],
+        "red": [255, 0, 0],
+        "orange": [255, 165, 0],
+        "yellow": [255, 255, 0],
+        "gray": [128, 128, 128],
     }
+    rgb_color = color_map.get(card.action.color, [255, 255, 255])  # fallback: white
+
+    # Default values
+    action_type = "unknown"
+    action_code = "unknown"
+
+    if db_card:
+        if db_card.action or db_card.dance:
+            action_type = "action"
+            action_code = db_card.code
+        elif db_card.expression:
+            action_type = "expression"
+            action_code = db_card.code
+        elif getattr(db_card, "skill", None):
+            action_type = "skill_helper"
+            action_code = db_card.code
+        elif getattr(db_card, "extended_action", None):
+            action_type = "extended_action"
+            action_code = db_card.code
+        else:
+            action_code = db_card.code
+
+    # Lặp lại theo số step
+    result = []
+    for _ in range(step_count):
+        result.append({
+            "type": action_type,
+            "code": action_code,
+            "color": rgb_color
+        })
+
+    return result
 
 
 # ------------------ Recognizer ------------------
