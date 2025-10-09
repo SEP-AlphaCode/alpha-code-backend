@@ -25,7 +25,7 @@ async def get_activity_from_qr(
         try:
             # Build query to select only the activity data we need
             query = (
-                select(Activity.data)
+                select(Activity)
                 .join(QRCode, QRCode.activity_id == Activity.id)
                 .where(
                     QRCode.qr_code == qr_code_value,
