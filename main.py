@@ -13,7 +13,7 @@ from app.routers.marker_router import router as marker_router
 from app.routers.object_detect import router as object_router
 from app.routers.robot_info_router import router as robot_info_router
 from app.services.socket.binary_handler import handle_binary_message
-from app.services.socket.connection_manager import connection_manager
+from app.services.socket.connection_manager import connection_manager, signaling_manager
 from app.services.socket.robot_websocket_service import robot_websocket_info_service
 from app.services.socket.text_handler import handle_text_message
 from config.config import settings
@@ -102,20 +102,20 @@ async def signaling_main(ws: WebSocket, serial: str, client_type: str):
             return
 
         # Add to connection manager
-        if serial not in connection_manager.clients:
-            connection_manager.clients[serial] = {}
+        if serial not in signaling_manager.clients:
+            signaling_manager.clients[serial] = {}
 
         # Close old connection of same type
-        if client_type in connection_manager.clients[serial]:
+        if client_type in signaling_manager.clients[serial]:
             try:
-                old_ws = connection_manager.clients[serial][client_type].websocket
+                old_ws = signaling_manager.clients[serial][client_type].websocket
                 if old_ws.client_state.name != "DISCONNECTED":
                     await old_ws.close(reason=f"New {client_type} connection")
             except:
                 pass
 
         from app.services.socket.connection_manager import WSMapEntry
-        connection_manager.clients[serial][client_type] = WSMapEntry(ws, ws.headers.get("client_id"))
+        signaling_manager.clients[serial][client_type] = WSMapEntry(ws, ws.headers.get("client_id"))
         logging.info(f"✅ Signaling connection established: {serial}/{client_type}")
 
         # Message loop
@@ -125,8 +125,8 @@ async def signaling_main(ws: WebSocket, serial: str, client_type: str):
 
             # Relay to other side
             target_type = "web" if client_type == "robot" else "robot"
-            if connection_manager.is_connected(serial, target_type):
-                await connection_manager.send_to_client(serial, json.dumps(data), target_type)
+            if signaling_manager.is_connected(serial, target_type):
+                await signaling_manager.send_to_client(serial, json.dumps(data), target_type)
 
     except WebSocketDisconnect:
         logging.info(f"Signaling disconnected: {serial}/{client_type}")
@@ -134,7 +134,7 @@ async def signaling_main(ws: WebSocket, serial: str, client_type: str):
         logging.error(f"Signaling error: {e}")
     finally:
         try:
-            await connection_manager.disconnect(serial, client_type)
+            await signaling_manager.disconnect(serial, client_type)
         except:
             pass
 
