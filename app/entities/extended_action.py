@@ -14,7 +14,7 @@ class ExtendedAction(Base):
     icon = Column(String(255), nullable=True)
     robotModelId = Column(PG_UUID(as_uuid=True), nullable=True)
 
-    last_update = Column(DateTime(timezone=True), nullable=True, onupdate=func.now())
+    last_updated = Column(DateTime(timezone=True), nullable=True, onupdate=func.now())
     created_date = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
 

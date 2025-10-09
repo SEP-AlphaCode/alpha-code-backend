@@ -17,7 +17,7 @@ class Expression(Base):
     robotModelId = Column(PG_UUID(as_uuid=True), nullable=True)
 
     created_date = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    last_update = Column(DateTime(timezone=True), onupdate=func.now())
+    last_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Relationships
     osmo_cards = relationship("OsmoCard", back_populates="expression", lazy="selectin")

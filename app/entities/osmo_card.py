@@ -13,7 +13,7 @@ class OsmoCard(Base):
     name = Column(String(255), nullable=False)
     status = Column(Integer, nullable=False, default=1)
 
-    last_update = Column(DateTime(timezone=True), nullable=True, onupdate=func.now())
+    last_updated = Column(DateTime(timezone=True), nullable=True, onupdate=func.now())
     created_date = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
     expression_id = Column(PG_UUID(as_uuid=True), ForeignKey("expressions.id"), nullable=True)
