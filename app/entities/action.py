@@ -15,9 +15,11 @@ class Action(Base):
     description = Column(String(255), nullable=True)
     duration = Column(Integer, nullable=False)
     status = Column(Integer, nullable=False)
+    icon = Column(String(255), nullable=True)
     last_update = Column(DateTime(timezone=True), onupdate=func.now())
     created_date = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     can_interrupt = Column(Boolean, nullable=False, default=False)
+    robotModelId = Column(PG_UUID(as_uuid=True), nullable=True)
 
     # - osmo_cards: quan hệ ngược với OsmoCard
     osmo_cards = relationship("OsmoCard", back_populates="action", lazy="selectin")

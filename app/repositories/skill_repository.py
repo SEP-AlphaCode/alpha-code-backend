@@ -1,0 +1,35 @@
+from sqlalchemy.future import select
+from typing import List, Optional
+from app.entities.database import AsyncSessionLocal
+from app.entities.skill import Skill
+
+async def get_all_skills() -> List[Skill]:
+    """Lấy toàn bộ skills"""
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(select(Skill))
+        return result.scalars().all()
+
+async def get_skill_by_code(code: str) -> Optional[Skill]:
+    """Lấy skill theo code"""
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(select(Skill).where(Skill.code == code))
+        return result.scalar_one_or_none()
+
+async def create_skill(data: Skill) -> Skill:
+    """Thêm mới skill"""
+    async with AsyncSessionLocal() as session:
+        session.add(data)
+        await session.commit()
+        await session.refresh(data)
+        return data
+
+async def delete_skill_by_id(id: str) -> bool:
+    """Xóa skill theo id"""
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(select(Skill).where(Skill.id == id))
+        skill = result.scalar_one_or_none()
+        if skill:
+            await session.delete(skill)
+            await session.commit()
+            return True
+        return False

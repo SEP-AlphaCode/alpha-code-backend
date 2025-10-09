@@ -24,3 +24,5 @@ class OsmoCard(Base):
     expression = relationship("Expression", back_populates="osmo_cards", lazy="selectin")
     action = relationship("Action", back_populates="osmo_cards", lazy="selectin")
     dance = relationship("Dance", back_populates="osmo_cards", lazy="selectin")
+    skill = relationship("Skill", back_populates="osmo_card", lazy="selectin")
+    extended_action = relationship("ExtendedAction", back_populates="osmo_card", lazy="selectin")
