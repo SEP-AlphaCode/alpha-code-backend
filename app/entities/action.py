@@ -7,7 +7,7 @@ from sqlalchemy.sql import func
 from app.entities.database import Base
 
 class Action(Base):
-    __tablename__ = "actions"
+    __tablename__ = "action"
 
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     code = Column(String(100), nullable=False, unique=True)
@@ -19,7 +19,7 @@ class Action(Base):
     last_updated = Column(DateTime(timezone=True), nullable=True, onupdate=func.now())
     created_date = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     can_interrupt = Column(Boolean, nullable=False, default=False)
-    robotModelId = Column(PG_UUID(as_uuid=True), nullable=True)
+    robot_model_id = Column(PG_UUID(as_uuid=True), nullable=True)
 
     # - osmo_cards: quan hệ ngược với OsmoCard
-    osmo_cards = relationship("OsmoCard", back_populates="action", lazy="selectin")
+    osmo_card = relationship("OsmoCard", back_populates="action", lazy="selectin")

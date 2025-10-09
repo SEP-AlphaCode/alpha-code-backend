@@ -126,11 +126,13 @@ async def parse_action_card_list(action_card_list):
                 actions_inside = await card_to_action(cards[j])
                 loop_body.extend(actions_inside)
 
-            result.append({
-                "type": "loop",
-                "times": times,
-                "actions": loop_body
-            })
+            # result.append({
+            #     "type": "loop",
+            #     "times": times,
+            #     "actions": loop_body
+            # })
+            for _ in range(times):
+                result.extend(loop_body)
             break 
 
         # ---- ACTION THƯỜNG ----
@@ -138,7 +140,10 @@ async def parse_action_card_list(action_card_list):
         result.extend(actions)
         i += 1
 
-    return result
+    return {
+        "type": "osmo_card",
+        "data": result
+    }
 
 async def card_to_action(card: ActionCard) -> List[dict]:
     """Convert 1 ActionCard sang list các dict action (mỗi step = 1 item)."""
@@ -160,25 +165,26 @@ async def card_to_action(card: ActionCard) -> List[dict]:
     action_code = "unknown"
 
     if db_card:
-        if db_card.action or db_card.dance:
+        if db_card.action is not None:
             action_type = "action"
-            action_code = db_card.code
-        elif db_card.expression:
+            action_code = db_card.action.code
+        elif db_card.dance is not None:
+            action_type = "action"
+            action_code = db_card.dance.code
+        elif db_card.expression is not None:
             action_type = "expression"
-            action_code = db_card.code
-        elif getattr(db_card, "skill", None):
+            action_code = db_card.expression.code
+        elif db_card.skill is not None:
             action_type = "skill_helper"
-            action_code = db_card.code
-        elif getattr(db_card, "extended_action", None):
+            action_code = db_card.skill.code
+        elif db_card.extended_action is not None:
             action_type = "extended_action"
-            action_code = db_card.code
-        else:
-            action_code = db_card.code
+            action_code = db_card.extended_action.code
 
+    print(f"Card {card.action.color} -> {action_type}:{action_code} x{step_count}")
     # Lặp lại theo số step
-    result = []
-    for _ in range(step_count):
-        result.append({
+    return [
+        {
             "type": action_type,
             "code": action_code,
             "color": {
@@ -187,7 +193,9 @@ async def card_to_action(card: ActionCard) -> List[dict]:
                 'g': rgb_color[1],
                 'b': rgb_color[2]
             }
-        })
+        }
+        for _ in range(step_count)
+    ]
 
     return result
 
