@@ -1,7 +1,7 @@
 from app.models.proto.robot_command_pb2 import RobotRequest
 from app.models.stt import ASRData
 from app.services.socket.handlers.command_pool import process_speech, detect_object, parse_osmo, notify_shutdown, \
-    parse_qr
+    parse_qr, process_text
 
 
 async def handle_command(req: RobotRequest):
@@ -16,6 +16,10 @@ async def handle_command(req: RobotRequest):
             # Convert asr bytes to ASRData object
             asr_data = ASRData(arr=list(req.asr))
             return await process_speech(asr_data)
+        
+        elif command_type == 'process-text':
+            text = req.params['text']
+            return await process_text(text)
         
         elif command_type == "detect-object":
             lang = req.params['lang']
