@@ -21,11 +21,35 @@ async def recognize_action_cards_from_image(
         "data": open(image_path, "rb").read()
     }
     prompt = """
-    Detect Osmo action cards from this photo.
-    Return JSON array only. Each item has:
-    - color: "blue","red","orange","gray","pink"
-    - direction: "forward","backward","left","right" or null
-    - value: integer (>=1) (yellow card will represent for number of step)
+    You are analyzing an image that contains one or more horizontal rows of Osmo action cards.
+
+    Each row typically includes:
+    - One **action card** on the left with a color indicating the type of action.
+    - Optionally, one **yellow step card** on the right indicating the number of steps.
+
+    Your task:
+    Detect all rows and return a **pure JSON array** (no text or markdown).
+    Each item represents one detected row in top-to-bottom order.
+
+    JSON format for each item:
+    {
+      "color": "blue" | "red" | "orange" | "gray" | "pink" | "purple" | "green",
+      "direction": "forward" | "backward" | "left" | "right" | null,
+      "value": integer
+    }
+
+    Rules:
+    1. The "color" field corresponds to the color of the action card (not yellow).
+    2. If a yellow card is present in the same row, extract the number on it and use that as "value".
+    3. If there is **no yellow card**, default `"value": 1`.
+    5. Return **JSON only**, without explanations or code fences.
+
+    Example valid output:
+    [
+      {"color": "red", "direction": "backward", "value": 3},
+      {"color": "blue", "direction": "forward", "value": 2},
+      {"color": "green", "direction": "left", "value": 5}
+    ]
     """
 
     from starlette.concurrency import run_in_threadpool
