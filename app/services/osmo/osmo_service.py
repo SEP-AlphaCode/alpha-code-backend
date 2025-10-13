@@ -23,9 +23,9 @@ async def recognize_action_cards_from_image(
     prompt = """
     Detect Osmo action cards from this photo.
     Return JSON array only. Each item has:
-    - color: "blue","red","orange","yellow","gray"
+    - color: "blue","red","orange","gray","pink"
     - direction: "forward","backward","left","right" or null
-    - value: integer (>=1)
+    - value: integer (>=1) (yellow card will represent for number of step)
     """
 
     from starlette.concurrency import run_in_threadpool
