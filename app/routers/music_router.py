@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from app.services.audio.audio_service import convert_audio_to_wav_and_upload
 from app.services.music.planner import build_activity_json
-from app.services.music.durations import get_durations_summary, load_all_durations
+from app.services.music.durations import load_all_durations
 from fastapi import APIRouter, UploadFile, File, HTTPException, Body, Query
 
 router = APIRouter()
@@ -15,29 +15,30 @@ class MusicRequest(BaseModel):
     music_name: str
     music_url: str
     duration: float  # seconds
+    robot_model_id: str
 
-@router.get("")
-async def get_all_durations():
-    """Lấy thông tin durations hiện đang load trong bộ nhớ."""
-    return get_durations_summary()
+# @router.get("")
+# async def get_all_durations():
+#     return get_durations_summary()
 
 
-@router.post("/reload")
-async def reload_durations():
-    """Reload durations từ DB."""
-    await load_all_durations()
-    return {"message": "Durations reloaded successfully"}
+# @router.post("/reload")
+# async def reload_durations():
+#     """Reload durations từ DB."""
+#     await load_all_durations()
+#     return {"message": "Durations reloaded successfully"}
 
 @router.post('/generate-dance-plan')
 async def generate_dance_plan(req: MusicRequest):
-    return build_activity_json(req.music_name, req.music_url, req.duration)
+    return await build_activity_json(req.music_name, req.music_url, req.duration, req.robot_model_id)
 
 
 @router.post('/upload-music-and-generate-plan')
 async def upload_music_and_generate_plan(
         file: UploadFile = File(...),
         start_time: Optional[float] = Body(None, description="Start time in seconds (optional)", ge=0),
-        end_time: Optional[float] = Body(None, description="End time in seconds (optional)", ge=0)):
+        end_time: Optional[float] = Body(None, description="End time in seconds (optional)", ge=0),
+        robot_model_id: str = Body(..., description="Robot model ID")):
     # Chỉ cho phép mp3 và mp4
     if not (file.filename.lower().endswith(".mp3") or file.filename.lower().endswith(".mp4")):
         raise HTTPException(status_code=400, detail="Only .mp3 or .mp4 files are supported.")
@@ -51,7 +52,7 @@ async def upload_music_and_generate_plan(
 
         # Add trimming info to response if parameters were provided
 
-        response_data = build_activity_json(result["file_name"], result["url"], result["duration"])
+        response_data = await build_activity_json(result["file_name"], result["url"], result["duration"], robot_model_id)
 
         # lấy phần data ra
         new_res_data = response_data['data'].copy()

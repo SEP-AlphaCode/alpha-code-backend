@@ -17,7 +17,7 @@ import numpy as np
 #     EXPRESSION_DURATIONS_MS,
 # )
 from app.services.music.durations import (
-    get_durations_summary,
+    load_all_durations,
 )
 
 # DANCE_DURATIONS = {k: v/1000.0 for k, v in DANCE_DURATIONS_MS.items()}
@@ -32,15 +32,17 @@ class PlannedSegment:
     action_type: str
 
 class MusicActivityPlanner:
-    def __init__(self):
-        durations = get_durations_summary()
-
+    def __init__(self, durations: dict):
+        """Initialize planner with dynamic durations dict."""
         def _normalize(d: dict):
             return {k: v / 1000.0 for k, v in d.items() if isinstance(v, (int, float))}
 
         self.dances = _normalize(durations.get("dance", {}))
         self.actions = _normalize(durations.get("action", {}))
         self.expressions = _normalize(durations.get("expression", {}))
+
+        if not any([self.dances, self.actions, self.expressions]):
+            raise ValueError("No duration data available for this robot model")
         # self.dances = DANCE_DURATIONS
         # self.actions = ACTION_DURATIONS
         # self.expressions = EXPRESSION_DURATIONS
@@ -234,8 +236,9 @@ def fetch_audio(url: str) -> bytes:
     return r.content
 
 
-def build_activity_json(music_name: str, music_url: str, music_duration: float) -> dict:
-    planner = MusicActivityPlanner()
+async def build_activity_json(music_name: str, music_url: str, music_duration: float, robot_model_id: str) -> dict:
+    durations = await load_all_durations(robot_model_id)
+    planner = MusicActivityPlanner(durations)
     beats: List[float] = []
     energies: List[float] = []
     seed = None
