@@ -13,3 +13,9 @@ async def get_action_by_code(code: str) -> Optional[Action]:
     async with AsyncSessionLocal() as session:
         result = await session.execute(select(Action).where(Action.code == code))
         return result.scalar_one_or_none()
+
+async def load_action_durations() -> dict[str, int]:
+    """Load action durations (ms) từ bảng action."""
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(select(Action.code, Action.duration))
+        return {code: int(duration or 0) for code, duration in result.all()}

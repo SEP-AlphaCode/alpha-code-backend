@@ -11,15 +11,18 @@ except Exception:
     librosa = None
 import numpy as np
 
-from .durations import (
-    DANCE_DURATIONS_MS,
-    ACTION_DURATIONS_MS,
-    EXPRESSION_DURATIONS_MS,
+# from .durations import (
+#     DANCE_DURATIONS_MS,
+#     ACTION_DURATIONS_MS,
+#     EXPRESSION_DURATIONS_MS,
+# )
+from app.services.music.durations import (
+    get_durations_summary,
 )
 
-DANCE_DURATIONS = {k: v/1000.0 for k, v in DANCE_DURATIONS_MS.items()}
-ACTION_DURATIONS = {k: v/1000.0 for k, v in ACTION_DURATIONS_MS.items()}
-EXPRESSION_DURATIONS = {k: v/1000.0 for k, v in EXPRESSION_DURATIONS_MS.items()}
+# DANCE_DURATIONS = {k: v/1000.0 for k, v in DANCE_DURATIONS_MS.items()}
+# ACTION_DURATIONS = {k: v/1000.0 for k, v in ACTION_DURATIONS_MS.items()}
+# EXPRESSION_DURATIONS = {k: v/1000.0 for k, v in EXPRESSION_DURATIONS_MS.items()}
 
 @dataclass
 class PlannedSegment:
@@ -30,9 +33,17 @@ class PlannedSegment:
 
 class MusicActivityPlanner:
     def __init__(self):
-        self.dances = DANCE_DURATIONS
-        self.actions = ACTION_DURATIONS
-        self.expressions = EXPRESSION_DURATIONS
+        durations = get_durations_summary()
+
+        def _normalize(d: dict):
+            return {k: v / 1000.0 for k, v in d.items() if isinstance(v, (int, float))}
+
+        self.dances = _normalize(durations.get("dance", {}))
+        self.actions = _normalize(durations.get("action", {}))
+        self.expressions = _normalize(durations.get("expression", {}))
+        # self.dances = DANCE_DURATIONS
+        # self.actions = ACTION_DURATIONS
+        # self.expressions = EXPRESSION_DURATIONS
         self._dance_cycle = list(self.dances.items())
         self._action_cycle = list(self.actions.items())
         self._expr_cycle = list(self.expressions.items())
@@ -249,7 +260,9 @@ def build_activity_json(music_name: str, music_url: str, music_duration: float) 
         return {'a': 0, 'r': int(r*255), 'g': int(g*255), 'b': int(b*255)}
 
     for idx, seg in enumerate(plan):
-        atype = 'expression' if seg.action_id in EXPRESSION_DURATIONS else 'dance'
+        # atype = 'expression' if seg.action_id in EXPRESSION_DURATIONS else 'dance'
+        atype = 'expression' if seg.action_id in planner.expressions else 'dance'
+
         activity_actions.append({
             'action_id': seg.action_id,
             'start_time': round(seg.start_time, 2),

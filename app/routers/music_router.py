@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 from app.services.audio.audio_service import convert_audio_to_wav_and_upload
 from app.services.music.planner import build_activity_json
+from app.services.music.durations import get_durations_summary, load_all_durations
 from fastapi import APIRouter, UploadFile, File, HTTPException, Body, Query
 
 router = APIRouter()
@@ -15,6 +16,17 @@ class MusicRequest(BaseModel):
     music_url: str
     duration: float  # seconds
 
+@router.get("")
+async def get_all_durations():
+    """Lấy thông tin durations hiện đang load trong bộ nhớ."""
+    return get_durations_summary()
+
+
+@router.post("/reload")
+async def reload_durations():
+    """Reload durations từ DB."""
+    await load_all_durations()
+    return {"message": "Durations reloaded successfully"}
 
 @router.post('/generate-dance-plan')
 async def generate_dance_plan(req: MusicRequest):

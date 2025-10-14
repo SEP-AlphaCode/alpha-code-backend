@@ -17,6 +17,7 @@ from app.services.socket.handlers.binary_handler import handle_binary_message
 from app.services.socket.connection_manager import connection_manager, signaling_manager
 from app.services.socket.robot_websocket_service import robot_websocket_info_service
 from app.services.socket.handlers.text_handler import handle_text_message
+from app.services.music.durations import load_all_durations
 from config.config import settings
 
 # Build FastAPI kwargs dynamically to avoid invalid empty URL in license
@@ -139,6 +140,9 @@ async def signaling_main(ws: WebSocket, serial: str, client_type: str):
         except:
             pass
 
+@app.on_event("startup")
+async def on_startup():
+    await load_all_durations()
 
 @app.get("/", include_in_schema=False)
 async def root():
