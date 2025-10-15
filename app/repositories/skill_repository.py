@@ -33,3 +33,10 @@ async def delete_skill_by_id(id: str) -> bool:
             await session.commit()
             return True
         return False
+
+async def get_skills_by_robot_model_repo(robot_model_id: str):
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(Skill).where(Skill.robot_model_id == robot_model_id)
+        )
+        return result.scalars().all()

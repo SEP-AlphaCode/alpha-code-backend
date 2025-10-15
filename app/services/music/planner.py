@@ -283,6 +283,8 @@ async def build_activity_json(music_name: str, music_url: str, music_duration: f
             },
             'activity': {
                 'actions': activity_actions
-            }
+            },
+            'robot_model_id': robot_model_id
         }
+
     }
