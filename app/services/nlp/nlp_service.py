@@ -8,6 +8,8 @@ from .prompt import build_prompt
 from .prompt_obj_detect import build_prompt_obj_detect
 from ..stt.stt_service import transcribe_audio
 from .skills_loader import load_skills_text
+from app.repositories.robot_model_repository import get_robot_prompt_by_id
+from app.services.nlp.prompt import PROMPT_TEMPLATE
 # =========================
 # Config Gemini
 # =========================
@@ -29,6 +31,24 @@ else:
 async def load_skills_text_async(robot_model_id: str) -> str:
     skills_text = await load_skills_text(robot_model_id)
     return skills_text
+
+async def load_robot_prompt(robot_model_id: str) -> str:
+    db_prompt = await get_robot_prompt_by_id(robot_model_id)
+    return db_prompt or ""
+
+async def build_prompt(input_text: str, robot_model_id: str) -> str:
+    db_prompt = await get_robot_prompt_by_id(robot_model_id)
+    skills_text = await load_skills_text(robot_model_id)
+    safe_text = input_text.replace('"', '\\"')
+
+    # fallback nếu DB không có prompt
+    prompt_template = db_prompt or PROMPT_TEMPLATE
+
+    return (
+        prompt_template
+        .replace("$INPUT_TEXT", safe_text)
+        .replace("$SKILL_LIST", skills_text)
+    )
 
 async def process_audio(req: UploadFile, robot_model_id: str ) -> dict:
     try:

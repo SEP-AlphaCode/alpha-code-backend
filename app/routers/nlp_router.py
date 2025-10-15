@@ -3,13 +3,17 @@ from fastapi import APIRouter, UploadFile, Response, HTTPException
 from app.services.audio.audio_service import text_to_mp3_bytes
 from app.services.nlp.nlp_service import process_text, process_audio, process_obj_detect
 from app.models.nlp import NLPRequest
-from app.services.nlp.nlp_service import load_skills_text_async
+from app.services.nlp.nlp_service import load_skills_text_async, load_robot_prompt
 
 router = APIRouter()
 
 @router.get("/skills")
 async def get_skills(robot_model_id: str):
     return await load_skills_text_async(robot_model_id)
+
+@router.get("/prompt")
+async def get_prompt(robot_model_id: str):
+    return {"prompt": await load_robot_prompt(robot_model_id)}
 
 @router.post('/process-audio')
 async def process_audio_endpoint(file: UploadFile, robot_model_id: str):
