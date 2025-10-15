@@ -7,6 +7,7 @@ to maintain, reuse, test, and potentially localize.
 from pathlib import Path
 from textwrap import dedent
 from typing import Final
+from app.services.nlp.skills_loader import load_skills_text
 
 SKILLS_FILE = Path(__file__).resolve().parents[2] / "files" / "skills.txt"
 
@@ -149,18 +150,19 @@ PROMPT_TEMPLATE: Final[str] = dedent(
 ).strip()
 
 
-def build_prompt(input_text: str) -> str:
+async def build_prompt(input_text: str, robot_model_id: str) -> str:
     """Return the full prompt with the user input embedded.
 
     Escapes double quotes in the input to keep JSON inside prompt consistent.
     """
     safe_text = input_text.replace('"', '\\"')
+    skills_text = await load_skills_text(robot_model_id)
     return PROMPT_TEMPLATE.replace("$INPUT_TEXT", safe_text).replace(
-        "$SKILL_LIST", SKILLS_TEXT
+        "$SKILL_LIST", skills_text
     )
 
 
 __all__ = ["build_prompt", "PROMPT_TEMPLATE"]
 
-with open(SKILLS_FILE, "r", encoding="utf-8") as f:
-    SKILLS_TEXT = f.read()
+# with open(SKILLS_FILE, "r", encoding="utf-8") as f:
+#     SKILLS_TEXT = f.read()

@@ -2,6 +2,7 @@ from sqlalchemy.future import select
 from typing import List, Optional
 from app.entities.database import AsyncSessionLocal
 from app.entities.skill import Skill
+from aiocache import cached
 
 async def get_all_skills() -> List[Skill]:
     """Lấy toàn bộ skills"""
@@ -33,3 +34,12 @@ async def delete_skill_by_id(id: str) -> bool:
             await session.commit()
             return True
         return False
+
+
+@cached(ttl=60 * 10, key_builder=lambda f, robot_model_id: f"skill:{robot_model_id}")
+async def get_skills_by_robot_model_repo(robot_model_id: str):
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(Skill).where(Skill.robot_model_id == robot_model_id)
+        )
+        return result.scalars().all()

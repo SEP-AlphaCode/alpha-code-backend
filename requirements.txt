@@ -32,3 +32,5 @@ uvicorn[standard]
 whisper
 torch
 transformers
+aiocache
+redis[async]
