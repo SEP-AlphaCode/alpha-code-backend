@@ -4,7 +4,7 @@ from app.services.socket.handlers.command_pool import process_speech, detect_obj
     parse_qr, process_text
 
 
-async def handle_command(req: RobotRequest, model_id: str):
+async def handle_command(req: RobotRequest, serial: str, model_id: str):
     try:
         command_type = req.type
         if command_type == 'ping':

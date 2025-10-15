@@ -12,7 +12,7 @@ async def handle_binary_message(websocket: WebSocket, data: bytes, serial: str, 
         request.ParseFromString(data)
         
         # Use the handle_command function to process the request
-        result = await handle_command(request)
+        result = await handle_command(request, serial, model_id)
         
         # Send the result back as JSON
         if hasattr(result, 'json') and callable(getattr(result, 'json')):

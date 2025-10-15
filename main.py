@@ -7,7 +7,7 @@ from config.config import settings
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
-
+from starlette.responses import Response
 from app.routers.osmo_router import router as osmo_router
 from app.routers.audio_router import router as audio_router
 from app.routers.websocket_router import router as websocket_router
@@ -58,7 +58,10 @@ app.include_router(robot_info_router, prefix="/robot", tags=["Robot Info"])
 @app.websocket("/ws/{serial}")
 async def websocket_alias(websocket: WebSocket, serial: str):
     model_id = websocket.headers.get('robot_model_id', None)
+    
     if not model_id:
+        r: Response = Response('No robot model id', 401)
+        await websocket.send_denial_response(r)
         return
     
     websocket.max_message_size = 10 * 1024 * 1024
