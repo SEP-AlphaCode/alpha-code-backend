@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from app.services.nlp.nlp_service import process_text
-from app.services.stt.stt_service import transcribe_bytes
 from app.models.stt import ASRData
-from fastapi.responses import Response
+
+from app.services.stt.transcription_service import transcribe_bytes
+
 router = APIRouter()
 
 @router.post('')
@@ -20,6 +21,7 @@ async def transcribe_audio(data: ASRData):
     """
     try:
         resp = await transcribe_bytes(data)
+        print(resp)
         json_result = await process_text(resp.text)
         return json_result
     except Exception as e:
