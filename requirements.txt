@@ -30,3 +30,5 @@ torchvision
 ultralytics
 uvicorn[standard]
 whisper
+torch
+transformers
