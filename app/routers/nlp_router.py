@@ -15,10 +15,6 @@ async def process_audio_endpoint(file: UploadFile):
 async def process_text_endpoint(request: NLPRequest):
     return await process_text(request.text)
 
-@router.post('/object-detect-result')
-async def process_text_endpoint(label: str, lang: str):
-    return await process_obj_detect(label, lang)
-
 @router.post("/tts")
 async def do_tts(input_text: NLPRequest):
     try:
@@ -48,3 +44,7 @@ async def do_tts(input_text: NLPRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.post('/object-detect-result')
+async def process_text_endpoint(label: str, lang: str):
+    return await process_obj_detect(label, lang)

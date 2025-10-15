@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException
-
 from app.services.nlp.nlp_service import process_text
 from app.models.stt import ASRData
 
@@ -25,5 +24,13 @@ async def transcribe_audio(data: ASRData):
         print(resp)
         json_result = await process_text(resp.text)
         return json_result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=e)
+    
+@router.post('/transcribe')
+async def stub(data: ASRData):
+    try:
+        resp = await transcribe_bytes(data)
+        return resp.text
     except Exception as e:
         raise HTTPException(status_code=500, detail=e)

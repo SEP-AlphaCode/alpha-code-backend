@@ -1,92 +1,65 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from typing import Dict, Set
+from typing import Set
 import json
-
-from starlette.status import HTTP_200_OK
+import logging
 
 from app.services.socket.robot_websocket_service import robot_websocket_info_service
 from app.services.socket.connection_manager import connection_manager
 
 router = APIRouter()
+logging.basicConfig(level=logging.INFO)
 
+# Pydantic model cho command
 class Command(BaseModel):
     type: str
     data: dict
 
-# Sử dụng connection manager từ service
-manager = connection_manager
-@router.get("/ws/disconnect/{serial}")
-async def close_connection(serial: str):
-    try:
-        if serial in manager.clients:
-            await manager.clients[serial].close(reason="Disconnected by choice")
-            manager.disconnect(serial)
-        return "Ok"
-    except Exception as e:
-        raise HTTPException(500, e)
-# Robot connects here with serial number
-@router.websocket("/ws/{serial}")
-async def websocket_endpoint(websocket: WebSocket, serial: str):
-    try:
-        if not serial:
-            await websocket.close(code=1008)  # Policy Violation
-            return
-
-        await manager.connect(websocket, serial)
-
-        while True:
-            data = await websocket.receive_text()
-            
-            # Xử lý message từ robot
-            try:
-                message_data = json.loads(data)
-                # Kiểm tra nếu là response cho system info request
-                robot_websocket_info_service.handle_robot_response(message_data)
-            except json.JSONDecodeError:
-                pass
-            except Exception as e:
-                pass
-
-    except WebSocketDisconnect:
-        manager.disconnect(serial)
-
-    except Exception as e:
-        manager.disconnect(serial)
-
-
-
-# Send a command to a specific robot
+# --- Send command to a robot ---
 @router.post("/command/{serial}")
 async def send_command(serial: str, command: Command):
-    # Use pydantic v2 model_dump_json / model_dump to avoid deprecation warnings
-    ok = await manager.send_to_robot(serial, command.model_dump_json())
+    """
+    Gửi command tới robot qua WebSocket ConnectionManager
+    """
+    ok = await connection_manager.send_to_client(
+        serial,
+        command.model_dump_json(),
+        client_type="robot"  # mặc định gửi tới robot
+    )
     return JSONResponse({
         "status": "sent" if ok else "failed",
         "to": serial,
         "command": command.model_dump(),
-        "active_clients": manager.active
+        "active_clients": connection_manager.active
     })
 
-@router.get("/ws/list-by-client/{client}")
+# --- List serials by client_id ---
+@router.get("/ws/list-by-client/{client_id}")
 async def list_by_client(client_id: str):
     result: Set[str] = set()
-    for s in connection_manager.clients.items():
-        if s[1].client_id == client_id:
-            result.add(s[0])
-    return {
-        'serials': result
-    }
+    for serial, info in connection_manager.clients.items():
+        if info.client_id == client_id:
+            result.add(serial)
+    return {"serials": result}
 
-@router.get("/ws/disconnect-by-client/{client}")
+# --- Disconnect all robots by client_id ---
+@router.get("/ws/disconnect-by-client/{client_id}")
 async def disconnect_by_client(client_id: str):
     result: Set[str] = set()
-    for s in connection_manager.clients.items():
-        if s[1].client_id == client_id:
-            result.add(s[0])
-    for i in result:
-        await connection_manager.disconnect(i)
-    return {
-        'serials': result
-    }
+    for serial, info in connection_manager.clients.items():
+        if info.client_id == client_id:
+            result.add(serial)
+    for serial in result:
+        await connection_manager.disconnect(serial)
+    return {"serials": result}
+
+# --- Disconnect single robot ---
+@router.get("/ws/disconnect/{serial}")
+async def close_connection(serial: str):
+    try:
+        if serial in connection_manager.clients:
+            await connection_manager.disconnect(serial)
+        return {"status": "ok"}
+    except Exception as e:
+        raise HTTPException(500, str(e))

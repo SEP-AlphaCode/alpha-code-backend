@@ -34,7 +34,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
     
     Always return this exact format:
     {
-         "type": "object_detect_result",
+         "type": "talk",
          "lang": ...,
          "data": {
            "text": I see a ... (English) or Tôi thấy ... (Vietnamese)

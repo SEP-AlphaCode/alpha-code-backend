@@ -93,14 +93,14 @@ async def process_text(input_text: str):
             status_code=500,
             detail=f"Gemini model not initialized: {init_error}"
         )
-
+    
     # Build prompt from external template file for maintainability
     prompt = build_prompt(input_text)
-
+    
     try:
         # gọi Gemini ở threadpool (async safe)
         response = await run_in_threadpool(model.generate_content, prompt)
-
+        
         text = getattr(response, "text", None)
         # fallback nếu Gemini trả về trong candidates
         if not text and hasattr(response, "candidates"):
@@ -112,25 +112,24 @@ async def process_text(input_text: str):
                 )
             except Exception:
                 text = str(response)
-
+        
         if not text:
-            raise HTTPException(status_code=500, detail="Empty response from Gemini")
+            return {"error": "Empty response from Gemini"}
+        
         # cleanup nếu Gemini vẫn trả về với code fences
         cleaned = re.sub(r"^```(?:json)?|```$", "", text.strip(), flags=re.MULTILINE).strip()
-
+        
         # đảm bảo parse được JSON
         try:
             parsed = json.loads(cleaned)
+            return parsed
         except Exception:
-            raise HTTPException(status_code=500, detail=f"Gemini returned invalid JSON: {text}")
-
-        return parsed
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Gemini generation failed: {e}")
+            return {"error": f"Gemini returned invalid JSON: {text}"}
     
+    except Exception as e:
+        return {"error": f"Gemini generation failed: {e}"}
+
+
 async def process_obj_detect(label: str, lang: str):
     """
     Nhận text từ client, gửi qua Gemini để phân tích intent
@@ -162,19 +161,17 @@ async def process_obj_detect(label: str, lang: str):
                 text = str(response)
         
         if not text:
-            raise HTTPException(status_code=500, detail="Empty response from Gemini")
+            return {"error": "Empty response from Gemini"}
+        
         # cleanup nếu Gemini vẫn trả về với code fences
         cleaned = re.sub(r"^```(?:json)?|```$", "", text.strip(), flags=re.MULTILINE).strip()
         
         # đảm bảo parse được JSON
         try:
             parsed = json.loads(cleaned)
+            return parsed
         except Exception:
-            raise HTTPException(status_code=500, detail=f"Gemini returned invalid JSON: {text}")
-        
-        return parsed
+            return {"error": f"Gemini returned invalid JSON: {text}"}
     
-    except HTTPException:
-        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Gemini generation failed: {e}")
+        return {"error": f"Gemini generation failed: {e}"}

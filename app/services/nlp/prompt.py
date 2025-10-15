@@ -28,7 +28,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - "greeting" (hello, hi, good morning…)
        - "skill_helper" (when user wants to execute a particular skill, action according to the skill list below)
        - "qr_code" (when user asks about QR code)
-       - "osmo_card" (when user asks about Osmo cards)
+       - "capture_osmo_card" (when user asks about Osmo cards)
        - "talk" (simply to speak)
        - "extended_action" (walk forward, walk backward, turn left, turn right, make bows, make nods, shake heads, slating heads, shake hands, wave hands, make press ups)
        - "object_detect_start" (the user asks you to detect an object)
@@ -48,7 +48,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
     3. Special rule for "osmo_card":
       Always return this exact format (respond in the same language as user input):
        {
-         "type": "osmo_card",
+         "type": "capture_osmo_card",
          "lang": ...,
          "data": {
            "text": "Please place the OSMO card under my feet in my view. Now I will bend down to scan it." (English) OR "Vui lòng đặt thẻ OSMO dưới chân tôi trong tầm nhìn của tôi. Bây giờ tôi sẽ cúi xuống để quét thẻ." (Vietnamese)
@@ -71,7 +71,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
        - Be friendly and suitable for students.
        - Use this strict JSON format:
        {
-         "type": "<one_of: greeting | study | dance | dance-with-music | talk | unknown>",
+         "type": "<one_of: greeting | talk | unknown>",
          "lang": ...,
          "data": {
            "text": "<your response in the same language as user input>"
@@ -86,7 +86,7 @@ PROMPT_TEMPLATE: Final[str] = dedent(
          "data": {
            "actions": [
              {
-               "name": "<one_of: walk_forward | walk_backward | turn_left | turn_right | make_bows | make_nods | shake_heads | slating_heads | shake_hands | wave_hands | make_press_ups>",
+               "code": "<one_of: walk_forward | walk_backward | turn_left | turn_right | make_bows | make_nods | shake_heads | slating_heads | shake_hands | wave_hands | make_press_ups>",
                "step": <integer 1 to 10, default 1 if not specified in voice command>
              },
              ...

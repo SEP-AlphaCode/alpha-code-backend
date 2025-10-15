@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+message RobotRequest {
+  string type = 1;
+  repeated sint32 asr = 2;
+  bytes image = 3;
+  map<string, string> params = 4;
+  string speech = 5;
+}
