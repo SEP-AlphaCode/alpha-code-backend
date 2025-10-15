@@ -5,21 +5,21 @@ from app.services.object_detect.object_detect_service import detect_closest_obje
 from app.services.osmo.osmo_service import recognize_action_cards_from_image, parse_action_card_list
 from app.services.qr_code.qr_code_service import detect_qr_code
 from app.services.socket import connection_manager
-from app.services.stt.stt_service import transcribe_bytes
+from app.services.stt.stt_service import transcribe_bytes_driver
 
 
-async def process_speech(asr: ASRData):  # process-speech
+async def process_speech(asr: ASRData, robot_model_id: str):  # process-speech
     try:
-        text = await transcribe_bytes(asr)
+        text = await transcribe_bytes_driver(asr)
         print(text)
-        resp = await service_process_text(text)
+        resp = await service_process_text(input_text=text, robot_model_id=robot_model_id)
         return resp
     except Exception as e:
         raise e
 
-async def process_text(txt: str): #process-text
+async def process_text(txt: str,  robot_model_id: str): #process-text
     try:
-        resp = await service_process_text(txt)
+        resp = await service_process_text(input_text=txt, robot_model_id=robot_model_id)
         return resp
     except Exception as e:
         raise e

@@ -19,10 +19,7 @@ from app.routers.object_detect import router as object_router
 from app.routers.robot_info_router import router as robot_info_router
 from app.services.socket.handlers.binary_handler import handle_binary_message
 from app.services.socket.connection_manager import connection_manager, signaling_manager
-from app.services.socket.robot_websocket_service import robot_websocket_info_service
 from app.services.socket.handlers.text_handler import handle_text_message
-# from app.services.music.durations import load_all_durations
-# from config.config import settings
 
 # Build FastAPI kwargs dynamically to avoid invalid empty URL in license
 fastapi_kwargs = dict(
@@ -60,11 +57,15 @@ app.include_router(robot_info_router, prefix="/robot", tags=["Robot Info"])
 # Backward-compatible alias path for websocket without /websocket prefix
 @app.websocket("/ws/{serial}")
 async def websocket_alias(websocket: WebSocket, serial: str):
-    # websocket.max_message_size = 10 * 1024 * 1024
+    model_id = websocket.headers.get('robot_model_id', None)
+    if not model_id:
+        return
+    
+    websocket.max_message_size = 10 * 1024 * 1024
     success = await connection_manager.connect(websocket, serial)
     if not success:
         return  # Connection was rejected
-    
+    print(model_id)
     try:
         while True:
             # Accept both text and binary messages
@@ -76,7 +77,7 @@ async def websocket_alias(websocket: WebSocket, serial: str):
                 if "text" in message:
                     await handle_text_message(message["text"], serial)
                 elif "bytes" in message:
-                    await handle_binary_message(websocket, message["bytes"], serial)
+                    await handle_binary_message(websocket, message["bytes"], serial, model_id)
             # print('Done process message')
     except WebSocketDisconnect:
         print(f"WebSocket disconnected: {websocket.client}")
@@ -89,6 +90,7 @@ async def websocket_alias(websocket: WebSocket, serial: str):
 # Add signaling endpoint directly to main app (without /websocket prefix)
 @app.websocket("/ws/signaling/{serial}/{client_type}")
 async def signaling_main(ws: WebSocket, serial: str, client_type: str):
+    ws.max_message_size = 10 * 1024 * 1024
     """
     WebSocket signaling giữa robot và web client - Direct route
     client_type: "robot" hoặc "web"

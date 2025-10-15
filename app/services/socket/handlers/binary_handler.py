@@ -6,7 +6,7 @@ from app.models.proto.robot_command_pb2 import RobotRequest
 from app.services.socket.handlers.controller import handle_command
 
 
-async def handle_binary_message(websocket: WebSocket, data: bytes, serial: str):
+async def handle_binary_message(websocket: WebSocket, data: bytes, serial: str, model_id: str):
     try:
         request = RobotRequest()
         request.ParseFromString(data)

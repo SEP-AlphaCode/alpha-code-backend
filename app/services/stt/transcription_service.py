@@ -223,7 +223,7 @@ async def transcribe_vietnamese(audio_array: np.ndarray, sample_rate: int = 1600
         logging.error(f"Vietnamese transcription failed: {e}, falling back to Whisper")
         raise RuntimeError(e)
 
-async def transcribe_bytes_vip(data: ASRData) -> STTResponse:
+async def transcribe_bytes(data: ASRData) -> STTResponse:
     """
     Transcribe audio from byte array with language detection and specialized models
     """

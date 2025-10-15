@@ -6,7 +6,7 @@ import whisper
 from fastapi import UploadFile
 
 from app.models.stt import ASRData, STTResponse
-from app.services.stt.transcription_service import transcribe_bytes_vip
+from app.services.stt.transcription_service import transcribe_bytes
 
 model = whisper.load_model('base')
 
@@ -46,11 +46,11 @@ async def transcribe_audio(audio_file: UploadFile) -> str:
         raise RuntimeError(f"Transcription failed: {str(e)}")
 
 
-async def transcribe_bytes(data: ASRData):
+async def transcribe_bytes_driver(data: ASRData):
     if whisper is None or model is None:
         raise RuntimeError("Whisper STT not available (package not installed or model failed to load)")
     try:
-        result = await transcribe_bytes_vip(data)
+        result = await transcribe_bytes(data)
         transcript = result.text.strip()
         return transcript
     except Exception as e:
