@@ -57,7 +57,7 @@ app.include_router(robot_info_router, prefix="/robot", tags=["Robot Info"])
 # Backward-compatible alias path for websocket without /websocket prefix
 @app.websocket("/ws/{serial}")
 async def websocket_alias(websocket: WebSocket, serial: str):
-    model_id = websocket.headers.get('robot_model_id', None)
+    model_id = websocket.headers.get('x-robot_model_id', None)
     
     if not model_id:
         r: Response = Response('No robot model id', 401)
