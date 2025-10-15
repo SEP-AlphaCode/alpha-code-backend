@@ -1,4 +1,4 @@
-from app.models.stt import ASRData, STTResponse
+from app.models.stt import ASRData
 from app.repositories.activity_repository import get_activity_from_qr
 from app.services.nlp.nlp_service import process_text as service_process_text, process_obj_detect
 from app.services.object_detect.object_detect_service import detect_closest_objects_from_bytes
@@ -10,8 +10,9 @@ from app.services.stt.stt_service import transcribe_bytes
 
 async def process_speech(asr: ASRData):  # process-speech
     try:
-        text: STTResponse = await transcribe_bytes(asr)
-        resp = await service_process_text(text.text)
+        text = await transcribe_bytes(asr)
+        print(text)
+        resp = await service_process_text(text)
         return resp
     except Exception as e:
         raise e

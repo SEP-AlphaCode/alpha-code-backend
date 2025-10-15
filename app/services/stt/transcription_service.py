@@ -1,8 +1,10 @@
 # app/services/stt/transcription_service.py
 import io
 import logging
+import time
 import wave
-
+import tempfile
+import os
 import soundfile as sf
 import numpy as np
 import librosa
@@ -12,7 +14,7 @@ from fastapi import UploadFile
 from typing import Tuple, Optional
 
 from app.models.stt import ASRData, STTResponse, LanguageDetectionResponse, ModelStatusResponse
-from app.services.stt.init_models import stt_models, VIETNAMESE_AVAILABLE
+from app.services.stt.init_models import stt_models
 
 # Initialize models on import
 try:
@@ -48,7 +50,8 @@ async def detect_language(audio_array: np.ndarray, sample_rate: int = 16000) -> 
             audio_resampled = librosa.resample(audio_array, orig_sr=sample_rate, target_sr=16000)
         else:
             audio_resampled = audio_array
-        
+
+        t1 = time.time()
         # Use Whisper to detect language
         audio_for_detect = audio_resampled.astype(np.float32)
         if audio_for_detect.ndim > 1:
@@ -66,7 +69,8 @@ async def detect_language(audio_array: np.ndarray, sample_rate: int = 16000) -> 
         _, probs = stt_models.base_model.detect_language(mel)
         detected_language = max(probs, key=probs.get)
         confidence = probs[detected_language]
-        
+
+        print('Detect lang done', time.time() - t1)
         return LanguageDetectionResponse(
             detected_language=detected_language,
             language_code=detected_language,
@@ -90,7 +94,7 @@ async def transcribe_english(audio_array: np.ndarray, sample_rate: int = 16000) 
     try:
         if not stt_models.english_model:
             raise RuntimeError("English model not loaded")
-        
+        t1 = time.time()
         # Resample to 16kHz if needed
         if sample_rate != 16000:
             audio_array = librosa.resample(audio_array, orig_sr=sample_rate, target_sr=16000)
@@ -101,30 +105,30 @@ async def transcribe_english(audio_array: np.ndarray, sample_rate: int = 16000) 
             audio_float = audio_float.mean(axis=1)  # Convert to mono
             
             # Ensure model is on GPU
-        stt_models.english_model = stt_models.english_model.to("cuda")
+        # stt_models.english_model = stt_models.english_model.to("cuda")
         
         # Transcribe with English-optimized model on GPU
         result = stt_models.english_model.transcribe(
             audio_float,
             language='en',
-            fp16=True,  # Use FP16 for faster inference on GPU
+            # fp16=True,  # Use FP16 for faster inference on GPU
             best_of=5,
             beam_size=5
         )
         
         # Safe confidence calculation with multiple fallbacks
         avg_confidence = calculate_confidence(result)
-        
+        print('Transcribe ENG done', time.time() - t1)
         return result["text"].strip(), avg_confidence
     
     except Exception as e:
         logging.error(f"English transcription failed: {e}, falling back to base model")
         # Ensure base model is on GPU
-        stt_models.base_model = stt_models.base_model.to("cuda")
+        # stt_models.base_model = stt_models.base_model.to("cuda")
         result = stt_models.base_model.transcribe(
             audio_array,
             language='en',
-            fp16=True  # Use FP16 on GPU
+            # fp16=True  # Use FP16 on GPU
         )
         avg_confidence = calculate_confidence(result)
         return result["text"].strip(), avg_confidence
@@ -163,63 +167,18 @@ def calculate_confidence(result: dict) -> float:
         return 0.5  # Fallback confidence
 
 
-async def transcribe_vietnamese2(audio_array: np.ndarray, sample_rate: int = 16000) -> Tuple[str, float]:
-    """
-    Transcribe English audio using specialized English model
-
-    Args:
-        audio_array: Audio data as numpy array
-        sample_rate: Sample rate of the audio
-
-    Returns:
-        tuple: (transcribed_text, average_confidence)
-    """
-    try:
-        if not stt_models.base_model:
-            raise RuntimeError("English model not loaded")
-        
-        # Resample to 16kHz if needed
-        if sample_rate != 16000:
-            audio_array = librosa.resample(audio_array, orig_sr=sample_rate, target_sr=16000)
-        
-        # Ensure proper format
-        audio_float = audio_array.astype(np.float32)
-        if audio_float.ndim > 1:
-            audio_float = audio_float.mean(axis=1)  # Convert to mono
-        
-        # Transcribe with English-optimized model
-        result = stt_models.base_model.transcribe(
-            audio_float,
-            language='vi',
-            fp16=False,
-            best_of=5,
-            beam_size=5
-        )
-        
-        # Safe confidence calculation with multiple fallbacks
-        avg_confidence = calculate_confidence(result)
-        
-        return result["text"].strip(), avg_confidence
-    
-    except Exception as e:
-        logging.error(f"English transcription failed: {e}, falling back to base model")
-        result = stt_models.base_model.transcribe(audio_array, language='en', fp16=False)
-        avg_confidence = calculate_confidence(result)
-        return result["text"].strip(), avg_confidence
-
-
 async def transcribe_vietnamese(audio_array: np.ndarray, sample_rate: int = 16000) -> Tuple[str, float]:
     """
     Transcribe Vietnamese audio using specialized Vietnamese model
     """
-    if not VIETNAMESE_AVAILABLE or not stt_models.vietnamese_model:
-        logging.warning("Vietnamese model not available, falling back to Whisper")
-        result = stt_models.base_model.transcribe(audio_array, language='vi', fp16=False)
-        avg_confidence = calculate_confidence(result)
-        return result["text"].strip(), avg_confidence
+    if not stt_models.vietnamese_model:
+        raise RuntimeError("Vietnamese model not loaded")
     
     try:
-        # Resample to 16kHz for wav2vec2 model
+        # Save audio to temporary file
+
+        t1 = time.time()
+        # Resample to 16kHz for wav2vec2 model if needed
         if sample_rate != 16000:
             audio_array = librosa.resample(audio_array, orig_sr=sample_rate, target_sr=16000)
         
@@ -230,33 +189,39 @@ async def transcribe_vietnamese(audio_array: np.ndarray, sample_rate: int = 1600
         # Normalize audio
         audio_array = audio_array / np.max(np.abs(audio_array))
         
-        # Process with Vietnamese model
-        input_values = stt_models.vietnamese_processor(
-            audio_array,
-            sampling_rate=16000,
-            return_tensors="pt",
-            padding=True
-        ).input_values
+        # Create temporary WAV file
+        with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as temp_file:
+            temp_path = temp_file.name
         
-        # Get logits
-        with torch.no_grad():
-            logits = stt_models.vietnamese_model(input_values).logits
+        # Save as WAV file
+        sf.write(temp_path, audio_array, 16000)
+        print('Write temp from VN transcribe done', time.time() - t1)
+        try:
+            t1 = time.time()
+            # Process with Vietnamese model using file path
+            transcription = stt_models.vietnamese_model(temp_path)
+            
+            # Extract text from result (handle different possible return formats)
+            if isinstance(transcription, dict) and 'text' in transcription:
+                text = transcription['text']
+            elif isinstance(transcription, str):
+                text = transcription
+            else:
+                text = str(transcription)
+            
+            # For wav2vec2, we don't get confidence scores easily, so use a default
+            confidence = 0.8  # Default confidence for Vietnamese model
+            print('Transcribe VN done', time.time() - t1)
+            return text.strip(), confidence
         
-        # Get predicted tokens
-        predicted_ids = torch.argmax(logits, dim=-1)
-        transcription = stt_models.vietnamese_processor.batch_decode(predicted_ids)[0]
-        
-        # For wav2vec2, we don't get confidence scores easily, so use a default
-        confidence = 0.8  # Default confidence for Vietnamese model
-        
-        return transcription.strip(), confidence
+        finally:
+            # Clean up temporary file
+            if os.path.exists(temp_path):
+                os.unlink(temp_path)
     
     except Exception as e:
         logging.error(f"Vietnamese transcription failed: {e}, falling back to Whisper")
-        result = stt_models.base_model.transcribe(audio_array, language='vi', fp16=False)
-        avg_confidence = calculate_confidence(result)
-        return result["text"].strip(), avg_confidence
-
+        raise RuntimeError(e)
 
 async def transcribe_bytes_vip(data: ASRData) -> STTResponse:
     """
@@ -275,7 +240,6 @@ async def transcribe_bytes_vip(data: ASRData) -> STTResponse:
         
         # Use provided sample rate or default to 16kHz
         sample_rate = data.sample_rate or 16000
-        
         # await save_pcm_as_wav(data, "output.wav")
         # print('Save to wav successfully')
         
@@ -283,15 +247,14 @@ async def transcribe_bytes_vip(data: ASRData) -> STTResponse:
         language_result = await detect_language(float_audio, sample_rate)
         language_code = language_result.language_code
         
-        print(language_code)
+        print('Language code', language_code)
         # Route to appropriate model
         if language_code == 'vi':
-            transcription, confidence = await transcribe_vietnamese2(float_audio, sample_rate)
+            transcription, confidence = await transcribe_vietnamese(float_audio, sample_rate)
             model_type = "vietnamese"
         else:
             transcription, confidence = await transcribe_english(float_audio, sample_rate)
             model_type = "english"
-        
         return STTResponse(
             text=transcription,
             language=language_code,
@@ -336,6 +299,7 @@ async def save_pcm_as_wav(data: ASRData, filename: str = "output.wav"):
     Reconstruct PCM data and save as WAV file
     """
     try:
+        t1 = time.time()
         # Convert list of ints -> raw bytes -> int16 samples
         byte_array = np.array(data.arr, dtype=np.int8).tobytes()
         audio_array = np.frombuffer(byte_array, dtype="<i2")
@@ -349,8 +313,7 @@ async def save_pcm_as_wav(data: ASRData, filename: str = "output.wav"):
             wav_file.setsampwidth(2)  # 2 bytes = 16-bit
             wav_file.setframerate(sample_rate)
             wav_file.writeframes(audio_array.tobytes())
-        
-        print(f"Audio saved as {filename}")
+        print('Save to .wav done', time.time() - t1)
         return filename
     
     except Exception as e:
