@@ -1,5 +1,9 @@
 import json
+import logging
 
+from redis import asyncio as aioredis
+from aiocache import caches
+from config.config import settings
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
@@ -18,7 +22,7 @@ from app.services.socket.connection_manager import connection_manager, signaling
 from app.services.socket.robot_websocket_service import robot_websocket_info_service
 from app.services.socket.handlers.text_handler import handle_text_message
 # from app.services.music.durations import load_all_durations
-from config.config import settings
+# from config.config import settings
 
 # Build FastAPI kwargs dynamically to avoid invalid empty URL in license
 fastapi_kwargs = dict(
@@ -139,6 +143,31 @@ async def signaling_main(ws: WebSocket, serial: str, client_type: str):
             await signaling_manager.disconnect(serial, client_type)
         except:
             pass
+
+@app.on_event("startup")
+async def startup_event():
+    try:
+        redis = aioredis.from_url(
+            f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
+            password=settings.REDIS_PASSWORD,
+            encoding="utf-8",
+            decode_responses=True,
+        )
+        await redis.ping()
+        logging.info("✅ Connected to Redis successfully")
+
+        caches.set_config({
+            "default": {
+                "cache": "aiocache.RedisCache",
+                "endpoint": settings.REDIS_HOST,
+                "port": settings.REDIS_PORT,
+                "password": settings.REDIS_PASSWORD,
+                "timeout": 5,
+                "serializer": {"class": "aiocache.serializers.JsonSerializer"},
+            }
+        })
+    except Exception as e:
+        logging.error(f"❌ Redis connection failed: {e}")
 
 @app.get("/", include_in_schema=False)
 async def root():
