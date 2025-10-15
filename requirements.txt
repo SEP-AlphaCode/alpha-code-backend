@@ -30,5 +30,3 @@ torchvision
 ultralytics
 uvicorn[standard]
 whisper
-aiocache
-redis[async]
