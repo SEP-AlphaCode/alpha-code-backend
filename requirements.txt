@@ -16,7 +16,7 @@ openai-whisper
 pillow
 protobuf==3.20.3
 psycopg2-binary
-pydantic==1.10.24
+pydantic
 pydub
 python-dotenv
 python-multipart
