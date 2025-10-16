@@ -34,5 +34,5 @@ whisper
 torch
 transformers
 aiocache
-redis[async]>=5.0.0
+redis[async]==6.4.0
 hf_xet
