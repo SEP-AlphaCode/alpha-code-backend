@@ -35,3 +35,4 @@ torch
 transformers
 aiocache
 redis[async]
+hf_xet
