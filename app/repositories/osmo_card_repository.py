@@ -5,14 +5,31 @@ from app.entities.database import AsyncSessionLocal
 from app.entities.osmo_card import OsmoCard
 from typing import List, Optional
 from aiocache import cached, Cache, RedisCache
+from config.config import settings
+from aiocache.serializers import JsonSerializer
 
+@cached(ttl=60 * 10,
+        cache=RedisCache,
+        endpoint=settings.REDIS_HOST,
+        port=settings.REDIS_PORT,
+        password=settings.REDIS_PASSWORD,
+        key_builder=lambda f:  f"osmo_cards_list",
+        serializer=JsonSerializer(),
+)
 @cached(ttl=60 * 10, cache=RedisCache, key_builder=lambda f:  f"osmo_cards_list")
 async def get_all_osmo_cards() -> List[OsmoCard]:
     async with AsyncSessionLocal() as session:
         result = await session.execute(select(OsmoCard).where(OsmoCard.status == 1))
         return result.scalars().all()
 
-@cached(ttl=60 * 10, cache=RedisCache, key_builder=lambda f, color: f"osmo_card:{color}")
+@cached(ttl=60 * 10,
+        cache=RedisCache,
+        endpoint=settings.REDIS_HOST,
+        port=settings.REDIS_PORT,
+        password=settings.REDIS_PASSWORD,
+        key_builder=lambda f, color: f"osmo_card:{color}",
+        serializer=JsonSerializer(),
+)
 async def get_osmo_card_by_color(color: str) -> Optional[OsmoCard]:
     async with AsyncSessionLocal() as session:
         result = await session.execute(

@@ -7,6 +7,8 @@ from typing import Optional, Dict, Any
 
 from app.entities.qr_code import QRCode
 from aiocache import cached, Cache, RedisCache
+from config.config import settings
+from aiocache.serializers import JsonSerializer
 
 async def get_activity_from_qr(
         qr_code_value: str

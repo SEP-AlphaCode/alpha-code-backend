@@ -3,14 +3,31 @@ from typing import List, Optional
 from app.entities.database import AsyncSessionLocal
 from app.entities.skill import Skill
 from aiocache import cached, RedisCache
+from config.config import settings
+from aiocache.serializers import JsonSerializer
 
-
+@cached(ttl=60 * 10,
+        cache=RedisCache,
+        endpoint=settings.REDIS_HOST,
+        port=settings.REDIS_PORT,
+        password=settings.REDIS_PASSWORD,
+        key_builder=lambda f: f"skills_list",
+        serializer=JsonSerializer(),
+)
 async def get_all_skills() -> List[Skill]:
     """Lấy toàn bộ skills"""
     async with AsyncSessionLocal() as session:
         result = await session.execute(select(Skill))
         return result.scalars().all()
 
+@cached(ttl=60 * 10,
+        cache=RedisCache,
+        endpoint=settings.REDIS_HOST,
+        port=settings.REDIS_PORT,
+        password=settings.REDIS_PASSWORD,
+        key_builder=lambda f, code: f"skill:{code}",
+        serializer=JsonSerializer(),
+)
 async def get_skill_by_code(code: str) -> Optional[Skill]:
     """Lấy skill theo code"""
     async with AsyncSessionLocal() as session:
@@ -36,8 +53,14 @@ async def delete_skill_by_id(id: str) -> bool:
             return True
         return False
 
-
-@cached(ttl=60 * 10, cache=RedisCache, key_builder=lambda f, robot_model_id: f"skill:{robot_model_id}")
+@cached(ttl=60 * 10,
+        cache=RedisCache,
+        endpoint=settings.REDIS_HOST,
+        port=settings.REDIS_PORT,
+        password=settings.REDIS_PASSWORD,
+        key_builder=lambda f, robot_model_id: f"skill:{robot_model_id}",
+        serializer=JsonSerializer(),
+)
 async def get_skills_by_robot_model_repo(robot_model_id: str):
     async with AsyncSessionLocal() as session:
         result = await session.execute(

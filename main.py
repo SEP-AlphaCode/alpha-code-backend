@@ -51,6 +51,7 @@ async def startup_event():
         )
         await redis.ping()
         logging.info("✅ Connected to Redis successfully")
+        print(f"🚀 Redis config: {settings.REDIS_HOST}:{settings.REDIS_PORT}")
 
         caches.set_config({
             'default': {
