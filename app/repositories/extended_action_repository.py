@@ -2,13 +2,16 @@ from sqlalchemy.future import select
 from typing import List, Optional
 from app.entities.database import AsyncSessionLocal
 from app.entities.extended_action import ExtendedAction
+from aiocache import cached, Cache, RedisCache
 
+@cached(ttl=60 * 10, cache=RedisCache, key_builder=lambda f:  f"extended_actions_list")
 async def get_all_extended_actions() -> List[ExtendedAction]:
     """Lấy toàn bộ extended actions"""
     async with AsyncSessionLocal() as session:
         result = await session.execute(select(ExtendedAction))
         return result.scalars().all()
 
+@cached(ttl=60 * 10, cache=RedisCache, key_builder=lambda f, code: f"extended_action:{code}")
 async def get_extended_action_by_code(code: str) -> Optional[ExtendedAction]:
     """Lấy extended action theo code"""
     async with AsyncSessionLocal() as session:

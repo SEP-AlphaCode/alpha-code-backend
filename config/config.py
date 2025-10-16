@@ -19,15 +19,3 @@ class Settings:
 
 settings = Settings()
 
-caches.set_config({
-    "default": {
-        "cache": "aiocache.RedisCache",
-        "endpoint": settings.REDIS_HOST,
-        "port": settings.REDIS_PORT,
-        "password": settings.REDIS_PASSWORD,
-        "timeout": 5,
-        "serializer": {
-            "class": "aiocache.serializers.JsonSerializer"
-        }
-    }
-})

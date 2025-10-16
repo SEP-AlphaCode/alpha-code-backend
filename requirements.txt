@@ -1,4 +1,5 @@
-﻿alembic
+﻿booktype
+alembic
 alphamini
 asyncpg
 boto3

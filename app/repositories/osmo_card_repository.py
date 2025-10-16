@@ -4,13 +4,15 @@ from sqlalchemy.orm import selectinload
 from app.entities.database import AsyncSessionLocal
 from app.entities.osmo_card import OsmoCard
 from typing import List, Optional
+from aiocache import cached, Cache, RedisCache
 
+@cached(ttl=60 * 10, cache=RedisCache, key_builder=lambda f:  f"osmo_cards_list")
 async def get_all_osmo_cards() -> List[OsmoCard]:
     async with AsyncSessionLocal() as session:
         result = await session.execute(select(OsmoCard).where(OsmoCard.status == 1))
         return result.scalars().all()
 
-
+@cached(ttl=60 * 10, cache=RedisCache, key_builder=lambda f, color: f"osmo_card:{color}")
 async def get_osmo_card_by_color(color: str) -> Optional[OsmoCard]:
     async with AsyncSessionLocal() as session:
         result = await session.execute(
