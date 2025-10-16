@@ -1,7 +1,7 @@
 import json
 import logging
 
-from redis import asyncio as aioredis
+# from redis import asyncio as aioredis
 from aiocache import caches
 from config.config import settings
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -40,31 +40,31 @@ if settings.LICENSE_NAME and settings.LICENSE_URL:
 app = FastAPI(**fastapi_kwargs)
 
 
-@app.on_event("startup")
-async def startup_event():
-    try:
-        redis = aioredis.from_url(
-            f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
-            password=settings.REDIS_PASSWORD,
-            encoding="utf-8",
-            decode_responses=True,
-        )
-        await redis.ping()
-        logging.info("✅ Connected to Redis successfully")
-        print(f"🚀 Redis config: {settings.REDIS_HOST}:{settings.REDIS_PORT}")
-
-        caches.set_config({
-            'default': {
-                'cache': RedisCache,
-                'endpoint': settings.REDIS_HOST,
-                'port': settings.REDIS_PORT,
-                'password': settings.REDIS_PASSWORD,
-                'timeout': 5,
-                'serializer':JsonSerializer(),
-            }
-        })
-    except Exception as e:
-        logging.error(f"❌ Redis connection failed: {e}")
+# @app.on_event("startup")
+# async def startup_event():
+#     try:
+#         redis = aioredis.from_url(
+#             f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
+#             password=settings.REDIS_PASSWORD,
+#             encoding="utf-8",
+#             decode_responses=True,
+#         )
+#         await redis.ping()
+#         logging.info("✅ Connected to Redis successfully")
+#         print(f"🚀 Redis config: {settings.REDIS_HOST}:{settings.REDIS_PORT}")
+# 
+#         caches.set_config({
+#             'default': {
+#                 'cache': RedisCache,
+#                 'endpoint': settings.REDIS_HOST,
+#                 'port': settings.REDIS_PORT,
+#                 'password': settings.REDIS_PASSWORD,
+#                 'timeout': 5,
+#                 'serializer':JsonSerializer(),
+#             }
+#         })
+#     except Exception as e:
+#         logging.error(f"❌ Redis connection failed: {e}")
 
 app.add_middleware(
     CORSMiddleware,
