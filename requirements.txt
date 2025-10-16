@@ -1,4 +1,4 @@
-﻿booktype
+booktype
 alembic
 alphamini
 asyncpg
@@ -31,5 +31,7 @@ torchvision
 ultralytics
 uvicorn[standard]
 whisper
+torch
+transformers
 aiocache
 redis[async]

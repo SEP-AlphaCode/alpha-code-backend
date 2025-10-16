@@ -4,7 +4,7 @@ from app.services.socket.handlers.command_pool import process_speech, detect_obj
     parse_qr, process_text
 
 
-async def handle_command(req: RobotRequest):
+async def handle_command(req: RobotRequest, serial: str, model_id: str):
     try:
         command_type = req.type
         if command_type == 'ping':
@@ -15,11 +15,11 @@ async def handle_command(req: RobotRequest):
         elif command_type == "process-speech":
             # Convert asr bytes to ASRData object
             asr_data = ASRData(arr=list(req.asr))
-            return await process_speech(asr_data)
+            return await process_speech(asr_data, model_id)
         
         elif command_type == 'process-text':
             text = req.params['text']
-            return await process_text(text)
+            return await process_text(text, model_id)
         
         elif command_type == "detect-object":
             lang = req.params['lang']
