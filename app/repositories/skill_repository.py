@@ -6,7 +6,7 @@ from aiocache import cached, RedisCache
 from config.config import settings
 from aiocache.serializers import JsonSerializer
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
@@ -20,7 +20,7 @@ async def get_all_skills() -> List[Skill]:
         result = await session.execute(select(Skill))
         return result.scalars().all()
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
@@ -53,7 +53,7 @@ async def delete_skill_by_id(id: str) -> bool:
             return True
         return False
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,

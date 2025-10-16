@@ -7,7 +7,7 @@ from aiocache import cached, Cache, RedisCache
 from config.config import settings
 from aiocache.serializers import JsonSerializer
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
@@ -20,7 +20,7 @@ async def get_all_actions() -> List[Action]:
         result = await session.execute(select(Action))
         return result.scalars().all()
     
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
@@ -33,7 +33,7 @@ async def get_action_by_code(code: str) -> Optional[Action]:
         result = await session.execute(select(Action).where(Action.code == code))
         return result.scalar_one_or_none()
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,

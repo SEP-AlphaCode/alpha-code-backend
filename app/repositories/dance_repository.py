@@ -7,7 +7,7 @@ from aiocache import cached, Cache, RedisCache
 from config.config import settings
 from aiocache.serializers import JsonSerializer
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
@@ -20,7 +20,7 @@ async def get_all_dances() -> List[Dance]:
         result = await session.execute(select(Dance))
         return result.scalars().all()
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
@@ -33,7 +33,7 @@ async def get_dance_by_code(code: str) -> Optional[Dance]:
         result = await session.execute(select(Dance).where(Dance.code == code))
         return result.scalar_one_or_none()
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,

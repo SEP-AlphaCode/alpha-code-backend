@@ -7,7 +7,7 @@ from aiocache import cached, Cache, RedisCache
 from config.config import settings
 from aiocache.serializers import JsonSerializer
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
@@ -20,7 +20,7 @@ async def get_all_expressions() -> List[Expression]:
         result = await session.execute(select(Expression))
         return result.scalars().all()
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
@@ -33,7 +33,7 @@ async def get_expression_by_code(code: str) -> Optional[Expression]:
         result = await session.execute(select(Expression).where(Expression.code == code))
         return result.scalar_one_or_none()
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,

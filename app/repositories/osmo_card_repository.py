@@ -8,7 +8,7 @@ from aiocache import cached, Cache, RedisCache
 from config.config import settings
 from aiocache.serializers import JsonSerializer
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
@@ -16,13 +16,13 @@ from aiocache.serializers import JsonSerializer
         key_builder=lambda f:  f"osmo_cards_list",
         serializer=JsonSerializer(),
 )
-@cached(ttl=60 * 10, cache=RedisCache, key_builder=lambda f:  f"osmo_cards_list")
+@cached(ttl=60 * 10 * 3, cache=RedisCache, key_builder=lambda f:  f"osmo_cards_list")
 async def get_all_osmo_cards() -> List[OsmoCard]:
     async with AsyncSessionLocal() as session:
         result = await session.execute(select(OsmoCard).where(OsmoCard.status == 1))
         return result.scalars().all()
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,

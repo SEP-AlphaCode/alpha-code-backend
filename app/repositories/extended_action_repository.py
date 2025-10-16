@@ -6,7 +6,7 @@ from aiocache import cached, Cache, RedisCache
 from config.config import settings
 from aiocache.serializers import JsonSerializer
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
@@ -20,7 +20,7 @@ async def get_all_extended_actions() -> List[ExtendedAction]:
         result = await session.execute(select(ExtendedAction))
         return result.scalars().all()
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,

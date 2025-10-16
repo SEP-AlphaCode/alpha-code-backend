@@ -7,7 +7,7 @@ from config.config import settings
 from aiocache.serializers import JsonSerializer
 
 
-@cached(ttl=60 * 10,
+@cached(ttl=60 * 10 * 3,
         cache=RedisCache,
         endpoint=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
