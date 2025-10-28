@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.INFO)
 # Pydantic model cho command
 class Command(BaseModel):
     type: str
+    lang: str
     data: dict
 
 # --- Send command to a robot ---
