@@ -1,7 +1,7 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from typing import Set
+from typing import Set, Optional
 import json
 import logging
 
@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 # Pydantic model cho command
 class Command(BaseModel):
     type: str
-    lang: str
+    lang: Optional[str]
     data: dict
 
 # --- Send command to a robot ---
