@@ -89,9 +89,9 @@ class RobotWebSocketInfoService:
                 if request_id in self.pending_requests:
                     response_data = self.pending_requests[request_id]['response']
                     del self.pending_requests[request_id]
-
+                    
                     print(f"Received response from robot {serial}: {response_data}")
-
+                    
                     if response_data:
                         result = self.parse_robot_response(response_data)
                         return result
@@ -119,7 +119,7 @@ class RobotWebSocketInfoService:
                         },
                         'message': 'Request not found in pending requests'
                     }
-                    
+            
             except asyncio.TimeoutError:
                 # Cleanup pending request
                 if request_id in self.pending_requests:
@@ -136,7 +136,7 @@ class RobotWebSocketInfoService:
                     },
                     'message': f'Timeout waiting for response from robot {serial}'
                 }
-                
+        
         except Exception as e:
             self.logger.error(f"Error sending info request to robot {serial}: {e}")
             return {
@@ -150,6 +150,78 @@ class RobotWebSocketInfoService:
                 },
                 'message': f'Service error: {str(e)}'
             }
+    
+    async def check_block_coding_running(self, serial: str, timeout: int = 10) -> Dict[str, Any]:
+        empty_data = {
+            'success': False,
+            'isRunning': False
+        }
+        """
+        Gửi yêu cầu lấy thông tin robot qua WebSocket
+
+        Args:
+            serial: Serial number của robot
+            timeout: Timeout chờ response (seconds)
+
+        Returns:
+            Dict chứa thông tin robot hoặc error
+        """
+        try:
+            # Kiểm tra robot có kết nối không
+            if serial not in connection_manager.clients:
+                return empty_data
+            
+            # Tạo command để yêu cầu thông tin hệ thống
+            request_id = f"info_req_{datetime.now().timestamp()}"
+            command = {
+                "type": "coding_block_status",
+                "request_id": request_id,
+                "data": {
+                }
+            }
+            
+            # Tạo event để chờ response
+            response_event = asyncio.Event()
+            self.pending_requests[request_id] = {
+                'event': response_event,
+                'response': None,
+                'timestamp': datetime.now()
+            }
+            
+            # Gửi command tới robot
+            command_json = json.dumps(command)
+            success = await connection_manager.send_to_robot(serial, command_json)
+            if not success:
+                del self.pending_requests[request_id]
+                return empty_data
+            try:
+                await asyncio.wait_for(response_event.wait(), timeout=timeout)
+                # Lấy response
+                if request_id in self.pending_requests:
+                    response_data = self.pending_requests[request_id]['response']  # This will be a bool
+                    print(response_data)
+                    del self.pending_requests[request_id]
+                    if response_data is not None:
+                        result = {
+                            'success': True,
+                            'isRunning': response_data
+                        }
+                        return result
+                    else:
+                        return empty_data
+                else:
+                    return empty_data
+            
+            except asyncio.TimeoutError:
+                # Cleanup pending request
+                if request_id in self.pending_requests:
+                    del self.pending_requests[request_id]
+                
+                return empty_data
+        
+        except Exception as e:
+            self.logger.error(f"Error sending info request to robot {serial}: {e}")
+            return empty_data
     
     @staticmethod
     def parse_battery_info(battery_info: str) -> Dict[str, Any]:
@@ -174,21 +246,21 @@ class RobotWebSocketInfoService:
                 'level': None,
                 'is_charging': False
             }
-
+    
     def parse_robot_response(self, response_data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Parse response từ robot và trích xuất 4 thông tin cần thiết.
         """
         try:
             data = response_data.get('data', {})
-
+            
             battery_info = {
                 'level': None,
                 'is_charging': False
             }
             if "batteryInfo" in data:
                 battery_info = self.parse_battery_info(data.get("batteryInfo", ""))
-
+            
             return {
                 'success': True,
                 'data': {
@@ -200,7 +272,7 @@ class RobotWebSocketInfoService:
                 },
                 'message': 'Robot info retrieved successfully via WebSocket'
             }
-
+        
         except Exception as e:
             self.logger.error(f"Error parsing robot response: {e}")
             return {
@@ -221,14 +293,14 @@ class RobotWebSocketInfoService:
         """
         try:
             message_type = message_data.get('type')
-
+            
             # Robot thực tế trả về "status_res", không có request_id
             if message_type in ('system_info_response', 'status_res'):
                 # Với message không có request_id, gán tất cả pending_requests đều resolve
                 for request_id, pending in list(self.pending_requests.items()):
                     self.pending_requests[request_id]['response'] = message_data
                     self.pending_requests[request_id]['event'].set()
-
+        
         except Exception as e:
             self.logger.error(f"Error handling robot response: {e}")
     
@@ -245,7 +317,7 @@ class RobotWebSocketInfoService:
             
             for request_id in old_requests:
                 del self.pending_requests[request_id]
-                
+        
         except Exception as e:
             self.logger.error(f"Error cleaning up old requests: {e}")
 
@@ -271,4 +343,10 @@ async def get_robot_info_via_websocket(serial: str, timeout: int = 10) -> Dict[s
     result = await robot_websocket_info_service.send_info_request(serial, timeout)
     logging.info(f"get_robot_info_via_websocket result for {serial}: {result}")
     # Gửi request và chờ response
+    return result
+
+
+async def check_block_coding_status(serial: str, timeout: int = 10):
+    robot_websocket_info_service.cleanup_old_requests()
+    result = await robot_websocket_info_service.check_block_coding_running(serial, timeout)
     return result

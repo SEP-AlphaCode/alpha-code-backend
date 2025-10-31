@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from typing import Optional
 import logging
 
-from app.services.socket.robot_websocket_service import get_robot_info_via_websocket
+from app.services.socket.robot_websocket_service import get_robot_info_via_websocket, check_block_coding_status
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -97,6 +97,23 @@ async def get_robot_info(
         raise
     except Exception as e:
         logger.error(f"Internal server error getting robot info for {serial}: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}"
+        )
+
+@router.get("/coding-block/{serial")
+async def get_coding_block_status(serial: str, timeout: int = 10):
+    try:
+        if timeout < 1 or timeout > 30:
+            raise HTTPException(
+                status_code=400,
+                detail="Timeout must be between 1 and 30 seconds"
+            )
+        
+        result = await check_block_coding_status(serial)
+        return result
+    except Exception as e:
         raise HTTPException(
             status_code=500,
             detail=f"Internal server error: {str(e)}"

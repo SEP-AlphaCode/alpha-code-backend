@@ -1,7 +1,7 @@
 from app.models.proto.robot_command_pb2 import RobotRequest
 from app.models.stt import ASRData
 from app.services.socket.handlers.command_pool import process_speech, detect_object, parse_osmo, notify_shutdown, \
-    parse_qr, process_text
+    parse_qr, process_text, handle_coding_block_status
 
 
 async def handle_command(req: RobotRequest, serial: str, model_id: str):
@@ -35,6 +35,12 @@ async def handle_command(req: RobotRequest, serial: str, model_id: str):
         elif command_type == 'parse-qr':
             return await parse_qr(req.image)
         
+        elif command_type == 'coding-block-status':
+            st = req.params['status']
+            st = (st == 'true')
+            await handle_coding_block_status(bool(st))
+            return {}
+            
         else:
             return {"error": f"Unknown command type: {command_type}"}
     

@@ -4,7 +4,7 @@ from app.services.nlp.nlp_service import process_text as service_process_text, p
 from app.services.object_detect.object_detect_service import detect_closest_objects_from_bytes
 from app.services.osmo.osmo_service import recognize_action_cards_from_image, parse_action_card_list
 from app.services.qr_code.qr_code_service import detect_qr_code
-from app.services.socket import connection_manager
+from app.services.socket import connection_manager, robot_websocket_info_service
 from app.services.stt.stt_service import transcribe_bytes_driver
 
 
@@ -72,3 +72,9 @@ async def parse_qr(img: bytes):  # parse-qr
         return activities
     except Exception as e:
         raise e
+
+async def handle_coding_block_status(b: bool):
+    s = robot_websocket_info_service
+    for request_id, pending in list(s.pending_requests.items()):
+        s.pending_requests[request_id]['response'] = b
+        s.pending_requests[request_id]['event'].set()
