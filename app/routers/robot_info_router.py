@@ -102,7 +102,7 @@ async def get_robot_info(
             detail=f"Internal server error: {str(e)}"
         )
 
-@router.get("/coding-block/{serial")
+@router.get("/coding-block/{serial}")
 async def get_coding_block_status(serial: str, timeout: int = 10):
     try:
         if timeout < 1 or timeout > 30:
