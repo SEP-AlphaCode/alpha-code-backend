@@ -95,6 +95,8 @@ class MusicActivityPlanner:
         d_idx = a_idx = e_idx = 0
 
         def next_dance() -> tuple[str, float]:
+            if len(dance_pool) == 0:
+                return '', 0
             nonlocal d_idx
             if not dance_pool:
                 return self._next_dance()
@@ -105,6 +107,8 @@ class MusicActivityPlanner:
             return item
 
         def next_action() -> tuple[str, float]:
+            if len(action_pool) == 0:
+                return '', 0
             nonlocal a_idx
             if not action_pool:
                 return self._next_action()
@@ -115,6 +119,8 @@ class MusicActivityPlanner:
             return item
 
         def next_expression() -> tuple[str, float]:
+            if len(expr_pool) == 0:
+                return '', 0
             nonlocal e_idx
             if not expr_pool:
                 return self._next_expression()
@@ -125,6 +131,8 @@ class MusicActivityPlanner:
             return item
 
         def fill_expression_chain(a: float, b: float):
+            if len(expr_pool) == 0:
+                return
             t_expr = a + 0.25
             safety = 0.05
             while t_expr < b - 0.4:
@@ -138,6 +146,8 @@ class MusicActivityPlanner:
                 t_expr += step
 
         def fill_action_chain(a: float, b: float):
+            if len(action_pool) == 0:
+                return
             t = a
             safety = 0.05
             while t < b - 0.4:
