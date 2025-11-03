@@ -1,11 +1,11 @@
 # app/db/models/dance.py
 import uuid
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy import Double
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from app.entities.database import Base
+from app.entities.databases.database import Base
 
 class Dance(Base):
     __tablename__ = "dance"

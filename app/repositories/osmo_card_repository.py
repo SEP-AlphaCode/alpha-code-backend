@@ -1,10 +1,8 @@
 from sqlalchemy import select, and_, func
-from sqlalchemy import select as sync_select
-from sqlalchemy.orm import selectinload
-from app.entities.database import AsyncSessionLocal
+from app.entities.databases.database import AsyncSessionLocal
 from app.entities.osmo_card import OsmoCard
 from typing import List, Optional
-from aiocache import cached, Cache, RedisCache
+from aiocache import cached, RedisCache
 from config.config import settings
 from aiocache.serializers import JsonSerializer
 

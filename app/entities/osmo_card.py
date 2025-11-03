@@ -3,7 +3,7 @@ import uuid
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, func
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
-from app.entities.database import Base
+from app.entities.databases.database import Base
 
 class OsmoCard(Base):
     __tablename__ = "osmo_card"

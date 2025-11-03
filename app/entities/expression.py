@@ -1,10 +1,10 @@
 # app/db/models/expression.py
 import uuid
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from app.entities.database import Base
+from app.entities.databases.database import Base
 
 class Expression(Base):
     __tablename__ = "expression"

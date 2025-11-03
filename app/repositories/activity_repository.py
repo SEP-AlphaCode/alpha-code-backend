@@ -1,14 +1,10 @@
 from app.entities.activity import Activity
-from app.entities.database import AsyncSessionLocal
+from app.entities.databases.database import AsyncSessionLocal
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
-from typing import Optional, Dict, Any
+from typing import Optional
 
 from app.entities.qr_code import QRCode
-from aiocache import cached, Cache, RedisCache
-from config.config import settings
-from aiocache.serializers import JsonSerializer
+
 
 async def get_activity_from_qr(
         qr_code_value: str

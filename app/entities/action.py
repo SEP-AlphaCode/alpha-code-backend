@@ -1,10 +1,10 @@
 # app/db/models/action.py
 import uuid
-from sqlalchemy import Column, String, Integer,ForeignKey, DateTime, Boolean
+from sqlalchemy import Column, String, Integer, DateTime, Boolean
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from app.entities.database import Base
+from app.entities.databases.database import Base
 
 class Action(Base):
     __tablename__ = "action"

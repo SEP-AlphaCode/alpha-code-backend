@@ -1,6 +1,6 @@
 from sqlalchemy.future import select
 from typing import List, Optional
-from app.entities.database import AsyncSessionLocal
+from app.entities.databases.database import AsyncSessionLocal
 from app.entities.skill import Skill
 from aiocache import cached, RedisCache
 from config.config import settings
