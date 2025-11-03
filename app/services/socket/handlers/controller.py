@@ -15,11 +15,11 @@ async def handle_command(req: RobotRequest, serial: str, model_id: str):
         elif command_type == "process-speech":
             # Convert asr bytes to ASRData object
             asr_data = ASRData(arr=list(req.asr))
-            return await process_speech(asr_data, model_id)
+            return await process_speech(asr_data, model_id, serial)
         
         elif command_type == 'process-text':
             text = req.params['text']
-            return await process_text(text, model_id)
+            return await process_text(text, model_id, serial)
         
         elif command_type == "detect-object":
             lang = req.params['lang']

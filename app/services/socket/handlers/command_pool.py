@@ -8,7 +8,7 @@ from app.services.socket import connection_manager, robot_websocket_info_service
 from app.services.stt.stt_service import transcribe_bytes_driver
 
 
-async def process_speech(asr: ASRData, robot_model_id: str):  # process-speech
+async def process_speech(asr: ASRData, robot_model_id: str, serial: str):  # process-speech
     try:
         text = await transcribe_bytes_driver(asr)
         print(text)
@@ -17,9 +17,9 @@ async def process_speech(asr: ASRData, robot_model_id: str):  # process-speech
     except Exception as e:
         raise e
 
-async def process_text(txt: str,  robot_model_id: str): #process-text
+async def process_text(txt: str,  robot_model_id: str, serial: str): #process-text
     try:
-        resp = await service_process_text(input_text=txt, robot_model_id=robot_model_id)
+        resp = await service_process_text(input_text=txt, robot_model_id=robot_model_id, serial=serial)
         return resp
     except Exception as e:
         raise e

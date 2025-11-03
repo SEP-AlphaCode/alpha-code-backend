@@ -116,7 +116,7 @@ import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 
-async def process_text(input_text: str, robot_model_id: str, max_output_tokens: int = 500):
+async def process_text(input_text: str, robot_model_id: str, serial: str = '', max_output_tokens: int = 500):
     """
     Enhanced version with actual Gemini token usage tracking
     """
@@ -126,12 +126,17 @@ async def process_text(input_text: str, robot_model_id: str, max_output_tokens: 
             detail=f"Gemini model not initialized: {init_error}"
         )
     
+    if serial is None or len(serial) == 0:
+        raise HTTPException(
+            status_code=400,
+            detail='Serial is required'
+        )
+    
     prompt = await build_prompt(input_text, robot_model_id)
     
     try:
         generation_config = genai.types.GenerationConfig(
             max_output_tokens=max_output_tokens,
-            temperature=0.1,
         )
         
         response = await run_in_threadpool(
@@ -143,7 +148,7 @@ async def process_text(input_text: str, robot_model_id: str, max_output_tokens: 
         text = response.text
         
         if not text:
-            return {"error": "Empty response from Gemini"}
+            return {'type': 'error', 'data': {"error": "Empty response from Gemini"}}
         
         # ACTUAL TOKEN USAGE FROM GEMINI API
         actual_input_tokens = 0
