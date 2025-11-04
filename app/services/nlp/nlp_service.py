@@ -138,7 +138,6 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
         generation_config = genai.types.GenerationConfig(
             max_output_tokens=max_output_tokens,
         )
-        
         response = await run_in_threadpool(
             model.generate_content,
             prompt,
@@ -177,7 +176,8 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
                 "actual_output_tokens": actual_output_tokens,
                 "actual_total_tokens": actual_total_tokens,
                 "max_output_tokens": max_output_tokens,
-                "token_limit_respected": actual_output_tokens <= max_output_tokens
+                "token_limit_respected": actual_output_tokens <= max_output_tokens,
+                "actual_prompt": prompt
             }
             return parsed
         except Exception:

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
-from app.entities.databases.database import Base
+from app.entities.databases.database_payment import Base
 
 
 class AccountQuota(Base):
