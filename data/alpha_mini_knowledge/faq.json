@@ -1,0 +1,62 @@
+[
+  {
+    "id": "faq_001",
+    "content": "Câu hỏi: Alpha Mini có hỗ trợ tiếng Việt không? Trả lời: Có, Alpha Mini hỗ trợ tiếng Việt đầy đủ cho cả nhận diện giọng nói và phát âm. Robot có thể hiểu các lệnh tiếng Việt cơ bản và phản hồi bằng tiếng Việt tự nhiên.",
+    "metadata": {
+      "category": "faq",
+      "subcategory": "language",
+      "tags": ["vietnamese", "language", "voice"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "faq"
+    }
+  },
+  {
+    "id": "faq_002",
+    "content": "Câu hỏi: Robot có thể hoạt động mà không cần kết nối Internet không? Trả lời: Các tính năng cơ bản như nhảy múa, di chuyển, và phát nhạc từ bộ nhớ có thể hoạt động offline. Tuy nhiên, các tính năng nâng cao như nhận diện giọng nói trực tuyến, cập nhật nội dung mới, và lập trình từ xa cần kết nối Internet.",
+    "metadata": {
+      "category": "faq",
+      "subcategory": "connectivity",
+      "tags": ["internet", "offline", "connectivity"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "faq"
+    }
+  },
+  {
+    "id": "faq_003",
+    "content": "Câu hỏi: Thời gian sử dụng pin của robot là bao lâu? Trả lời: Pin 2000mAh cho thời gian hoạt động 4-6 giờ tùy thuộc vào cách sử dụng. Các hoạt động tiêu tốn pin nhiều bao gồm di chuyển, nhảy múa, và sử dụng camera liên tục. Thời gian sạc đầy khoảng 2-3 giờ.",
+    "metadata": {
+      "category": "faq",
+      "subcategory": "battery",
+      "tags": ["battery", "charging", "power"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "faq"
+    }
+  },
+  {
+    "id": "faq_004",
+    "content": "Câu hỏi: Robot có an toàn cho trẻ em không? Trả lời: Có, Alpha Mini được thiết kế an toàn cho trẻ em từ 6 tuổi trở lên. Robot có các góc cạnh được bo tròn, vật liệu không độc hại, và có giới hạn lực khi di chuyển. Tuy nhiên, trẻ nhỏ nên được người lớn giám sát khi sử dụng.",
+    "metadata": {
+      "category": "faq",
+      "subcategory": "safety",
+      "tags": ["safety", "children", "age"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "faq"
+    }
+  },
+  {
+    "id": "faq_005",
+    "content": "Câu hỏi: Tôi có thể lập trình thêm động tác mới cho robot không? Trả lời: Có, bạn có thể tạo động tác tùy chỉnh thông qua ứng dụng Alpha Mini. Chọn 'Lập trình' > 'Tạo động tác mới', sau đó điều chỉnh từng khớp servo của robot để tạo động tác mong muốn. Bạn cũng có thể lập trình bằng Python để tạo các chuỗi động tác phức tạp hơn.",
+    "metadata": {
+      "category": "faq",
+      "subcategory": "programming",
+      "tags": ["programming", "customization", "movements"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "faq"
+    }
+  }
+]

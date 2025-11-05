@@ -1,0 +1,80 @@
+[
+  {
+    "id": "guide_001",
+    "content": "Hướng dẫn bật robot lần đầu: 1. Sạc đầy pin cho robot (khoảng 2-3 giờ). 2. Nhấn nút nguồn ở lưng robot và giữ trong 3 giây. 3. Đợi robot khởi động (đèn LED nhấp nháy xanh). 4. Tải ứng dụng Alpha Mini từ App Store hoặc Google Play. 5. Mở ứng dụng và làm theo hướng dẫn để kết nối WiFi cho robot.",
+    "metadata": {
+      "category": "user_guide",
+      "subcategory": "setup",
+      "difficulty": "beginner",
+      "tags": ["setup", "first_time", "connection"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "user_manual"
+    }
+  },
+  {
+    "id": "guide_002",
+    "content": "Cách kết nối WiFi cho Alpha Mini: 1. Bật robot và mở ứng dụng Alpha Mini. 2. Chọn 'Thêm robot mới' trong ứng dụng. 3. Chọn mạng WiFi 2.4GHz (robot không hỗ trợ WiFi 5GHz). 4. Nhập mật khẩu WiFi. 5. Giữ điện thoại gần robot trong quá trình kết nối. 6. Đợi đèn LED chuyển sang xanh liên tục khi kết nối thành công.",
+    "metadata": {
+      "category": "user_guide",
+      "subcategory": "connectivity",
+      "difficulty": "beginner",
+      "tags": ["wifi", "connection", "network"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "user_manual"
+    }
+  },
+  {
+    "id": "guide_003",
+    "content": "Hướng dẫn điều khiển robot nhảy múa: 1. Mở ứng dụng Alpha Mini và kết nối với robot. 2. Chọn tab 'Giải trí' trong menu. 3. Chọn 'Nhảy múa'. 4. Chọn bài nhảy từ danh sách có sẵn hoặc chọn 'Phát nhạc' để robot nhảy theo nhạc từ điện thoại. 5. Nhấn 'Bắt đầu' để robot bắt đầu nhảy. 6. Điều chỉnh âm lượng bằng nút trên ứng dụng.",
+    "metadata": {
+      "category": "user_guide",
+      "subcategory": "entertainment",
+      "difficulty": "beginner",
+      "tags": ["dance", "music", "entertainment"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "user_manual"
+    }
+  },
+  {
+    "id": "guide_004",
+    "content": "Cách lập trình Alpha Mini bằng Blockly: 1. Mở ứng dụng và chọn tab 'Lập trình'. 2. Chọn 'Blockly Editor'. 3. Kéo thả các khối lệnh từ menu bên trái. 4. Ghép các khối lại theo trình tự mong muốn. 5. Nhấn 'Chạy' để xem robot thực hiện chương trình. 6. Lưu chương trình để sử dụng lại sau. Các khối cơ bản bao gồm: Di chuyển, Âm thanh, Động tác, Cảm biến, Điều kiện, Vòng lặp.",
+    "metadata": {
+      "category": "user_guide",
+      "subcategory": "programming",
+      "difficulty": "intermediate",
+      "tags": ["programming", "blockly", "education"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "user_manual"
+    }
+  },
+  {
+    "id": "guide_005",
+    "content": "Bảo quản và vệ sinh robot: 1. Tắt robot trước khi vệ sinh. 2. Dùng khăn mềm khô hoặc hơi ẩm để lau bề mặt robot. 3. KHÔNG được dùng nước rửa trực tiếp lên robot. 4. Tránh để robot tiếp xúc với nước hoặc độ ẩm cao. 5. Bảo quản robot ở nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp. 6. Nếu không sử dụng lâu, nên sạc pin 1 lần/tháng để bảo vệ pin.",
+    "metadata": {
+      "category": "user_guide",
+      "subcategory": "maintenance",
+      "difficulty": "beginner",
+      "tags": ["maintenance", "care", "cleaning"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "user_manual"
+    }
+  },
+  {
+    "id": "guide_006",
+    "content": "Cách cập nhật firmware cho Alpha Mini: 1. Đảm bảo robot có pin trên 50% và kết nối WiFi ổn định. 2. Mở ứng dụng Alpha Mini. 3. Vào 'Cài đặt' > 'Thông tin robot'. 4. Nếu có bản cập nhật mới, sẽ hiển thị thông báo. 5. Nhấn 'Cập nhật' và đợi quá trình hoàn tất (10-15 phút). 6. KHÔNG tắt robot hoặc ngắt kết nối trong quá trình cập nhật. 7. Robot sẽ tự động khởi động lại sau khi cập nhật xong.",
+    "metadata": {
+      "category": "user_guide",
+      "subcategory": "software",
+      "difficulty": "intermediate",
+      "tags": ["firmware", "update", "software"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "user_manual"
+    }
+  }
+]
