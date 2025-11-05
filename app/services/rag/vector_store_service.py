@@ -40,16 +40,24 @@ class VectorStoreService:
                 # Remote ChromaDB server
                 logger.info(f"Connecting to remote ChromaDB at: {rag_config.CHROMA_HOST}:{rag_config.CHROMA_PORT}")
                 
+                # Prepare headers
+                headers = {}
+                if rag_config.CHROMA_USERNAME and rag_config.CHROMA_PASSWORD:
+                    import base64
+                    credentials = f"{rag_config.CHROMA_USERNAME}:{rag_config.CHROMA_PASSWORD}"
+                    encoded = base64.b64encode(credentials.encode()).decode()
+                    headers["Authorization"] = f"Basic {encoded}"
+                
                 self.client = chromadb.HttpClient(
                     host=rag_config.CHROMA_HOST,
                     port=rag_config.CHROMA_PORT,
                     ssl=rag_config.CHROMA_SSL,
-                    headers={
-                        "Authorization": f"Basic {self._encode_credentials()}"
-                    } if rag_config.CHROMA_USERNAME else {},
+                    headers=headers,
                     settings=Settings(
                         anonymized_telemetry=False,
-                        allow_reset=True
+                        allow_reset=False,
+                        chroma_client_auth_provider="chromadb.auth.basic.BasicAuthClientProvider",
+                        chroma_client_auth_credentials=f"{rag_config.CHROMA_USERNAME}:{rag_config.CHROMA_PASSWORD}"
                     )
                 )
             else:
@@ -65,37 +73,50 @@ class VectorStoreService:
                     )
                 )
             
+            # Test connection first
+            try:
+                self.client.heartbeat()
+                logger.info(f"✅ ChromaDB connection successful")
+            except Exception as e:
+                logger.error(f"❌ ChromaDB heartbeat failed: {str(e)}")
+                raise ConnectionError(f"Cannot connect to ChromaDB server: {str(e)}")
+            
             # Get or create collection
             self.embedding_service = get_embedding_service()
             
-            # Use custom embedding function
-            self.collection = self.client.get_or_create_collection(
-                name=self.collection_name,
-                metadata={"hnsw:space": "cosine"}
-            )
+            try:
+                # Try to get existing collection first
+                self.collection = self.client.get_collection(name=self.collection_name)
+                logger.info(f"✅ Found existing collection: {self.collection_name}")
+            except Exception:
+                # Collection doesn't exist, create it
+                logger.info(f"Creating new collection: {self.collection_name}")
+                self.collection = self.client.create_collection(
+                    name=self.collection_name,
+                    metadata={"hnsw:space": "cosine"}
+                )
             
             logger.info(f"✅ ChromaDB initialized successfully. Collection: {self.collection_name}")
-            logger.info(f"   Total documents: {self.collection.count()}")
+            
+            try:
+                doc_count = self.collection.count()
+                logger.info(f"   Total documents: {doc_count}")
+            except Exception as e:
+                logger.warning(f"   Could not get document count: {str(e)}")
             
         except Exception as e:
             logger.error(f"❌ Failed to initialize ChromaDB: {str(e)}")
             raise
     
-    def _encode_credentials(self) -> str:
-        """Encode username:password to base64 for Basic Auth"""
-        import base64
-        credentials = f"{rag_config.CHROMA_USERNAME}:{rag_config.CHROMA_PASSWORD}"
-        encoded = base64.b64encode(credentials.encode()).decode()
-        return encoded
-    
     def test_connection(self) -> bool:
         """Test ChromaDB connection"""
         try:
             self.client.heartbeat()
+            logger.info("✅ ChromaDB heartbeat OK")
             return True
         except Exception as e:
-            logger.error(f"❌ Failed to initialize ChromaDB: {e}")
-            raise
+            logger.error(f"❌ ChromaDB heartbeat failed: {str(e)}")
+            return False
     
     def add_documents(
         self,

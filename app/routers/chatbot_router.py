@@ -149,31 +149,60 @@ async def get_knowledge_base_stats():
     """
     try:
         from app.services.rag.vector_store_service import get_vector_store_service
+        from app.services.rag.config import rag_config
         
         vector_store = get_vector_store_service()
         
-        # Get all documents to analyze
-        all_docs = vector_store.get_all_documents()
+        # Test connection first
+        if not vector_store.test_connection():
+            return JSONResponse(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                content={
+                    "error": "Cannot connect to ChromaDB server",
+                    "mode": rag_config.CHROMA_MODE,
+                    "host": rag_config.CHROMA_HOST if rag_config.CHROMA_MODE == "remote" else "local"
+                }
+            )
         
-        # Analyze by category
+        # Get document count safely
+        try:
+            doc_count = vector_store.get_document_count()
+        except Exception as e:
+            logger.warning(f"Could not get document count: {str(e)}")
+            doc_count = 0
+        
+        # Try to get all documents to analyze
         categories = {}
-        if all_docs.get('metadatas'):
-            for metadata in all_docs['metadatas']:
-                category = metadata.get('category', 'unknown')
-                categories[category] = categories.get(category, 0) + 1
+        try:
+            if doc_count > 0:
+                all_docs = vector_store.get_all_documents()
+                
+                # Analyze by category
+                if all_docs.get('metadatas'):
+                    for metadata in all_docs['metadatas']:
+                        category = metadata.get('category', 'unknown')
+                        categories[category] = categories.get(category, 0) + 1
+        except Exception as e:
+            logger.warning(f"Could not analyze categories: {str(e)}")
         
         return JSONResponse(
             content={
-                "total_documents": vector_store.get_document_count(),
+                "status": "connected",
+                "mode": rag_config.CHROMA_MODE,
                 "collection_name": vector_store.collection_name,
+                "total_documents": doc_count,
                 "categories": categories,
-                "persist_directory": vector_store.persist_directory
+                "server": f"{rag_config.CHROMA_HOST}:{rag_config.CHROMA_PORT}" if rag_config.CHROMA_MODE == "remote" else "local"
             }
         )
         
     except Exception as e:
-        logger.error(f"Error getting stats: {e}")
-        raise HTTPException(
+        logger.error(f"Error getting stats: {str(e)}", exc_info=True)
+        return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error getting stats: {str(e)}"
+            content={
+                "error": "Error getting stats",
+                "detail": str(e),
+                "mode": rag_config.CHROMA_MODE if 'rag_config' in locals() else "unknown"
+            }
         )
