@@ -33,8 +33,14 @@ def load_json_data(file_path: str):
         return []
 
 
-def init_knowledge_base():
-    """Initialize knowledge base with data from JSON files"""
+def init_knowledge_base(auto_mode=False, reset=False):
+    """
+    Initialize knowledge base with data from JSON files
+    
+    Args:
+        auto_mode: If True, skip user prompts (for startup auto-init)
+        reset: If True, reset existing data
+    """
     try:
         logger.info("=" * 80)
         logger.info("Initializing Alpha Mini Knowledge Base")
@@ -48,12 +54,20 @@ def init_knowledge_base():
         logger.info(f"Current documents in ChromaDB: {current_count}")
         
         if current_count > 0:
-            response = input("⚠️  Knowledge base already has documents. Reset? (y/N): ")
-            if response.lower() == 'y':
+            if auto_mode:
+                # Auto mode: skip if already has data
+                logger.info("✅ Knowledge base already initialized. Skipping.")
+                return
+            elif reset:
                 logger.warning("Resetting collection...")
                 vector_store.reset_collection()
             else:
-                logger.info("Keeping existing documents. Will add new ones.")
+                response = input("⚠️  Knowledge base already has documents. Reset? (y/N): ")
+                if response.lower() == 'y':
+                    logger.warning("Resetting collection...")
+                    vector_store.reset_collection()
+                else:
+                    logger.info("Keeping existing documents. Will add new ones.")
         
         # Data directory
         data_dir = Path(__file__).parent.parent / "data" / "alpha_mini_knowledge"

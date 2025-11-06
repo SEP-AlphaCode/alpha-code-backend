@@ -41,8 +41,25 @@ if settings.LICENSE_NAME and settings.LICENSE_URL:
 app = FastAPI(**fastapi_kwargs)
 
 
+@app.on_event("startup")
+async def startup_event():
+    """Initialize services on startup"""
+    # Auto-initialize ChromaDB knowledge base
+    try:
+        logging.info("🚀 Checking ChromaDB knowledge base...")
+        from scripts.init_knowledge_base import init_knowledge_base
+        
+        # Auto-init with no prompts, skip if already has data
+        init_knowledge_base(auto_mode=True)
+        logging.info("✅ ChromaDB ready")
+            
+    except Exception as e:
+        logging.error(f"⚠️ ChromaDB initialization failed: {e}")
+        logging.warning("⚠️ Chatbot will continue without knowledge base")
+
+
 # @app.on_event("startup")
-# async def startup_event():
+# async def startup_event_redis():
 #     try:
 #         redis = aioredis.from_url(
 #             f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",

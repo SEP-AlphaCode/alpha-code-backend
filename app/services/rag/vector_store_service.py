@@ -52,13 +52,7 @@ class VectorStoreService:
                     host=rag_config.CHROMA_HOST,
                     port=rag_config.CHROMA_PORT,
                     ssl=rag_config.CHROMA_SSL,
-                    headers=headers,
-                    settings=Settings(
-                        anonymized_telemetry=False,
-                        allow_reset=False,
-                        chroma_client_auth_provider="chromadb.auth.basic.BasicAuthClientProvider",
-                        chroma_client_auth_credentials=f"{rag_config.CHROMA_USERNAME}:{rag_config.CHROMA_PASSWORD}"
-                    )
+                    headers=headers
                 )
             else:
                 # Local ChromaDB with persistence
