@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 from typing import Optional
 import logging
 
+from app.repositories.account_quota_repository import get_account_from_serial, get_account_quota
 from app.services.socket.robot_websocket_service import get_robot_info_via_websocket, check_block_coding_status
 
 router = APIRouter()
@@ -16,8 +17,8 @@ logger = logging.getLogger(__name__)
 
 @router.get("/info/{serial}")
 async def get_robot_info(
-    serial: str,
-    timeout: Optional[int] = Query(default=10, description="Timeout in seconds for robot response")
+        serial: str,
+        timeout: Optional[int] = Query(default=10, description="Timeout in seconds for robot response")
 ):
     """
     Lấy 4 thông tin cơ bản của robot qua WebSocket:
@@ -35,7 +36,7 @@ async def get_robot_info(
         # Validate input
         if not serial or len(serial.strip()) < 3:
             raise HTTPException(
-                status_code=400, 
+                status_code=400,
                 detail="Serial number must be at least 3 characters long"
             )
         
@@ -50,7 +51,7 @@ async def get_robot_info(
         result = await get_robot_info_via_websocket(serial.strip(), timeout)
         logger.info(f"get_robot_info_via_websocket result for {serial}: {result}")
         logger.info(f"WebSocket result for {serial}: success={result.get('success')}, message={result.get('message')}")
-
+        
         # ✅ Robot offline → HTTP 200, status=error
         if not result.get("success"):
             logger.warning(f"Failed to get robot info for {serial}: {result.get('message')}")
@@ -68,12 +69,12 @@ async def get_robot_info(
                 },
                 status_code=200
             )
-
+        
         # ✅ Robot online
         data = result.get('data')
         battery_level = data.get("battery_level")
         is_charging = data.get("is_charging", False)
-
+        
         response_data = {
             "serial_number": data.get('serial_number'),
             "firmware_version": data.get('firmware_version'),
@@ -82,8 +83,9 @@ async def get_robot_info(
             "is_charging": is_charging,
         }
         
-        logger.info(f"Returning robot info for {serial}: battery={battery_level}%, charging={is_charging}, serial={data.get('serial_number')}")
-
+        logger.info(
+            f"Returning robot info for {serial}: battery={battery_level}%, charging={is_charging}, serial={data.get('serial_number')}")
+        
         return JSONResponse(
             content={
                 "status": "success",
@@ -92,7 +94,7 @@ async def get_robot_info(
             },
             status_code=200
         )
-            
+    
     except HTTPException:
         raise
     except Exception as e:
@@ -101,6 +103,7 @@ async def get_robot_info(
             status_code=500,
             detail=f"Internal server error: {str(e)}"
         )
+
 
 @router.get("/coding-block/{serial}")
 async def get_coding_block_status(serial: str, timeout: int = 10):
@@ -113,6 +116,34 @@ async def get_coding_block_status(serial: str, timeout: int = 10):
         
         result = await check_block_coding_status(serial)
         return result
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}"
+        )
+
+
+@router.get("/find-account")
+async def get_acc_from_serial(serial: str):
+    try:
+        result = await get_account_from_serial(serial)
+        return {'accountId': result}
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}"
+        )
+
+
+@router.get('/account_quota')
+async def get_acc_quota(account_id: str):
+    try:
+        result = await get_account_quota(account_id)
+        
+        return {
+            'type': result[1],
+            'data': result[0]
+        }
     except Exception as e:
         raise HTTPException(
             status_code=500,
