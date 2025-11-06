@@ -40,6 +40,27 @@ class RetrievalService:
         self.top_k = rag_config.TOP_K
         logger.info("Retrieval service initialized")
     
+    def _clean_filters(self, filters: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Clean filters by removing empty nested dicts
+        
+        Args:
+            filters: Raw filters dict
+            
+        Returns:
+            Cleaned filters or None if empty
+        """
+        if not filters:
+            return None
+        
+        # Remove keys with empty dict values
+        cleaned = {
+            k: v for k, v in filters.items() 
+            if v is not None and v != {} and v != []
+        }
+        
+        return cleaned if cleaned else None
+    
     def retrieve(
         self,
         query: str,
@@ -66,14 +87,18 @@ class RetrievalService:
             logger.info(f"Retrieving documents for query: '{query[:50]}...'")
             logger.info(f"  top_k={top_k}, threshold={similarity_threshold}")
             
+            # Clean filters to remove empty objects
+            cleaned_filters = self._clean_filters(filters)
+            
             # Query vector store - only pass filters if not None and not empty
             query_params = {
                 "query_text": query,
                 "n_results": top_k
             }
             
-            if filters and len(filters) > 0:
-                query_params["where"] = filters
+            if cleaned_filters:
+                query_params["where"] = cleaned_filters
+                logger.info(f"  Using filters: {cleaned_filters}")
             
             results = self.vector_store.query(**query_params)
             

@@ -22,11 +22,19 @@ async def ask_chatbot(query: ChatbotQuery):
     1. Retrieve relevant documents from ChromaDB
     2. Generate an answer using LLM based on retrieved context
     
-    Args:
-        query: ChatbotQuery with question and optional parameters
+    Request Body:
+        {
+            "question": "Your question here"
+        }
+    
+    Example:
+        POST /chatbot/ask
+        {
+            "question": "Alpha Mini có thể làm gì?"
+        }
         
     Returns:
-        ChatbotResponse with answer and metadata
+        ChatbotResponse with answer, sources, and metadata
     """
     try:
         logger.info(f"Received chatbot query: '{query.question}'")
@@ -35,17 +43,11 @@ async def ask_chatbot(query: ChatbotQuery):
         retrieval_service = get_retrieval_service()
         generation_service = get_generation_service()
         
-        # Retrieve relevant documents - only pass filters if not empty
-        retrieve_params = {
-            "query": query.question,
-            "top_k": query.top_k
-        }
-        
-        # Only add filters if they exist and are not empty
-        if query.filters and len(query.filters) > 0:
-            retrieve_params["filters"] = query.filters
-        
-        documents = retrieval_service.retrieve(**retrieve_params)
+        # Retrieve relevant documents with default settings
+        documents = retrieval_service.retrieve(
+            query=query.question
+            # top_k and filters use defaults from config
+        )
         
         logger.info(f"Retrieved {len(documents)} documents")
         
