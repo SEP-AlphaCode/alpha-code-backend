@@ -1,0 +1,98 @@
+[
+  {
+    "id": "feature_001",
+    "content": "Alpha Mini có khả năng nhảy múa theo nhạc với hơn 30 động tác nhảy được lập trình sẵn. Robot có thể nhảy theo nhiều thể loại nhạc khác nhau như nhạc pop, hip-hop, và nhạc truyền thống. Người dùng có thể điều khiển robot nhảy thông qua ứng dụng di động hoặc bằng giọng nói.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "dance",
+      "tags": ["dance", "music", "entertainment"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "official_docs"
+    }
+  },
+  {
+    "id": "feature_002",
+    "content": "Alpha Mini hỗ trợ điều khiển bằng giọng nói tiếng Việt. Robot có thể nhận diện các lệnh cơ bản như 'nhảy đi', 'hát bài hát', 'kể chuyện', 'chơi trò chơi'. Hệ thống nhận diện giọng nói hoạt động tốt trong môi trường ít tiếng ồn với độ chính xác cao.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "voice_control",
+      "tags": ["voice", "control", "vietnamese"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "official_docs"
+    }
+  },
+  {
+    "id": "feature_003",
+    "content": "Robot Alpha Mini có thể kể chuyện cho trẻ em với hơn 100 câu chuyện được lưu trữ sẵn. Các câu chuyện bao gồm truyện cổ tích, truyện khoa học, và truyện giáo dục. Robot kể chuyện với giọng đọc sinh động và có thể tương tác với trẻ trong quá trình kể chuyện.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "storytelling",
+      "tags": ["storytelling", "education", "children"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "official_docs"
+    }
+  },
+  {
+    "id": "feature_004",
+    "content": "Alpha Mini được trang bị camera HD có khả năng nhận diện khuôn mặt và cử chỉ. Robot có thể nhận biết được các thành viên trong gia đình sau khi được huấn luyện. Tính năng này giúp robot cá nhân hóa trải nghiệm tương tác với từng người dùng.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "recognition",
+      "tags": ["camera", "face_recognition", "ai"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "official_docs"
+    }
+  },
+  {
+    "id": "feature_005",
+    "content": "Robot có thể di chuyển linh hoạt với 16 khớp servo cho phép thực hiện nhiều động tác phức tạp. Alpha Mini có thể đi bộ, quay người, ngồi xuống, đứng dậy, và thực hiện các động tác võ thuật cơ bản. Tốc độ di chuyển có thể điều chỉnh tùy theo nhu cầu sử dụng.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "movement",
+      "tags": ["movement", "servo", "mobility"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "official_docs"
+    }
+  },
+  {
+    "id": "feature_006",
+    "content": "Alpha Mini hỗ trợ lập trình bằng Blockly và Python, phù hợp cho cả người mới bắt đầu và người dùng nâng cao. Giao diện lập trình trực quan giúp trẻ em học lập trình một cách dễ dàng. Robot có thể được lập trình để thực hiện các hành động tùy chỉnh và tương tác phức tạp.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "programming",
+      "tags": ["programming", "blockly", "python", "education"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "official_docs"
+    }
+  },
+  {
+    "id": "feature_007",
+    "content": "Robot có pin lithium dung lượng 2000mAh cho thời gian hoạt động lên đến 4-6 giờ sử dụng liên tục. Thời gian sạc đầy khoảng 2-3 giờ. Robot có chức năng tự động về đế sạc khi pin yếu và hiển thị mức pin trên ứng dụng di động.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "battery",
+      "tags": ["battery", "power", "charging"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "official_docs"
+    }
+  },
+  {
+    "id": "feature_008",
+    "content": "Alpha Mini kết nối với smartphone qua WiFi và Bluetooth. Ứng dụng di động Alpha Mini App có sẵn trên iOS và Android cho phép điều khiển, lập trình và giám sát robot từ xa. Robot hỗ trợ kết nối WiFi 2.4GHz và Bluetooth 5.0.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "connectivity",
+      "tags": ["wifi", "bluetooth", "app", "mobile"],
+      "language": "vi",
+      "last_updated": "2025-01-01",
+      "source": "official_docs"
+    }
+  }
+]

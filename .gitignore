@@ -88,3 +88,4 @@ ENV/
 *.webp
 *.out
 
+chroma.sqlite3

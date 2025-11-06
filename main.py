@@ -18,6 +18,7 @@ from app.routers.stt_router import router as stt_router
 from app.routers.marker_router import router as marker_router
 from app.routers.object_detect import router as object_router
 from app.routers.robot_info_router import router as robot_info_router
+from app.routers.chatbot_router import router as chatbot_router
 from app.services.socket.handlers.binary_handler import handle_binary_message
 from app.services.socket.connection_manager import connection_manager, signaling_manager
 from app.services.socket.handlers.text_handler import handle_text_message
@@ -40,8 +41,25 @@ if settings.LICENSE_NAME and settings.LICENSE_URL:
 app = FastAPI(**fastapi_kwargs)
 
 
+@app.on_event("startup")
+async def startup_event():
+    """Initialize services on startup"""
+    # Auto-initialize ChromaDB knowledge base
+    try:
+        logging.info("🚀 Checking ChromaDB knowledge base...")
+        from scripts.init_knowledge_base import init_knowledge_base
+        
+        # Auto-init with no prompts, skip if already has data
+        init_knowledge_base(auto_mode=True)
+        logging.info("✅ ChromaDB ready")
+            
+    except Exception as e:
+        logging.error(f"⚠️ ChromaDB initialization failed: {e}")
+        logging.warning("⚠️ Chatbot will continue without knowledge base")
+
+
 # @app.on_event("startup")
-# async def startup_event():
+# async def startup_event_redis():
 #     try:
 #         redis = aioredis.from_url(
 #             f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
@@ -83,6 +101,7 @@ app.include_router(nlp_router, prefix="/nlp", tags=["NLP"])
 app.include_router(marker_router, prefix="/marker", tags=["Marker"])
 app.include_router(object_router, prefix="/object", tags=["Object Detection"])
 app.include_router(robot_info_router, prefix="/robot", tags=["Robot Info"])
+app.include_router(chatbot_router, prefix="/chatbot", tags=["RAG Chatbot"])
 
 
 # Backward-compatible alias path for websocket without /websocket prefix
