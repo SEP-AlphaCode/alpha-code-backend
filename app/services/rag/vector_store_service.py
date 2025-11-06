@@ -178,14 +178,20 @@ class VectorStoreService:
             # Generate query embedding
             query_embedding = self.embedding_service.embed_text(query_text)
             
-            # Query ChromaDB
-            results = self.collection.query(
-                query_embeddings=[query_embedding],
-                n_results=n_results,
-                where=where,
-                where_document=where_document,
-                include=["documents", "metadatas", "distances"]
-            )
+            # Query ChromaDB - remove empty filters to avoid operator errors
+            query_params = {
+                "query_embeddings": [query_embedding],
+                "n_results": n_results,
+                "include": ["documents", "metadatas", "distances"]
+            }
+            
+            # Only add filters if they are not empty
+            if where and len(where) > 0:
+                query_params["where"] = where
+            if where_document and len(where_document) > 0:
+                query_params["where_document"] = where_document
+            
+            results = self.collection.query(**query_params)
             
             logger.info(f"Query returned {len(results['documents'][0])} results")
             

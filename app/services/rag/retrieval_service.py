@@ -66,12 +66,16 @@ class RetrievalService:
             logger.info(f"Retrieving documents for query: '{query[:50]}...'")
             logger.info(f"  top_k={top_k}, threshold={similarity_threshold}")
             
-            # Query vector store
-            results = self.vector_store.query(
-                query_text=query,
-                n_results=top_k,
-                where=filters
-            )
+            # Query vector store - only pass filters if not None and not empty
+            query_params = {
+                "query_text": query,
+                "n_results": top_k
+            }
+            
+            if filters and len(filters) > 0:
+                query_params["where"] = filters
+            
+            results = self.vector_store.query(**query_params)
             
             # Parse results
             documents = []

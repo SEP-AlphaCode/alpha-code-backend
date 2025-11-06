@@ -35,12 +35,17 @@ async def ask_chatbot(query: ChatbotQuery):
         retrieval_service = get_retrieval_service()
         generation_service = get_generation_service()
         
-        # Retrieve relevant documents
-        documents = retrieval_service.retrieve(
-            query=query.question,
-            top_k=query.top_k,
-            filters=query.filters
-        )
+        # Retrieve relevant documents - only pass filters if not empty
+        retrieve_params = {
+            "query": query.question,
+            "top_k": query.top_k
+        }
+        
+        # Only add filters if they exist and are not empty
+        if query.filters and len(query.filters) > 0:
+            retrieve_params["filters"] = query.filters
+        
+        documents = retrieval_service.retrieve(**retrieve_params)
         
         logger.info(f"Retrieved {len(documents)} documents")
         
