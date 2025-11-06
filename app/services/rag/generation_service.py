@@ -4,8 +4,7 @@ Handles LLM-based answer generation
 """
 import logging
 from typing import List, Dict, Any, Optional
-import openai
-from anthropic import Anthropic
+import google.generativeai as genai
 
 from .config import rag_config
 from .retrieval_service import RetrievedDocument
@@ -36,18 +35,14 @@ class GenerationService:
         
         logger.info(f"Initializing generation service: {self.provider}/{self.model}")
         
-        # Initialize API clients
-        if self.provider == "openai":
-            if not rag_config.OPENAI_API_KEY:
-                raise ValueError("OPENAI_API_KEY not found in environment")
-            openai.api_key = rag_config.OPENAI_API_KEY
-            self.client = openai
-        elif self.provider == "anthropic":
-            if not rag_config.ANTHROPIC_API_KEY:
-                raise ValueError("ANTHROPIC_API_KEY not found in environment")
-            self.client = Anthropic(api_key=rag_config.ANTHROPIC_API_KEY)
+        # Initialize Gemini API client
+        if self.provider == "gemini":
+            if not rag_config.GEMINI_API_KEY:
+                raise ValueError("GEMINI_API_KEY not found in environment")
+            genai.configure(api_key=rag_config.GEMINI_API_KEY)
+            self.client = genai.GenerativeModel(self.model)
         else:
-            raise ValueError(f"Unsupported provider: {self.provider}")
+            raise ValueError(f"Only 'gemini' provider is supported. Got: {self.provider}")
         
         logger.info("✅ Generation service initialized")
     
@@ -80,13 +75,8 @@ class GenerationService:
             logger.info(f"Generating answer for query: '{query[:50]}...'")
             logger.info(f"Context length: {len(context)} chars")
             
-            # Generate based on provider
-            if self.provider == "openai":
-                response = self._generate_openai(full_prompt)
-            elif self.provider == "anthropic":
-                response = self._generate_anthropic(query, context, system_prompt)
-            else:
-                raise ValueError(f"Unsupported provider: {self.provider}")
+            # Generate using Gemini
+            response = self._generate_gemini(full_prompt)
             
             logger.info(f"Generated answer ({len(response['answer'])} chars)")
             
@@ -96,71 +86,34 @@ class GenerationService:
             logger.error(f"Error generating answer: {e}")
             raise
     
-    def _generate_openai(self, prompt: str) -> Dict[str, Any]:
-        """Generate using OpenAI API"""
+    def _generate_gemini(self, prompt: str) -> Dict[str, Any]:
+        """Generate using Google Gemini API"""
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=self.temperature,
-                max_tokens=rag_config.LLM_MAX_TOKENS
+            generation_config = {
+                "temperature": self.temperature,
+                "max_output_tokens": rag_config.LLM_MAX_TOKENS,
+            }
+            
+            response = self.client.generate_content(
+                prompt,
+                generation_config=generation_config
             )
             
-            answer = response.choices[0].message.content
+            answer = response.text
             
             return {
                 "answer": answer,
                 "model": self.model,
-                "provider": "openai",
+                "provider": "gemini",
                 "tokens_used": {
-                    "prompt": response.usage.prompt_tokens,
-                    "completion": response.usage.completion_tokens,
-                    "total": response.usage.total_tokens
+                    "prompt": response.usage_metadata.prompt_token_count if hasattr(response, 'usage_metadata') else 0,
+                    "completion": response.usage_metadata.candidates_token_count if hasattr(response, 'usage_metadata') else 0,
+                    "total": response.usage_metadata.total_token_count if hasattr(response, 'usage_metadata') else 0
                 }
             }
             
         except Exception as e:
-            logger.error(f"OpenAI API error: {e}")
-            raise
-    
-    def _generate_anthropic(
-        self,
-        query: str,
-        context: str,
-        system_prompt: str
-    ) -> Dict[str, Any]:
-        """Generate using Anthropic API"""
-        try:
-            # Format system prompt
-            system_message = system_prompt.format(context=context, question="")
-            
-            response = self.client.messages.create(
-                model=self.model,
-                max_tokens=rag_config.LLM_MAX_TOKENS,
-                temperature=self.temperature,
-                system=system_message,
-                messages=[
-                    {"role": "user", "content": query}
-                ]
-            )
-            
-            answer = response.content[0].text
-            
-            return {
-                "answer": answer,
-                "model": self.model,
-                "provider": "anthropic",
-                "tokens_used": {
-                    "prompt": response.usage.input_tokens,
-                    "completion": response.usage.output_tokens,
-                    "total": response.usage.input_tokens + response.usage.output_tokens
-                }
-            }
-            
-        except Exception as e:
-            logger.error(f"Anthropic API error: {e}")
+            logger.error(f"Gemini API error: {e}")
             raise
     
     def generate_with_fallback(

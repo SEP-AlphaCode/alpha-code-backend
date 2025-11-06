@@ -112,6 +112,33 @@ class VectorStoreService:
             logger.error(f"❌ ChromaDB heartbeat failed: {str(e)}")
             return False
     
+    def _clean_metadata(self, metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Clean metadata to ensure ChromaDB compatibility.
+        Convert lists to comma-separated strings.
+        
+        Args:
+            metadata: Raw metadata dictionary
+            
+        Returns:
+            Cleaned metadata dictionary
+        """
+        cleaned = {}
+        for key, value in metadata.items():
+            if isinstance(value, list):
+                # Convert list to comma-separated string
+                cleaned[key] = ", ".join(str(v) for v in value)
+            elif isinstance(value, dict):
+                # Skip nested dicts as ChromaDB doesn't support them
+                logger.warning(f"Skipping nested dict in metadata key: {key}")
+                continue
+            elif value is None or isinstance(value, (str, int, float, bool)):
+                cleaned[key] = value
+            else:
+                # Convert other types to string
+                cleaned[key] = str(value)
+        return cleaned
+    
     def add_documents(
         self,
         documents: List[str],
@@ -129,6 +156,9 @@ class VectorStoreService:
         try:
             logger.info(f"Adding {len(documents)} documents to ChromaDB...")
             
+            # Clean metadatas to ensure ChromaDB compatibility
+            cleaned_metadatas = [self._clean_metadata(m) for m in metadatas]
+            
             # Generate embeddings
             embeddings = self.embedding_service.embed_texts(documents)
             
@@ -136,7 +166,7 @@ class VectorStoreService:
             self.collection.add(
                 documents=documents,
                 embeddings=embeddings,
-                metadatas=metadatas,
+                metadatas=cleaned_metadatas,
                 ids=ids
             )
             
