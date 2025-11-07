@@ -1,9 +1,9 @@
-from app.entities.activity import Activity
-from app.entities.databases.database import AsyncSessionLocal
+from app.entities.activity_service.activity import Activity
+from app.entities.activity_service.database import AsyncSessionLocal
 from sqlalchemy import select
 from typing import Optional
 
-from app.entities.qr_code import QRCode
+from app.entities.activity_service.qr_code import QRCode
 
 
 async def get_activity_from_qr(

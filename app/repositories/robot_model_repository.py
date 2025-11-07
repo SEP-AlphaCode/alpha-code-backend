@@ -1,6 +1,6 @@
 from sqlalchemy.future import select
-from app.entities.robot_model import RobotModel
-from app.entities.databases.database_robot import AsyncSessionLocal
+from app.entities.robot_service.robot_model import RobotModel
+from app.entities.robot_service.database_robot import AsyncSessionLocal
 from typing import Optional
 from aiocache import cached, RedisCache
 from config.config import settings

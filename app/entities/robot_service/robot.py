@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy.dialects.postgresql.base import UUID
-from app.entities.databases.database_robot import Base
+from app.entities.robot_service.database_robot import Base
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 
 class Robot(Base):

@@ -1,9 +1,8 @@
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import declarative_base
 import uuid
 
-from app.entities.databases.database_payment import Base
+from app.entities.payment_service.database_payment import Base
 
 
 class Subscription(Base):

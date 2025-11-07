@@ -86,11 +86,9 @@ def init_knowledge_base(auto_mode=False, reset=False):
             data = load_json_data(str(json_file))
             for item in data:
                 all_metadatas.append((item['content'], item['metadata'], item['id']))
-        print('Metadatas:', all_metadatas)
         if not all_documents:
             logger.error("❌ No documents found to load!")
             return
-        print('Documents:', all_documents)
         logger.info(f"\n{'=' * 80}")
         logger.info(f"Total documents to add: {len(all_documents)}")
         logger.info(f"{'=' * 80}\n")

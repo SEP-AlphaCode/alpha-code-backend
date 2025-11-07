@@ -1,9 +1,9 @@
 # app/db/models/__init__.py
-from .osmo_card import OsmoCard
-from .action import Action
-from .dance import Dance
-from .expression import Expression
-from .skill import Skill
-from .extended_action import ExtendedAction
+from app.entities.activity_service.osmo_card import OsmoCard
+from app.entities.activity_service.action import Action
+from app.entities.activity_service.dance import Dance
+from app.entities.activity_service.expression import Expression
+from app.entities.activity_service.skill import Skill
+from app.entities.activity_service.extended_action import ExtendedAction
 
 __all__ = ["OsmoCard", "Action", "Dance", "Expression", "Skill", "ExtendedAction"]

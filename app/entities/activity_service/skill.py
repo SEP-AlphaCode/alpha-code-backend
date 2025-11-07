@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy import Column, String, Integer, DateTime, func
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
-from app.entities.databases.database import Base
+from app.entities.activity_service.database import Base
 
 class Skill(Base):
     __tablename__ = "skill"

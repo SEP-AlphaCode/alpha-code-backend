@@ -1,8 +1,8 @@
 # app/db/repos/dance_repo.py
 from sqlalchemy.future import select
 from typing import List, Optional
-from app.entities.databases.database import AsyncSessionLocal
-from app.entities.dance import Dance
+from app.entities.activity_service.database import AsyncSessionLocal
+from app.entities.activity_service.dance import Dance
 from aiocache import cached, RedisCache
 from config.config import settings
 from aiocache.serializers import JsonSerializer

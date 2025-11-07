@@ -1,7 +1,7 @@
 import uuid
 from sqlalchemy import Column, String, Integer, DateTime, func
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
-from app.entities.databases.database_robot import Base
+from app.entities.robot_service.database_robot import Base
 from sqlalchemy import Text
 
 class RobotModel(Base):

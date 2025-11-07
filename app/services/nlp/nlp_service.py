@@ -6,11 +6,15 @@ import json
 import re
 from .prompt import build_prompt
 from .prompt_obj_detect import build_prompt_obj_detect
+from ..quota.quota_service import get_account_quota
 from ..stt.stt_service import transcribe_audio
 from .skills_loader import load_skills_text
 from app.repositories.robot_model_repository import get_robot_prompt_by_id
 from app.services.nlp.prompt import PROMPT_TEMPLATE
 import tiktoken
+from langdetect import detect, DetectorFactory
+from langdetect.lang_detect_exception import LangDetectException
+from ...repositories.account_quota_repository import get_account_from_serial
 
 # =========================
 # Config Gemini
@@ -29,6 +33,22 @@ if key and gemini_model:
 else:
     model = None
     init_error = "Missing GEMINI_API_KEY or GEMINI_MODEL environment variables"
+
+DetectorFactory.seed = 0  # make detection deterministic
+
+def detect_lang(text: str) -> str:
+    """
+    Detect language of a text snippet as 'en', 'vi', or 'none'.
+    """
+    if not text or not text.strip():
+        return "none"
+    try:
+        lang = detect(text)
+        if lang in ("en", "vi"):
+            return lang
+        return "none"
+    except LangDetectException:
+        return "none"
 
 
 async def load_skills_text_async(robot_model_id: str) -> str:
@@ -132,9 +152,32 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
             detail='Serial is required'
         )
     
-    prompt = await build_prompt(input_text, robot_model_id)
-    
     try:
+        lang = detect_lang(input_text)
+        if lang == "none":
+            return {
+                'type': 'talk',
+                'lang': 'vi',
+                'data': {
+                    'text': 'Tôi không hiểu yêu cầu của bạn'
+                }
+            }
+        account_id = await get_account_from_serial(serial)
+        quota_or_sub = await get_account_quota(account_id)
+        if quota_or_sub[1] == 'Quota' and quota_or_sub[0]['quota'] <= 0:
+            content = ''
+            if lang == 'vi':
+                content == ('Bạn đã sử dụng hết dung lượng miễn phí cho ngày hôm nay. Vui lòng đăng ký gói để sử dụng thêm')
+            else:
+                content == 'You have used up all your free data for today. Please subscribe to a plan to use more.'
+            return {
+                'type': 'talk',
+                'data': {
+                    'text': content
+                }
+            }
+        prompt = await build_prompt(input_text, robot_model_id)
+        
         generation_config = genai.types.GenerationConfig(
             max_output_tokens=max_output_tokens,
         )
