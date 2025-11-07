@@ -213,3 +213,106 @@ async def get_knowledge_base_stats():
                 "mode": rag_config.CHROMA_MODE if 'rag_config' in locals() else "unknown"
             }
         )
+
+
+@router.post("/query")
+async def query_chatbot(query: ChatbotQuery):
+    """
+    Simple query endpoint for frontend integration
+    
+    Returns only the answer that frontend needs.
+    
+    Request Body:
+        {
+            "question": "Câu hỏi của bạn"
+        }
+    
+    Example:
+        POST /chatbot/query
+        {
+            "question": "Robot có thể làm gì?"
+        }
+        
+    Returns:
+        {
+            "answer": "Tôi là trợ lý AI của robot Alpha Mini..."
+        }
+    """
+    try:
+        logger.info(f"Frontend query: '{query.question}'")
+        
+        retrieval_service = get_retrieval_service()
+        generation_service = get_generation_service()
+        
+        # Retrieve documents
+        documents = retrieval_service.retrieve(query=query.question)
+        logger.info(f"Retrieved {len(documents)} documents")
+        
+        # Generate answer
+        result = generation_service.generate_with_fallback(
+            query=query.question,
+            documents=documents
+        )
+        
+        # Only return answer for frontend
+        return JSONResponse(content={"answer": result["answer"]})
+        
+    except Exception as e:
+        logger.error(f"Error in frontend query: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error processing query: {str(e)}"
+        )
+
+
+@router.get("/categories")
+async def get_categories():
+    """
+    Get all available categories in the knowledge base
+    
+    Returns:
+        List of categories with document counts
+        
+    Example Response:
+        {
+            "categories": [
+                {"name": "features", "count": 10},
+                {"name": "faq", "count": 15},
+                {"name": "user_guide", "count": 8}
+            ],
+            "total": 33
+        }
+    """
+    try:
+        from app.services.rag.vector_store_service import get_vector_store_service
+        
+        vector_store = get_vector_store_service()
+        doc_count = vector_store.get_document_count()
+        
+        categories_dict = {}
+        if doc_count > 0:
+            all_docs = vector_store.get_all_documents()
+            
+            if all_docs.get('metadatas'):
+                for metadata in all_docs['metadatas']:
+                    category = metadata.get('category', 'unknown')
+                    categories_dict[category] = categories_dict.get(category, 0) + 1
+        
+        categories_list = [
+            {"name": cat, "count": count}
+            for cat, count in sorted(categories_dict.items())
+        ]
+        
+        return JSONResponse(
+            content={
+                "categories": categories_list,
+                "total": doc_count
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting categories: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error getting categories: {str(e)}"
+        )

@@ -1,17 +1,19 @@
 """
 RAG Configuration for Alpha Mini Chatbot
 """
+
 import os
 from typing import Dict, Any
 from config.config import settings
 
+
 class RAGConfig:
     """Configuration for RAG system - uses main settings from config.config"""
-    
+
     # Embedding Model
     EMBEDDING_MODEL = settings.RAG_EMBEDDING_MODEL
     EMBEDDING_DIMENSION = settings.RAG_EMBEDDING_DIMENSION
-    
+
     # ChromaDB Configuration
     CHROMA_MODE = settings.CHROMA_MODE  # local or remote
     CHROMA_HOST = settings.CHROMA_HOST
@@ -21,45 +23,52 @@ class RAGConfig:
     CHROMA_PASSWORD = settings.CHROMA_PASSWORD
     CHROMA_PERSIST_DIRECTORY = os.path.abspath(settings.CHROMA_PERSIST_DIR)
     COLLECTION_NAME = settings.CHROMA_COLLECTION_NAME
-    
+
     # Retrieval
     TOP_K = settings.RAG_TOP_K
     SIMILARITY_THRESHOLD = settings.RAG_SIMILARITY_THRESHOLD
     MAX_CONTEXT_LENGTH = settings.RAG_MAX_CONTEXT_LENGTH
-    
+
     # LLM Generation
     LLM_PROVIDER = settings.LLM_PROVIDER
     LLM_MODEL = settings.LLM_MODEL
     LLM_TEMPERATURE = settings.LLM_TEMPERATURE
     LLM_MAX_TOKENS = settings.LLM_MAX_TOKENS
-    
+
     # API Keys
     OPENAI_API_KEY = settings.OPENAI_API_KEY
     ANTHROPIC_API_KEY = settings.ANTHROPIC_API_KEY
-    
+    GEMINI_API_KEY = settings.GEMINI_API_KEY
+    GEMINI_MODEL = settings.GEMINI_MODEL
+
     # Data paths
-    KNOWLEDGE_BASE_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "data", "alpha_mini_knowledge")
-    
+    KNOWLEDGE_BASE_PATH = os.path.join(
+        os.path.dirname(__file__), "..", "..", "data", "alpha_mini_knowledge"
+    )
+
     # Prompt Templates
-    SYSTEM_PROMPT = """Bạn là trợ lý AI thông minh của robot Alpha Mini. 
-Nhiệm vụ của bạn là trả lời câu hỏi của người dùng về Alpha Mini dựa trên thông tin được cung cấp.
+    SYSTEM_PROMPT = """
+Bạn là trợ lý AI của robot Alpha Mini.
+Nhiệm vụ: trả lời câu hỏi dựa trên Context được cung cấp.
 
-NGUYÊN TẮC QUAN TRỌNG:
-1. CHỈ sử dụng thông tin từ Context được cung cấp bên dưới
-2. KHÔNG bịa đặt hoặc thêm thông tin không có trong Context
-3. Nếu Context không chứa đủ thông tin để trả lời, hãy thành thật nói "Tôi không có đủ thông tin để trả lời câu hỏi này"
-4. Trả lời bằng tiếng Việt, thân thiện, rõ ràng và từng bước
-5. Luôn trích dẫn nguồn thông tin khi có thể
+QUY TẮC:
+- Nếu thông tin trong Context có thể trả lời câu hỏi, BẮT BUỘC phải trả lời dựa trên Context.
+- Không được trả lời "không có đủ thông tin" nếu Context chứa thông tin liên quan một phần.
+- Chỉ trả lời "Xin lỗi, mình hiện chỉ có thể hỗ trợ các câu hỏi về robot Alpha Mini. Bạn thử đặt câu hỏi khác giúp mình nhé!" nếu KHÔNG có bất kỳ dữ liệu liên quan nào.
+- Không bịa đặt thông tin ngoài Context.
+- Trả lời bằng tiếng Việt, tự nhiên và rõ ràng.
 
-Context được cung cấp:
+Context:
 {context}
 
-Câu hỏi của người dùng: {question}
+Câu hỏi:
+{question}
 
-Hãy trả lời câu hỏi dựa trên Context trên."""
+Hãy trả lời ngắn gọn, đầy đủ dựa trên Context phía trên.
+"""
 
     USER_PROMPT_TEMPLATE = "{question}"
-    
+
     # Fallback message
     NO_ANSWER_MESSAGE = """Xin lỗi, tôi không tìm thấy thông tin phù hợp để trả lời câu hỏi của bạn trong cơ sở dữ liệu hiện tại. 
 
@@ -79,8 +88,9 @@ Bạn có thể:
             "llm_provider": cls.LLM_PROVIDER,
             "llm_model": cls.LLM_MODEL,
             "temperature": cls.LLM_TEMPERATURE,
-            "max_tokens": cls.LLM_MAX_TOKENS
+            "max_tokens": cls.LLM_MAX_TOKENS,
         }
+
 
 # Create instance
 rag_config = RAGConfig()
