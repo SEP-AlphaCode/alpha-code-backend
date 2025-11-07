@@ -8,7 +8,8 @@ from fastapi.responses import JSONResponse
 from typing import Optional
 import logging
 
-from app.repositories.account_quota_repository import get_account_from_serial, get_account_quota
+from app.repositories.account_quota_repository import get_account_from_serial
+from app.services.quota.quota_service import get_account_quota
 from app.services.socket.robot_websocket_service import get_robot_info_via_websocket, check_block_coding_status
 
 router = APIRouter()

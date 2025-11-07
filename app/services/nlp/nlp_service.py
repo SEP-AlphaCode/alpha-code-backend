@@ -6,7 +6,7 @@ import json
 import re
 from .prompt import build_prompt
 from .prompt_obj_detect import build_prompt_obj_detect
-from ..quota.quota_service import get_account_quota
+from ..quota.quota_service import get_account_quota, consume_quota
 from ..stt.stt_service import transcribe_audio
 from .skills_loader import load_skills_text
 from app.repositories.robot_model_repository import get_robot_prompt_by_id
@@ -167,9 +167,9 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
         if quota_or_sub[1] == 'Quota' and quota_or_sub[0]['quota'] <= 0:
             content = ''
             if lang == 'vi':
-                content == ('Bạn đã sử dụng hết dung lượng miễn phí cho ngày hôm nay. Vui lòng đăng ký gói để sử dụng thêm')
+                content = 'Bạn đã sử dụng hết dung lượng miễn phí cho ngày hôm nay. Vui lòng đăng ký gói để sử dụng thêm'
             else:
-                content == 'You have used up all your free data for today. Please subscribe to a plan to use more.'
+                content = 'You have used up all your free data for today. Please subscribe to a plan to use more.'
             return {
                 'type': 'talk',
                 'data': {
@@ -211,7 +211,8 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
         
         # cleanup JSON response
         cleaned = re.sub(r"^```(?:json)?|```$", "", text.strip(), flags=re.MULTILINE).strip()
-        
+        if quota_or_sub[1] == 'Quota':
+            await consume_quota(account_id, actual_total_tokens)
         try:
             parsed = json.loads(cleaned)
             parsed["_token_usage"] = {

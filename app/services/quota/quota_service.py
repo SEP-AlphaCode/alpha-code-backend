@@ -2,14 +2,15 @@
 
 import asyncio
 from datetime import datetime
+from config.config import settings
 from sqlalchemy import select, update
 from redis.asyncio import Redis
 
 from app.entities.payment_service.account_quota import AccountQuota
-from app.entities.payment_service.database_payment import AsyncSession as PaymentSession
+from app.entities.payment_service.database_payment import AsyncSessionLocal as PaymentSession
 
 # Initialize Redis globally (you can also inject via dependency)
-redis_client = Redis(host="localhost", port=6379, decode_responses=True)
+redis_client = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, decode_responses=True, password=settings.REDIS_PASSWORD)
 
 
 # --- Core helper functions ---
@@ -28,7 +29,6 @@ async def get_account_quota(acc_id: str):
     """Return the account's current quota, either from Redis or DB."""
     key = f"quota:{acc_id}"
     quota = await redis_client.get(key)
-
     if quota is None:
         # Fallback to DB if not cached
         async with PaymentSession() as session:
@@ -38,7 +38,7 @@ async def get_account_quota(acc_id: str):
             record = result.scalar_one_or_none()
             if not record:
                 return None, "Quota"
-
+            
             await redis_client.set(key, record.quota)
             return {
                 "account_id": str(record.account_id),

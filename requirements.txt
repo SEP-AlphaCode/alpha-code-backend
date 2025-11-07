@@ -1,3 +1,4 @@
+apscheduler
 langdetect
 tiktoken
 booktype

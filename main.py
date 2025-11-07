@@ -3,6 +3,11 @@ import logging
 
 # from redis import asyncio as aioredis
 from aiocache import caches
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
+from apscheduler.triggers.interval import IntervalTrigger
+
+from app.services.quota.quota_service import preload_daily_quotas, sync_redis_to_db
 from config.config import settings
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -39,7 +44,7 @@ if settings.LICENSE_NAME and settings.LICENSE_URL:
     fastapi_kwargs["license_info"] = {"name": settings.LICENSE_NAME, "url": settings.LICENSE_URL}
 
 app = FastAPI(**fastapi_kwargs)
-
+scheduler = AsyncIOScheduler()
 
 @app.on_event("startup")
 async def startup_event():
@@ -52,37 +57,18 @@ async def startup_event():
         # Auto-init with no prompts, skip if already has data
         init_knowledge_base(auto_mode=True)
         logging.info("✅ ChromaDB ready")
-            
+        # Run every day at midnight
+        print('Add midnight jobs...')
+        scheduler.add_job(preload_daily_quotas, CronTrigger(hour=0, minute=0))
+        print('Add hourly sync jobs...')
+        # Optional hourly DB sync
+        scheduler.add_job(sync_redis_to_db, IntervalTrigger(hours=1))
+        
+        scheduler.start()
     except Exception as e:
         logging.error(f"⚠️ ChromaDB initialization failed: {e}")
         logging.warning("⚠️ Chatbot will continue without knowledge base")
 
-
-# @app.on_event("startup")
-# async def startup_event_redis():
-#     try:
-#         redis = aioredis.from_url(
-#             f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
-#             password=settings.REDIS_PASSWORD,
-#             encoding="utf-8",
-#             decode_responses=True,
-#         )
-#         await redis.ping()
-#         logging.info("✅ Connected to Redis successfully")
-#         print(f"🚀 Redis config: {settings.REDIS_HOST}:{settings.REDIS_PORT}")
-# 
-#         caches.set_config({
-#             'default': {
-#                 'cache': RedisCache,
-#                 'endpoint': settings.REDIS_HOST,
-#                 'port': settings.REDIS_PORT,
-#                 'password': settings.REDIS_PASSWORD,
-#                 'timeout': 5,
-#                 'serializer':JsonSerializer(),
-#             }
-#         })
-#     except Exception as e:
-#         logging.error(f"❌ Redis connection failed: {e}")
 
 app.add_middleware(
     CORSMiddleware,

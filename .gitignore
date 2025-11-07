@@ -89,3 +89,4 @@ ENV/
 *.out
 
 chroma.sqlite3
+chroma_db/*
