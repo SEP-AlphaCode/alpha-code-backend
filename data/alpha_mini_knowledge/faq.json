@@ -49,13 +49,73 @@
   },
   {
     "id": "faq_005",
-    "content": "Câu hỏi: Tôi có thể lập trình thêm động tác mới cho robot không? Trả lời: Có, bạn có thể tạo động tác tùy chỉnh thông qua ứng dụng Alpha Mini. Chọn 'Lập trình' > 'Tạo động tác mới', sau đó điều chỉnh từng khớp servo của robot để tạo động tác mong muốn. Bạn cũng có thể lập trình bằng Python để tạo các chuỗi động tác phức tạp hơn.",
+    "content": "Câu hỏi: Làm sao để cài đặt ứng dụng Alpha Mini bằng file APK? Trả lời: Vào phần 'Tài nguyên' (Resources) trong trang hướng dẫn hoặc bộ cài đi kèm, tải file 'AlphaMini_vX.X.X.apk' về điện thoại Android. Vào Cài đặt > Bảo mật > bật 'Cài đặt từ nguồn không xác định', sau đó mở file APK và chọn 'Cài đặt'. Khi hoàn tất, mở ứng dụng và cấp quyền Bluetooth, WiFi, micro cho robot.",
     "metadata": {
       "category": "faq",
-      "subcategory": "programming",
-      "tags": ["programming", "customization", "movements"],
+      "subcategory": "installation",
+      "tags": ["apk", "installation", "resources", "setup"],
       "language": "vi",
-      "last_updated": "2025-01-01",
+      "last_updated": "2025-11-08",
+      "source": "faq"
+    }
+  },
+  {
+    "id": "faq_006",
+    "content": "Câu hỏi: Alpha Mini có thể điều khiển bằng joystick không? Trả lời: Có, người dùng có thể kết nối joystick Bluetooth (ví dụ: Osmo Controller hoặc tay cầm chơi game) với ứng dụng Alpha Mini. Sau khi ghép nối, bạn có thể điều khiển hướng di chuyển, quay đầu, và kích hoạt các động tác cơ bản của robot trực tiếp từ joystick.",
+    "metadata": {
+      "category": "faq",
+      "subcategory": "joystick_control",
+      "tags": ["joystick", "control", "bluetooth"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "faq"
+    }
+  },
+  {
+    "id": "faq_007",
+    "content": "Câu hỏi: Osmo Card là gì và dùng như thế nào? Trả lời: Osmo Card là các thẻ vật lý chứa mã nhận dạng, giúp người dùng kích hoạt hành động hoặc bài học cho robot bằng cách quét thẻ trước camera. Ví dụ: khi đưa thẻ 'Hello' đến gần, robot sẽ chào bằng tiếng Anh và biểu diễn cử chỉ tương ứng. Tính năng này hỗ trợ tốt cho học tập tương tác và dạy từ vựng.",
+    "metadata": {
+      "category": "faq",
+      "subcategory": "osmo_card",
+      "tags": ["osmo", "card", "learning", "interaction"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "faq"
+    }
+  },
+  {
+    "id": "faq_008",
+    "content": "Câu hỏi: Làm sao để kết nối Alpha Mini với Bluetooth? Trả lời: Bật robot, mở ứng dụng Alpha Mini, sau đó vào phần 'Cài đặt' > 'Bluetooth'. Ứng dụng sẽ tự động quét và hiển thị danh sách thiết bị khả dụng. Chọn robot Alpha Mini của bạn để ghép nối. Khi đèn báo chuyển sang xanh liên tục, kết nối đã thành công.",
+    "metadata": {
+      "category": "faq",
+      "subcategory": "connectivity",
+      "tags": ["bluetooth", "pairing", "connection"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "faq"
+    }
+  },
+  {
+    "id": "faq_009",
+    "content": "Câu hỏi: Làm gì khi robot không phản hồi hoặc không kết nối được? Trả lời: Kiểm tra xem robot đã bật nguồn chưa. Nếu đèn LED không sáng, hãy sạc pin ít nhất 15 phút. Đảm bảo WiFi 2.4GHz hoạt động ổn định và không đổi mật khẩu gần đây. Nếu vẫn lỗi, giữ nút nguồn 10 giây để khởi động lại robot hoặc chọn 'Khôi phục cài đặt gốc' trong ứng dụng.",
+    "metadata": {
+      "category": "faq",
+      "subcategory": "troubleshooting",
+      "tags": ["error", "connection", "reset"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "faq"
+    }
+  },
+  {
+    "id": "faq_010",
+    "content": "Câu hỏi: Làm sao biết khi nào có bản cập nhật firmware mới? Trả lời: Ứng dụng Alpha Mini sẽ hiển thị thông báo khi có bản cập nhật. Bạn cũng có thể kiểm tra thủ công bằng cách vào 'Cài đặt' > 'Thông tin robot' > 'Kiểm tra cập nhật'. Nếu có phiên bản mới, nhấn 'Cập nhật' và đảm bảo robot có pin trên 50% trong suốt quá trình.",
+    "metadata": {
+      "category": "faq",
+      "subcategory": "firmware",
+      "tags": ["update", "firmware", "software"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
       "source": "faq"
     }
   }
