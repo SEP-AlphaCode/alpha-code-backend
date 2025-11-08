@@ -12,45 +12,68 @@ from app.entities.payment_service.database_payment import AsyncSessionLocal as P
 # Initialize Redis globally (you can also inject via dependency)
 redis_client = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, decode_responses=True, password=settings.REDIS_PASSWORD)
 
+from redis.exceptions import ConnectionError, TimeoutError
+
+async def safe_redis_get(key: str, fallback_fn):
+    try:
+        value = await redis_client.get(key)
+        if value is not None:
+            return int(value)
+    except (ConnectionError, TimeoutError):
+        print(f"⚠️ Redis unavailable, falling back for key: {key}")
+    return await fallback_fn()
+
 
 # --- Core helper functions ---
 
 async def consume_quota(acc_id: str, amount: int = 1) -> int:
-    """Atomically decrease account quota in Redis and return the new value."""
     key = f"quota:{acc_id}"
-    pipe = redis_client.pipeline()
-    pipe.decrby(key, amount)
-    pipe.get(key)
-    _, new_quota = await pipe.execute()
-    return int(new_quota)
-
-
-async def get_account_quota(acc_id: str):
-    """Return the account's current quota, either from Redis or DB."""
-    key = f"quota:{acc_id}"
-    quota = await redis_client.get(key)
-    if quota is None:
-        # Fallback to DB if not cached
+    try:
+        pipe = redis_client.pipeline()
+        pipe.decrby(key, amount)
+        pipe.get(key)
+        _, new_quota = await pipe.execute()
+        return int(new_quota)
+    except (ConnectionError, TimeoutError):
+        print(f"⚠️ Redis unavailable while consuming quota for {acc_id}")
+        # fallback: update DB directly
         async with PaymentSession() as session:
             result = await session.execute(
                 select(AccountQuota).where(AccountQuota.account_id == acc_id)
             )
             record = result.scalar_one_or_none()
             if not record:
-                return None, "Quota"
-            
-            await redis_client.set(key, record.quota)
-            return {
-                "account_id": str(record.account_id),
-                "quota": record.quota,
-                "last_updated": record.last_updated.isoformat() if record.last_updated else None,
-            }, "Quota"
+                return 0
+            new_value = max(record.quota - amount, 0)
+            await session.execute(
+                update(AccountQuota)
+                .where(AccountQuota.account_id == acc_id)
+                .values(quota=new_value)
+            )
+            await session.commit()
+            return new_value
 
-    # Redis hit
+
+
+async def get_account_quota(acc_id: str):
+    key = f"quota:{acc_id}"
+
+    async def fallback_from_db():
+        async with PaymentSession() as session:
+            result = await session.execute(
+                select(AccountQuota).where(AccountQuota.account_id == acc_id)
+            )
+            record = result.scalar_one_or_none()
+            if not record:
+                return 0
+            return record.quota
+
+    quota = await safe_redis_get(key, fallback_from_db)
     return {
         "account_id": acc_id,
-        "quota": int(quota),
+        "quota": quota,
     }, "Quota"
+
 
 
 async def preload_daily_quotas():

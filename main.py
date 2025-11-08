@@ -62,7 +62,7 @@ async def startup_event():
         scheduler.add_job(preload_daily_quotas, CronTrigger(hour=0, minute=0))
         print('Add hourly sync jobs...')
         # Optional hourly DB sync
-        scheduler.add_job(sync_redis_to_db, IntervalTrigger(hours=1))
+        scheduler.add_job(sync_redis_to_db, IntervalTrigger(minutes=15))
         
         scheduler.start()
     except Exception as e:
