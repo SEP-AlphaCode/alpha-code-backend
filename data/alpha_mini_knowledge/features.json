@@ -13,7 +13,7 @@
   },
   {
     "id": "feature_002",
-    "content": "Alpha Mini hỗ trợ điều khiển bằng giọng nói tiếng Việt. Robot có thể nhận diện các lệnh cơ bản như 'nhảy đi', 'hát bài hát', 'kể chuyện', 'chơi trò chơi'. Hệ thống nhận diện giọng nói hoạt động tốt trong môi trường ít tiếng ồn với độ chính xác cao.",
+    "content": "Alpha Mini hỗ trợ điều khiển bằng giọng nói tiếng Việt. Robot có thể nhận diện các lệnh cơ bản như 'dance', 'do exercise', 'push up', 'move forward' và 'turn right'. Hệ thống nhận diện giọng nói hoạt động tốt trong môi trường ít tiếng ồn với độ chính xác cao.",
     "metadata": {
       "category": "features",
       "subcategory": "voice_control",
@@ -61,11 +61,11 @@
   },
   {
     "id": "feature_006",
-    "content": "Alpha Mini hỗ trợ lập trình bằng Blockly và Python, phù hợp cho cả người mới bắt đầu và người dùng nâng cao. Giao diện lập trình trực quan giúp trẻ em học lập trình một cách dễ dàng. Robot có thể được lập trình để thực hiện các hành động tùy chỉnh và tương tác phức tạp.",
+    "content": "Alpha Mini hỗ trợ lập trình bằng Blockly, phù hợp cho cả người mới bắt đầu và người dùng nâng cao. Giao diện lập trình trực quan giúp trẻ em học lập trình một cách dễ dàng. Robot có thể được lập trình để thực hiện các hành động tùy chỉnh và tương tác phức tạp.",
     "metadata": {
       "category": "features",
       "subcategory": "programming",
-      "tags": ["programming", "blockly", "python", "education"],
+      "tags": ["programming", "blockly", "education"],
       "language": "vi",
       "last_updated": "2025-01-01",
       "source": "official_docs"
@@ -93,6 +93,114 @@
       "language": "vi",
       "last_updated": "2025-01-01",
       "source": "official_docs"
+    }
+  },
+  {
+    "id": "feature_009",
+    "content": "Alpha Mini có thể dạy từ vựng tiếng Anh thông qua giọng nói và cử chỉ minh họa. Robot lắng nghe phát âm của học sinh, phản hồi chính xác hoặc gợi ý sửa lỗi. Ngoài ra, người dùng có thể quét thẻ học từ vựng để robot đọc to từ tiếng Anh, hiển thị hình ảnh và thực hiện hành động minh họa tương ứng.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "language_learning",
+      "tags": ["english", "vocabulary", "education", "speech_recognition"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "alpha_mini_requirements"
+    }
+  },
+  {
+    "id": "feature_010",
+    "content": "Alpha Mini có khả năng nhận diện cảm xúc học sinh thông qua biểu cảm khuôn mặt và giọng nói. Robot có thể phát hiện trạng thái vui, buồn, mệt mỏi hoặc mất tập trung, từ đó điều chỉnh cách tương tác, thay đổi giọng nói hoặc biểu cảm khuôn mặt để khuyến khích học sinh.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "emotion_recognition",
+      "tags": ["emotion", "ai", "education", "face_recognition"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "alpha_mini_requirements"
+    }
+  },
+  {
+    "id": "feature_011",
+    "content": "Robot Alpha Mini có thể điểm danh học sinh bằng công nghệ nhận diện khuôn mặt. Sau khi huấn luyện, robot tự động xác định danh tính từng học sinh khi bước vào lớp và lưu lại dữ liệu điểm danh lên hệ thống. Tính năng này giúp giáo viên theo dõi sự có mặt của học sinh một cách nhanh chóng và chính xác.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "attendance",
+      "tags": ["face_recognition", "attendance", "education", "ai"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "alpha_mini_requirements"
+    }
+  },
+  {
+    "id": "feature_012",
+    "content": "Alpha Mini hỗ trợ phiên dịch song ngữ Việt – Anh theo thời gian thực. Người dùng có thể nói tiếng Việt để robot dịch sang tiếng Anh và ngược lại. Tính năng này hữu ích trong lớp học ngoại ngữ, giúp học sinh luyện nghe – nói và giao tiếp tự nhiên hơn.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "translation",
+      "tags": ["translation", "bilingual", "english", "vietnamese"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "alpha_mini_requirements"
+    }
+  },
+  {
+    "id": "feature_013",
+    "content": "Alpha Mini có thể nhận diện cử chỉ tay để thực hiện các hành động tương ứng, chẳng hạn như vẫy tay để chào, giơ tay để bắt đầu hoạt động, hoặc ra hiệu dừng. Tính năng này giúp tăng tính tương tác tự nhiên giữa robot và người dùng, đặc biệt trong môi trường học tập và biểu diễn.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "gesture_recognition",
+      "tags": ["gesture", "camera", "interaction", "ai"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "alpha_mini_requirements"
+    }
+  },
+  {
+    "id": "feature_014",
+    "content": "Alpha Mini có khả năng nhảy theo nhạc được người dùng tải lên. Hệ thống phân tích nhịp điệu của bài nhạc và đồng bộ các động tác từ file kịch bản .ubx. Người dùng có thể tùy chỉnh các bước nhảy, lưu và phát lại các kịch bản biểu diễn riêng.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "dance_sync",
+      "tags": ["dance", "music", "beat_analysis", "performance"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "alpha_mini_requirements"
+    }
+  },
+  {
+    "id": "feature_015",
+    "content": "Robot có thể tạo và thay đổi biểu cảm khuôn mặt tùy chỉnh trên màn hình LED. Người dùng có thể chọn các cảm xúc như vui, buồn, ngạc nhiên, hoặc tạo mới thông qua ứng dụng di động. Điều này giúp tăng khả năng biểu đạt và giao tiếp cảm xúc của robot.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "facial_expression",
+      "tags": ["emotion", "led_display", "expression", "interaction"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "alpha_mini_requirements"
+    }
+  },
+  {
+    "id": "feature_016",
+    "content": "Alpha Mini hỗ trợ điều khiển thủ công qua joystick. Người dùng có thể điều khiển robot di chuyển, xoay người hoặc thực hiện các động tác cơ bản trong thời gian thực. Chế độ này giúp thao tác trực tiếp và linh hoạt trong huấn luyện, thử nghiệm hoặc biểu diễn.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "manual_control_joystick",
+      "tags": ["joystick", "manual_control", "movement", "real_time"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "alpha_mini_requirements"
+    }
+  },
+  {
+    "id": "feature_017",
+    "content": "Alpha Mini có thể điều khiển thông qua Osmo Card, một thiết bị hỗ trợ giao tiếp vật lý với robot. Bằng cách đặt hoặc quét thẻ Osmo tương ứng, người dùng có thể ra lệnh cho robot thực hiện các hành động như chào, di chuyển, hoặc bắt đầu bài học. Tính năng này giúp trẻ nhỏ tương tác dễ dàng hơn mà không cần dùng điện thoại hay giọng nói.",
+    "metadata": {
+      "category": "features",
+      "subcategory": "osmo_card_control",
+      "tags": ["osmo_card", "control", "education", "interaction"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "alpha_mini_requirements"
     }
   }
 ]

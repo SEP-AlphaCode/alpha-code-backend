@@ -76,5 +76,18 @@
       "last_updated": "2025-01-01",
       "source": "user_manual"
     }
+  },
+  {
+    "id": "guide_007",
+    "content": "Cài đặt ứng dụng Alpha Mini (APK) từ phần Tài nguyên: 1. Mở thư mục 'Tài nguyên' (Resources) trên thiết bị hoặc trong trang tải Alpha Mini. 2. Tìm file 'AlphaMini_vX.X.X.apk'. 3. Nếu điện thoại hiển thị cảnh báo bảo mật, chọn 'Cài đặt từ nguồn không xác định' (hoặc vào Cài đặt > Bảo mật > cho phép cài đặt ứng dụng không xác định). 4. Nhấn 'Cài đặt'. 5. Đợi quá trình cài đặt hoàn tất, sau đó nhấn 'Mở'. 6. Khi ứng dụng mở, cấp quyền Bluetooth, WiFi và Micro cho ứng dụng để đảm bảo kết nối với robot hoạt động bình thường.",
+    "metadata": {
+      "category": "user_guide",
+      "subcategory": "installation",
+      "difficulty": "beginner",
+      "tags": ["apk", "installation", "resources", "setup"],
+      "language": "vi",
+      "last_updated": "2025-11-08",
+      "source": "resources_section"
+    }
   }
 ]
