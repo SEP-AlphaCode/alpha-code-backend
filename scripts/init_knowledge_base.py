@@ -129,7 +129,7 @@ def init_knowledge_base(auto_mode=False, reset=False):
         logger.error(f"❌ Error initializing knowledge base: {e}")
         import traceback
         traceback.print_exc()
-        sys.exit(1)
+        # sys.exit(1)
 
 
 if __name__ == "__main__":

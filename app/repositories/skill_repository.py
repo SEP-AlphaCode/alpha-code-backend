@@ -3,6 +3,8 @@ from typing import List, Optional
 from app.entities.activity_service.database import AsyncSessionLocal
 from app.entities.activity_service.skill import Skill
 from aiocache import cached, RedisCache
+
+from app.entities.model_to_json import skill_to_dict
 from config.config import settings
 from aiocache.serializers import JsonSerializer
 
@@ -66,4 +68,4 @@ async def get_skills_by_robot_model_repo(robot_model_id: str):
         result = await session.execute(
             select(Skill).where(Skill.robot_model_id == robot_model_id)
         )
-        return result.scalars().all()
+        return [skill_to_dict(skill) for skill in result.scalars().all()]

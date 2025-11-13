@@ -1,8 +1,5 @@
 from sqlalchemy import select, func
 
-from app.entities.model_to_json import subscription_to_dict, robot_to_dict, account_quota_to_dict
-from app.entities.payment_service.account_quota import AccountQuota
-from app.entities.payment_service.database_payment import AsyncSessionLocal as PaymentSession
 from app.entities.robot_service.database_robot import AsyncSessionLocal as RobotSession
 from aiocache import cached, RedisCache
 

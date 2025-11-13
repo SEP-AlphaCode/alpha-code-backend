@@ -151,7 +151,6 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
             status_code=400,
             detail='Serial is required'
         )
-    
     try:
         lang = detect_lang(input_text)
         if lang == "none":
@@ -165,7 +164,6 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
         account_id = await get_account_from_serial(serial)
         quota_or_sub = await get_account_quota(account_id)
         if quota_or_sub[1] == 'Quota' and quota_or_sub[0]['quota'] <= 0:
-            content = ''
             if lang == 'vi':
                 content = 'Bạn đã sử dụng hết dung lượng miễn phí cho ngày hôm nay. Vui lòng đăng ký gói để sử dụng thêm'
             else:
@@ -191,11 +189,6 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
         
         if not text:
             return {'type': 'error', 'data': {"error": "Empty response from Gemini"}}
-        
-        # ACTUAL TOKEN USAGE FROM GEMINI API
-        actual_input_tokens = 0
-        actual_output_tokens = 0
-        actual_total_tokens = 0
         
         if hasattr(response, 'usage_metadata'):
             # This is the ACTUAL token count from Gemini's processing

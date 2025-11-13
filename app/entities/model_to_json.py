@@ -12,7 +12,6 @@ def to_serializable(value):
 def robot_to_dict(robot):
     if robot is None:
         return None
-    print('\n', robot)
     return {
         "id": to_serializable(robot.id),
         "account_id": to_serializable(robot.account_id),
@@ -47,4 +46,18 @@ def account_quota_to_dict(account_quota):
         "status": account_quota.status,
         "account_id": to_serializable(account_quota.account_id),
         "quota": account_quota.quota,
+    }
+
+def skill_to_dict(skill):
+    if skill is None:
+        return None
+    return {
+        "id": to_serializable(skill.id),
+        "name": skill.name,
+        "code": skill.code,
+        "status": skill.status,
+        "icon": skill.icon,
+        "robot_model_id": to_serializable(skill.robot_model_id),
+        "last_updated": to_serializable(skill.last_updated),
+        "created_date": to_serializable(skill.created_date),
     }

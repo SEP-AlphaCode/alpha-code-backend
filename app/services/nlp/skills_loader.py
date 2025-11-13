@@ -12,5 +12,5 @@ async def load_skills_text(robot_model_id: str) -> str:
     if not skills:
         return "No skills available."
 
-    skill_lines = [f"{s.code}, {s.name}" for s in skills]
+    skill_lines = [f"{s['code']}, {s['name']}" for s in skills]
     return "\n".join(skill_lines)
