@@ -12,7 +12,7 @@ from config.config import settings
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
-from aiocache import cached, Cache, RedisCache
+
 from starlette.responses import Response
 from app.routers.osmo_router import router as osmo_router
 from app.routers.audio_router import router as audio_router

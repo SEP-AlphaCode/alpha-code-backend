@@ -15,7 +15,7 @@ from app.entities.payment_service.database_payment import AsyncSessionLocal as P
 redis_client = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, decode_responses=True,
                      password=settings.REDIS_PASSWORD)
 
-from redis.exceptions import ConnectionError, TimeoutError
+from redis.exceptions import ConnectionError
 
 
 async def safe_redis_get(key: str, fallback_fn):

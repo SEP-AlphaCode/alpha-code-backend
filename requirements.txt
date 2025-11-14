@@ -33,10 +33,9 @@ torch
 torchvision
 ultralytics
 uvicorn[standard]
-whisper
 torch
 transformers
-aiocache==0.11.1
+aiocache==0.12.3
 # Modern Redis client (asyncio built-in)
 redis>=5.0.0
 
