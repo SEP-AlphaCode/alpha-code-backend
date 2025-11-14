@@ -2,7 +2,6 @@ import json
 import logging
 
 # from redis import asyncio as aioredis
-from aiocache import caches
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
@@ -29,7 +28,6 @@ from app.services.socket.connection_manager import connection_manager, signaling
 from app.services.socket.handlers.text_handler import handle_text_message
 # from app.services.music.durations import load_all_durations
 # from config.config import settings
-from aiocache.serializers import StringSerializer, JsonSerializer
 
 # Build FastAPI kwargs dynamically to avoid invalid empty URL in license
 fastapi_kwargs = dict(
