@@ -15,6 +15,7 @@ import tiktoken
 from langdetect import detect, DetectorFactory
 from langdetect.lang_detect_exception import LangDetectException
 from ...repositories.account_quota_repository import get_account_from_serial
+from .vector_context_service import get_conversation_context_service
 
 # =========================
 # Config Gemini
@@ -206,6 +207,20 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
         cleaned = re.sub(r"^```(?:json)?|```$", "", text.strip(), flags=re.MULTILINE).strip()
         if quota_or_sub[1] == 'Quota':
             await consume_quota(account_id, actual_total_tokens)
+        # Try to include recent conversation context (per-robot) into the prompt
+        try:
+            ctx_service = get_conversation_context_service()
+            recent = ctx_service.get_recent(serial, k=5) if ctx_service else []
+            # recent is sorted newest-first; reverse to chronological order
+            recent_chron = list(reversed(recent))
+            # create a compact context text; include role label for clarity
+            context_text = "\n".join(f"{item['meta'].get('role','user')}: {item['text']}" for item in recent_chron)
+        except Exception:
+            context_text = None
+
+        # Rebuild prompt with conversation context (if any)
+        prompt = await build_prompt(input_text, robot_model_id, context_text=context_text)
+
         try:
             parsed = json.loads(cleaned)
             parsed["_token_usage"] = {
@@ -216,6 +231,25 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
                 "token_limit_respected": actual_output_tokens <= max_output_tokens,
                 "actual_prompt": prompt
             }
+
+            # Persist conversation messages (user input + assistant reply) to vector DB
+            try:
+                ctx_svc = get_conversation_context_service()
+                user_msg = {"text": input_text, "role": "user"}
+                # try to extract assistant textual reply if possible
+                assistant_text = None
+                if isinstance(parsed, dict):
+                    data = parsed.get("data")
+                    if isinstance(data, dict):
+                        assistant_text = data.get("text")
+                if not assistant_text:
+                    assistant_text = text
+                assistant_msg = {"text": assistant_text, "role": "assistant"}
+                ctx_svc.upsert_messages(serial, [user_msg, assistant_msg])
+            except Exception:
+                # don't fail the response if saving context fails
+                pass
+
             return parsed
         except Exception:
             return {

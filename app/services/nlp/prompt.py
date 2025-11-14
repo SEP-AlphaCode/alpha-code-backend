@@ -150,16 +150,27 @@ PROMPT_TEMPLATE: Final[str] = dedent(
 ).strip()
 
 
-async def build_prompt(input_text: str, robot_model_id: str) -> str:
-    """Return the full prompt with the user input embedded.
+async def build_prompt(input_text: str, robot_model_id: str, context_text: str = None) -> str:
+  """Return the full prompt with the user input embedded.
 
-    Escapes double quotes in the input to keep JSON inside prompt consistent.
-    """
-    safe_text = input_text.replace('"', '\\"')
-    skills_text = await load_skills_text(robot_model_id)
-    return PROMPT_TEMPLATE.replace("$INPUT_TEXT", safe_text).replace(
-        "$SKILL_LIST", skills_text
-    )
+  If `context_text` is provided, it will be prepended to the prompt as
+  conversation history to give the LLM continuity across turns.
+
+  Escapes double quotes in the input to keep JSON inside prompt consistent.
+  """
+  safe_text = input_text.replace('"', '\\"')
+  skills_text = await load_skills_text(robot_model_id)
+
+  base_prompt = PROMPT_TEMPLATE.replace("$INPUT_TEXT", safe_text).replace(
+    "$SKILL_LIST", skills_text
+  )
+
+  if context_text:
+    # Prepend a short labeled conversation history block
+    context_block = f"Conversation history:\n{context_text}\n\n"
+    return context_block + base_prompt
+
+  return base_prompt
 
 
 __all__ = ["build_prompt", "PROMPT_TEMPLATE"]
