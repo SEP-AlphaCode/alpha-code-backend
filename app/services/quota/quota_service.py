@@ -19,11 +19,15 @@ from redis.exceptions import ConnectionError
 
 
 async def safe_redis_get(key: str, fallback_fn):
+    client = get_redis_client()
+    if client is None:
+        # Redis client failed to initialize; fallback to DB
+        return await fallback_fn()
     try:
-        value = await redis_client.get(key)
+        value = await client.get(key)
         if value is not None:
             return int(value)
-    except (ConnectionError, TimeoutError):
+    except Exception:
         print(f"⚠️ Redis unavailable, falling back for key: {key}")
     return await fallback_fn()
 
@@ -32,16 +36,18 @@ async def safe_redis_get(key: str, fallback_fn):
 
 async def consume_quota(acc_id: str, amount: int = 1) -> int:
     key = f"quota:{acc_id}"
-    try:
-        pipe = redis_client.pipeline()
-        pipe.decrby(key, amount)
-        pipe.get(key)
-        _, new_quota = await pipe.execute()
-        print(f'⚠Reduce quota for {acc_id} by {amount}. New amount = {new_quota}')
-        return int(new_quota)
-    except (ConnectionError, TimeoutError):
-        print(f"⚠️ Redis unavailable while consuming quota for {acc_id}")
-        # fallback: update DB directly
+    client = get_redis_client()
+    if client is not None:
+        try:
+            pipe = client.pipeline()
+            pipe.decrby(key, amount)
+            pipe.get(key)
+            _, new_quota = await pipe.execute()
+            print(f'⚠Reduce quota for {acc_id} by {amount}. New amount = {new_quota}')
+            return int(new_quota)
+        except Exception:
+            print(f"⚠️ Redis unavailable while consuming quota for {acc_id}")
+    # fallback: update DB directly
         async with PaymentSession() as session:
             result = await session.execute(
                 select(AccountQuota).where(AccountQuota.account_id == acc_id)
@@ -59,9 +65,13 @@ async def consume_quota(acc_id: str, amount: int = 1) -> int:
             
             # Add the updated value to Redis for future use
             try:
-                await redis_client.set(key, new_value)
-                print(f"✅ Updated Redis cache for {acc_id} with new quota: {new_value}")
-            except (ConnectionError, TimeoutError):
+                client = get_redis_client()
+                if client is not None:
+                    await client.set(key, new_value)
+                    print(f"✅ Updated Redis cache for {acc_id} with new quota: {new_value}")
+                else:
+                    print(f"⚠️ Redis client not available, skipping cache update for {acc_id}")
+            except Exception:
                 print(f"⚠️ Redis still unavailable, skipping cache update for {acc_id}")
             
             return new_value
@@ -110,8 +120,12 @@ async def preload_daily_quotas():
         if not accounts:
             return
         
-        # Set trial amount for all accounts
-        pipe = redis_client.pipeline()
+        # Set trial amount for all accounts (if Redis available)
+        client = get_redis_client()
+        if client is None:
+            print("⚠️ Redis client not available; skipping preload to cache")
+            return
+        pipe = client.pipeline()
         for (acc_id,) in accounts:
             pipe.set(f"quota:{acc_id}", trial_amount)
         await pipe.execute()
@@ -121,14 +135,18 @@ async def preload_daily_quotas():
 
 async def sync_redis_to_db():
     """Sync all live Redis quotas back to DB (optional hourly job)."""
-    keys = await redis_client.keys("quota:*")
+    client = get_redis_client()
+    if client is None:
+        print("⚠️ Redis client not available; skipping sync")
+        return
+    keys = await client.keys("quota:*")
     if not keys:
         return
     
     async with PaymentSession() as session:
         for key in keys:
             acc_id = key.split(":")[1]
-            quota_val = await redis_client.get(key)
+            quota_val = await client.get(key)
             if quota_val is not None:
                 await session.execute(
                     update(AccountQuota)

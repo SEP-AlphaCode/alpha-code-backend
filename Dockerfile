@@ -19,10 +19,8 @@ RUN pip install --upgrade pip \
     && rm -rf /usr/local/lib/python3.9/site-packages/redis-*.dist-info \
     && rm -rf /usr/local/lib/python3.9/site-packages/aiocache \
     && rm -rf /usr/local/lib/python3.9/site-packages/aiocache-*.dist-info \
-    \
-    # Cài packages mới, đảm bảo redis 7.x
-    && pip install --no-cache-dir redis==7.0.1 aiocache==0.11.1 \
-    && pip install --no-cache-dir -r requirements.txt
+    && pip install --no-cache-dir -r requirements.txt \
+    && python -c "import redis, inspect; print('redis.version=', getattr(redis,'__version__',None)); print('redis.file=', redis.__file__)"
 
 # Copy toàn bộ source code
 COPY . .

@@ -36,8 +36,9 @@ uvicorn[standard]
 torch
 transformers
 aiocache==0.12.3
-# Modern Redis client (asyncio built-in)
-redis>=5.0.0
+# Pin redis-py to a known compatible version that provides `redis.asyncio`.
+# Pin to 4.x to avoid potential breaking changes in major 5.x during deploy.
+redis==4.6.0
 
 # REMOVE aioredis (deprecated). If bạn vẫn cần, dùng aioredis>=2:
 # aioredis>=2.0.1
