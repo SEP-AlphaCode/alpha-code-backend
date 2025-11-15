@@ -35,7 +35,7 @@ ultralytics
 uvicorn[standard]
 transformers
 aiocache==0.12.3
-redis[async]==6.4.0
+redis==6.4.0
 ujson
 
 # RAG Chatbot Dependencies

@@ -12,7 +12,7 @@ async def process_speech(asr: ASRData, robot_model_id: str, serial: str):  # pro
     try:
         text = await transcribe_bytes_driver(asr)
         print(text)
-        resp = await service_process_text(input_text=text, robot_model_id=robot_model_id)
+        resp = await service_process_text(input_text=text, robot_model_id=robot_model_id, serial=serial)
         return resp
     except Exception as e:
         raise e

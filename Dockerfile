@@ -20,7 +20,8 @@ COPY requirements.txt .
 
 # Cài pip packages triệt để, ép cài lại toàn bộ, xóa cache
 RUN pip install --upgrade pip \
-    && pip install --upgrade --force-reinstall --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir --force-reinstall -r requirements.txt \
+    && pip install --no-cache-dir --force-reinstall "redis==6.4.0" "aiocache==0.12.3" \
     && rm -rf /root/.cache/pip
 
 # Copy toàn bộ code
