@@ -10,44 +10,57 @@ from redis.asyncio import Redis
 
 from app.entities.payment_service.account_quota import AccountQuota
 from app.entities.payment_service.database_payment import AsyncSessionLocal as PaymentSession
+from aiocache import Cache
+from aiocache.serializers import StringSerializer
+from aiocache.backends.redis import RedisBackend
+from datetime import datetime
+from sqlalchemy import select, update
 
-# Initialize Redis globally (you can also inject via dependency)
-redis_client = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, decode_responses=True,
-                     password=settings.REDIS_PASSWORD)
+from aiocache import Cache
+from aiocache.serializers import StringSerializer
+from aiocache.backends.redis import RedisBackend
+from datetime import datetime
+from sqlalchemy import select, update
 
-from redis.exceptions import ConnectionError
+# Initialize aiocache Redis client
+redis_client = Cache(
+    Cache.REDIS,
+    endpoint=settings.REDIS_HOST,
+    port=settings.REDIS_PORT,
+    password=settings.REDIS_PASSWORD,
+    serializer=StringSerializer(),
+    namespace=""  # No namespace prefix
+)
 
 
 async def safe_redis_get(key: str, fallback_fn):
-    client = get_redis_client()
-    if client is None:
-        # Redis client failed to initialize; fallback to DB
-        return await fallback_fn()
+    """Safely get a value from Redis with fallback to DB."""
     try:
-        value = await client.get(key)
+        value = await redis_client.get(key)
         if value is not None:
             return int(value)
-    except Exception:
-        print(f"⚠️ Redis unavailable, falling back for key: {key}")
+    except Exception as e:
+        print(f"⚠️ Redis unavailable, falling back for key: {key} - {e}")
     return await fallback_fn()
 
 
-# --- Core helper functions ---
-
 async def consume_quota(acc_id: str, amount: int = 1) -> int:
+    """Consume quota for an account, with DB fallback if Redis fails."""
     key = f"quota:{acc_id}"
-    client = get_redis_client()
-    if client is not None:
-        try:
-            pipe = client.pipeline()
-            pipe.decrby(key, amount)
-            pipe.get(key)
-            _, new_quota = await pipe.execute()
-            print(f'⚠Reduce quota for {acc_id} by {amount}. New amount = {new_quota}')
-            return int(new_quota)
-        except Exception:
-            print(f"⚠️ Redis unavailable while consuming quota for {acc_id}")
-    # fallback: update DB directly
+    try:
+        # aiocache doesn't have native pipeline support, so we do operations sequentially
+        current = await redis_client.get(key)
+        if current is None:
+            # Key doesn't exist, fallback to DB
+            raise Exception("Key not found in Redis")
+        
+        new_quota = max(int(current) - amount, 0)
+        await redis_client.set(key, str(new_quota))
+        print(f'⚠️ Reduced quota for {acc_id} by {amount}. New amount = {new_quota}')
+        return new_quota
+    except Exception as e:
+        print(f"⚠️ Redis unavailable while consuming quota for {acc_id}: {e}")
+        # fallback: update DB directly
         async with PaymentSession() as session:
             result = await session.execute(
                 select(AccountQuota).where(AccountQuota.account_id == acc_id)
@@ -65,19 +78,16 @@ async def consume_quota(acc_id: str, amount: int = 1) -> int:
             
             # Add the updated value to Redis for future use
             try:
-                client = get_redis_client()
-                if client is not None:
-                    await client.set(key, new_value)
-                    print(f"✅ Updated Redis cache for {acc_id} with new quota: {new_value}")
-                else:
-                    print(f"⚠️ Redis client not available, skipping cache update for {acc_id}")
-            except Exception:
-                print(f"⚠️ Redis still unavailable, skipping cache update for {acc_id}")
+                await redis_client.set(key, str(new_value))
+                print(f"✅ Updated Redis cache for {acc_id} with new quota: {new_value}")
+            except Exception as cache_error:
+                print(f"⚠️ Redis still unavailable, skipping cache update for {acc_id}: {cache_error}")
             
             return new_value
 
 
 async def get_account_quota(acc_id: str):
+    """Get quota for an account from Redis, with DB fallback."""
     key = f"quota:{acc_id}"
     
     async def fallback_from_db():
@@ -120,39 +130,77 @@ async def preload_daily_quotas():
         if not accounts:
             return
         
-        # Set trial amount for all accounts (if Redis available)
-        client = get_redis_client()
-        if client is None:
-            print("⚠️ Redis client not available; skipping preload to cache")
-            return
-        pipe = client.pipeline()
+        # Set trial amount for all accounts (aiocache doesn't have pipeline, so we do it sequentially)
         for (acc_id,) in accounts:
-            pipe.set(f"quota:{acc_id}", trial_amount)
-        await pipe.execute()
+            try:
+                await redis_client.set(f"quota:{acc_id}", str(trial_amount))
+            except Exception as e:
+                print(f"⚠️ Failed to set quota for {acc_id}: {e}")
     
     print(f"[{datetime.utcnow().isoformat()}] Trial quotas preloaded into Redis")
 
 
 async def sync_redis_to_db():
     """Sync all live Redis quotas back to DB (optional hourly job)."""
-    client = get_redis_client()
-    if client is None:
-        print("⚠️ Redis client not available; skipping sync")
-        return
-    keys = await client.keys("quota:*")
-    if not keys:
-        return
-    
+    try:
+        # Get the underlying redis client from aiocache
+        # aiocache stores the client in the 'client' attribute after initialization
+        if not hasattr(redis_client, 'client') or redis_client.client is None:
+            # Initialize connection if not already done
+            await redis_client.get("_init_test")
+        
+        if hasattr(redis_client, 'client') and redis_client.client:
+            keys = await redis_client.client.keys("quota:*")
+        else:
+            print("⚠️ Cannot access Redis keys for sync, using alternative method")
+            await sync_redis_to_db_alternative()
+            return
+        
+        if not keys:
+            return
+        
+        async with PaymentSession() as session:
+            for key in keys:
+                # Decode key if it's bytes
+                if isinstance(key, bytes):
+                    key = key.decode('utf-8')
+                
+                acc_id = key.split(":")[1]
+                quota_val = await redis_client.get(key)
+                if quota_val is not None:
+                    await session.execute(
+                        update(AccountQuota)
+                        .where(AccountQuota.account_id == acc_id)
+                        .values(quota=int(quota_val), last_updated=datetime.utcnow())
+                    )
+            await session.commit()
+        
+        print(f"[{datetime.utcnow().isoformat()}] Redis quotas synced to DB.")
+    except Exception as e:
+        print(f"⚠️ Failed to sync Redis to DB: {e}, using alternative method")
+        await sync_redis_to_db_alternative()
+
+
+# Alternative sync method if direct access to keys doesn't work
+async def sync_redis_to_db_alternative():
+    """Alternative sync method using DB as the source of truth for account IDs."""
     async with PaymentSession() as session:
-        for key in keys:
-            acc_id = key.split(":")[1]
-            quota_val = await client.get(key)
-            if quota_val is not None:
-                await session.execute(
-                    update(AccountQuota)
-                    .where(AccountQuota.account_id == acc_id)
-                    .values(quota=int(quota_val), last_updated=datetime.utcnow())
-                )
+        # Get all account IDs from DB
+        accounts_result = await session.execute(select(AccountQuota.account_id))
+        accounts = accounts_result.all()
+        
+        for (acc_id,) in accounts:
+            try:
+                quota_val = await redis_client.get(f"quota:{acc_id}")
+                if quota_val is not None:
+                    await session.execute(
+                        update(AccountQuota)
+                        .where(AccountQuota.account_id == acc_id)
+                        .values(quota=int(quota_val), last_updated=datetime.utcnow())
+                    )
+            except Exception as e:
+                print(f"⚠️ Failed to sync quota for {acc_id}: {e}")
+        
         await session.commit()
     
-    print(f"[{datetime.utcnow().isoformat()}] Redis quotas synced to DB.")
+    print(f"[{datetime.utcnow().isoformat()}] Redis quotas synced to DB (alternative method).")

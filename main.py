@@ -50,10 +50,10 @@ async def startup_event():
     # Auto-initialize ChromaDB knowledge base
     try:
         print('Add midnight jobs...')
-        scheduler.add_job(preload_daily_quotas, CronTrigger(hour=0, minute=0))
+        scheduler.add_job(preload_daily_quotas, IntervalTrigger(minutes=2))
         print('Add hourly sync jobs...')
         # Optional hourly DB sync
-        scheduler.add_job(sync_redis_to_db, IntervalTrigger(hours=2))
+        scheduler.add_job(sync_redis_to_db, IntervalTrigger(minutes=1))
         scheduler.start()
     except Exception as e:
         logging.error(f"Cannot schedule some operations")
