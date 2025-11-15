@@ -35,7 +35,7 @@ ultralytics
 uvicorn[standard]
 transformers
 aiocache==0.12.3
-redis>=5.0.1        # ✔ FIX: ÉP aiocache dùng Redis mới (không còn lỗi Python 2)
+redis[async]==6.4.0
 ujson
 
 # RAG Chatbot Dependencies
