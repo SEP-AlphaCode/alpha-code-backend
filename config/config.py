@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-from aiocache import caches
 
 load_dotenv()  # load .env file
 
