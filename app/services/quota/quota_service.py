@@ -6,8 +6,6 @@ from datetime import datetime
 from app.entities.payment_service.token_rule import TokenRule
 from config.config import settings
 from sqlalchemy import select, update
-from redis.asyncio import Redis
-
 from app.entities.payment_service.account_quota import AccountQuota
 from app.entities.payment_service.database_payment import AsyncSessionLocal as PaymentSession
 from aiocache import Cache
