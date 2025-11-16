@@ -54,6 +54,22 @@ async def startup_event():
         print('Add hourly sync jobs...')
         # Optional hourly DB sync
         scheduler.add_job(sync_redis_to_db, IntervalTrigger(hours=1))
+        # Prune conversation context daily to bound vector store size
+        try:
+            from app.services.nlp.vector_context_service import get_conversation_context_service
+
+            def _prune_context_job():
+                try:
+                    svc = get_conversation_context_service()
+                    deleted = svc.prune_all(keep_last=200, older_than_days=30)
+                    logging.info(f"Prune job removed {deleted} conversation vectors")
+                except Exception as _e:
+                    logging.warning(f"Prune job failed: {_e}")
+
+            # run once a day
+            scheduler.add_job(_prune_context_job, IntervalTrigger(hours=24))
+        except Exception as e:
+            logging.warning(f"Could not schedule prune job: {e}")
         scheduler.start()
     except Exception as e:
         logging.error(f"Cannot schedule some operations")

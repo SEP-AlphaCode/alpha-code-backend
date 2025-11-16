@@ -4,7 +4,6 @@ import os
 from starlette.concurrency import run_in_threadpool
 import json
 import re
-from .prompt import build_prompt
 from .prompt_obj_detect import build_prompt_obj_detect
 from ..quota.quota_service import get_account_quota, consume_quota
 from ..stt.stt_service import transcribe_audio
@@ -45,6 +44,7 @@ def detect_lang(text: str) -> str:
         return "none"
     try:
         lang = detect(text)
+        print(f"Detected language: {lang} for text: {text}")
         if lang in ("en", "vi"):
             return lang
         return "none"
@@ -62,19 +62,26 @@ async def load_robot_prompt(robot_model_id: str) -> str:
     return db_prompt or ""
 
 
-async def build_prompt(input_text: str, robot_model_id: str) -> str:
+async def build_prompt(input_text: str, robot_model_id: str, context_text: str = None) -> str:
     db_prompt = await get_robot_prompt_by_id(robot_model_id)
     skills_text = await load_skills_text(robot_model_id)
     safe_text = input_text.replace('"', '\\"')
     
     # fallback nếu DB không có prompt
     prompt_template = db_prompt or PROMPT_TEMPLATE
-    
-    return (
+    base = (
         prompt_template
         .replace("$INPUT_TEXT", safe_text)
         .replace("$SKILL_LIST", skills_text)
     )
+
+    if context_text:
+        # Prepend a short labeled conversation history block so the LLM has
+        # previous turns for context continuity.
+        context_block = f"Conversation history:\n{context_text}\n\n"
+        return context_block + base
+
+    return base
 
 
 async def process_audio(req: UploadFile, robot_model_id: str) -> dict:
@@ -175,8 +182,19 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
                     'text': content
                 }
             }
-        prompt = await build_prompt(input_text, robot_model_id)
-        
+        # Fetch recent conversation context (per-robot) and build prompt including it
+        try:
+            ctx_service = get_conversation_context_service()
+            recent = await ctx_service.get_recent(serial, k=5) if ctx_service else []
+            # recent is sorted newest-first; reverse to chronological order
+            recent_chron = list(reversed(recent))
+            # create a compact context text; include role label for clarity
+            context_text = "\n".join(f"{item['meta'].get('role','user')}: {item['text']}" for item in recent_chron)
+        except Exception:
+            context_text = None
+
+        prompt = await build_prompt(input_text, robot_model_id, context_text=context_text)
+
         generation_config = genai.types.GenerationConfig(
             max_output_tokens=max_output_tokens,
         )
@@ -207,20 +225,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
         cleaned = re.sub(r"^```(?:json)?|```$", "", text.strip(), flags=re.MULTILINE).strip()
         if quota_or_sub[1] == 'Quota':
             await consume_quota(account_id, actual_total_tokens)
-        # Try to include recent conversation context (per-robot) into the prompt
-        try:
-            ctx_service = get_conversation_context_service()
-            recent = ctx_service.get_recent(serial, k=5) if ctx_service else []
-            # recent is sorted newest-first; reverse to chronological order
-            recent_chron = list(reversed(recent))
-            # create a compact context text; include role label for clarity
-            context_text = "\n".join(f"{item['meta'].get('role','user')}: {item['text']}" for item in recent_chron)
-        except Exception:
-            context_text = None
-
-        # Rebuild prompt with conversation context (if any)
-        prompt = await build_prompt(input_text, robot_model_id, context_text=context_text)
-
+        # prompt already built including context; keep it for token usage debug
         try:
             parsed = json.loads(cleaned)
             parsed["_token_usage"] = {
