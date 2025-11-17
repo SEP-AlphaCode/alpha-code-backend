@@ -41,15 +41,15 @@ def detect_lang(text: str) -> str:
     Detect language of a text snippet as 'en', 'vi', or 'none'.
     """
     if not text or not text.strip():
-        return "none"
+        return "vi"
     try:
         lang = detect(text)
         print(f"Detected language: {lang} for text: {text}")
         if lang in ("en", "vi"):
             return lang
-        return "none"
+        return "vi"
     except LangDetectException:
-        return "none"
+        return "vi"
 
 
 async def load_skills_text_async(robot_model_id: str) -> str:
@@ -144,7 +144,7 @@ import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 
-async def process_text(input_text: str, robot_model_id: str, serial: str = '', max_output_tokens: int = 500):
+async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
     """
     Enhanced version with actual Gemini token usage tracking
     """
@@ -161,14 +161,6 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
         )
     try:
         lang = detect_lang(input_text)
-        if lang == "none":
-            return {
-                'type': 'talk',
-                'lang': 'vi',
-                'data': {
-                    'text': 'Tôi không hiểu yêu cầu của bạn'
-                }
-            }
         account_id = await get_account_from_serial(serial)
         quota_or_sub = await get_account_quota(account_id)
         if quota_or_sub[1] == 'Quota' and quota_or_sub[0]['quota'] <= 0:
@@ -194,14 +186,10 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
             context_text = None
 
         prompt = await build_prompt(input_text, robot_model_id, context_text=context_text)
-
-        generation_config = genai.types.GenerationConfig(
-            max_output_tokens=max_output_tokens,
-        )
+        
         response = await run_in_threadpool(
             model.generate_content,
             prompt,
-            generation_config=generation_config
         )
         
         text = response.text
@@ -232,8 +220,6 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
                 "actual_input_tokens": actual_input_tokens,
                 "actual_output_tokens": actual_output_tokens,
                 "actual_total_tokens": actual_total_tokens,
-                "max_output_tokens": max_output_tokens,
-                "token_limit_respected": actual_output_tokens <= max_output_tokens,
                 "actual_prompt": prompt
             }
 
@@ -263,8 +249,6 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
                     "actual_input_tokens": actual_input_tokens,
                     "actual_output_tokens": actual_output_tokens,
                     "actual_total_tokens": actual_total_tokens,
-                    "max_output_tokens": max_output_tokens,
-                    "token_limit_respected": actual_output_tokens <= max_output_tokens
                 }
             }
     
