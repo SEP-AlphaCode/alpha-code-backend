@@ -3,7 +3,8 @@
 import asyncio
 from datetime import datetime
 from typing import Optional
-
+import json
+from app.entities.payment_service.subscription import Subscription
 from app.entities.payment_service.token_rule import TokenRule
 from config.config import settings
 from sqlalchemy import select, update
@@ -27,11 +28,11 @@ class InMemoryCache:
     but allows the service to start and operate degraded if Redis or aiocache
     cannot be imported.
     """
-
+    
     def __init__(self):
         self._store: dict[str, tuple[str, Optional[float]]] = {}
         self.client = None
-
+    
     async def get(self, key: str):
         entry = self._store.get(key)
         if not entry:
@@ -42,13 +43,13 @@ class InMemoryCache:
         # expired
         del self._store[key]
         return None
-
+    
     async def set(self, key: str, value: str, ttl: Optional[int] = None):
         expires_at = None
         if ttl and ttl > 0:
             expires_at = datetime.utcnow().timestamp() + ttl
         self._store[key] = (value, expires_at)
-
+    
     async def keys(self, pattern: str):
         # naive glob '*' support
         if pattern == "*":
@@ -64,12 +65,12 @@ def init_cache():
     global _cache_client, _cache_import_error
     if _cache_client is not None or _cache_import_error is not None:
         return _cache_client
-
+    
     try:
         # import here to avoid import-time failures
         from aiocache import Cache
         from aiocache.serializers import StringSerializer
-
+        
         client = Cache(
             Cache.REDIS,
             endpoint=settings.REDIS_HOST,
@@ -103,7 +104,7 @@ def init_redis_lowlevel():
     global _redis_lowlevel
     if _redis_lowlevel is not None:
         return _redis_lowlevel
-
+    
     # Prefer underlying client from aiocache if present
     client = get_cache()
     try:
@@ -112,12 +113,13 @@ def init_redis_lowlevel():
             return _redis_lowlevel
     except Exception:
         pass
-
+    
     # Otherwise try to import redis.asyncio directly (safe-guarded)
     try:
         from redis.asyncio import Redis as AsyncRedis
-
-        rc = AsyncRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, password=settings.REDIS_PASSWORD, decode_responses=True)
+        
+        rc = AsyncRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, password=settings.REDIS_PASSWORD,
+                        decode_responses=True)
         _redis_lowlevel = rc
         return _redis_lowlevel
     except Exception as e:
@@ -139,7 +141,8 @@ async def safe_redis_get(key: str, fallback_fn):
     try:
         value = await client.get(key)
         if value is not None:
-            return int(value)
+            # Deserialize JSON dict
+            return json.loads(value)
     except Exception as e:
         print(f"⚠️ Redis/unified cache unavailable, falling back for key: {key} - {e}")
     return await fallback_fn()
@@ -148,70 +151,56 @@ async def safe_redis_get(key: str, fallback_fn):
 async def consume_quota(acc_id: str, amount: int = 1) -> int:
     """Consume quota for an account, with DB fallback if Redis fails."""
     key = f"quota:{acc_id}"
-    # Try to use a low-level redis client for atomic decrement if available
     rc = get_redis_lowlevel()
+    client = get_cache()
+
     if rc is not None:
         try:
-            # Prefer decrby if supported
-            if hasattr(rc, 'decrby'):
-                new_val = await rc.decrby(key, amount)
-                print(f'⚠️ Reduced quota for {acc_id} by {amount}. New amount = {new_val}')
-                return int(new_val)
-            else:
-                # fall back to pipeline of decr and get
-                pipe = rc.pipeline()
-                pipe.decrby(key, amount)
-                pipe.get(key)
-                res = await pipe.execute()
-                # res[1] should be the new value as string
-                new_val = res[1]
-                return int(new_val)
+            # low-level redis: handle as before
+            new_val = await rc.decrby(key, amount)
+            return int(new_val)
         except Exception as e:
-            print(f"⚠️ Low-level Redis error while consuming quota for {acc_id}: {e}")
+            print(f"⚠️ Low-level Redis error while consuming quota: {e}")
 
-    # If low-level client not available, use generic cache client (aiocache or in-memory)
-    client = get_cache()
+    # Generic cache (aiocache / in-memory)
     if client is not None:
         try:
-            current = await client.get(key)
-            if current is None:
-                # Key doesn't exist, fallback to DB
+            val_dict = await client.get(key)
+            if val_dict is None:
                 raise Exception("Key not found in cache")
 
-            new_quota = max(int(current) - amount, 0)
-            await client.set(key, str(new_quota))
-            print(f'⚠️ Reduced quota for {acc_id} by {amount}. New amount = {new_quota}')
+            if isinstance(val_dict, str):
+                val_dict = json.loads(val_dict)
+
+            current_quota = val_dict.get('quota', 0)
+            new_quota = max(current_quota - amount, 0)
+            val_dict['quota'] = new_quota
+
+            # Save back to cache
+            await client.set(key, json.dumps(val_dict))
             return new_quota
         except Exception as e:
             print(f"⚠️ Cache unavailable while consuming quota for {acc_id}: {e}")
-    # fallback: update DB directly
-        async with PaymentSession() as session:
-            result = await session.execute(
-                select(AccountQuota).where(AccountQuota.account_id == acc_id)
-            )
-            record = result.scalar_one_or_none()
-            if not record:
-                return 0
-            new_value = max(record.quota - amount, 0)
-            await session.execute(
-                update(AccountQuota)
-                .where(AccountQuota.account_id == acc_id)
-                .values(quota=new_value)
-            )
-            await session.commit()
-            
-            # Add the updated value to Redis for future use
-            try:
-                client = get_cache()
-                if client is not None:
-                    await client.set(key, str(new_value))
-                    print(f"✅ Updated cache for {acc_id} with new quota: {new_value}")
-                else:
-                    print(f"⚠️ Cache client not available, skipping cache update for {acc_id}")
-            except Exception as cache_error:
-                print(f"⚠️ Cache still unavailable, skipping cache update for {acc_id}: {cache_error}")
-            
-            return new_value
+
+    # Fallback DB update
+    async with PaymentSession() as session:
+        result = await session.execute(
+            select(AccountQuota).where(AccountQuota.account_id == acc_id)
+        )
+        record = result.scalar_one_or_none()
+        if not record:
+            return 0
+        new_value = max(record.quota - amount, 0)
+        await session.execute(
+            update(AccountQuota)
+            .where(AccountQuota.account_id == acc_id)
+            .values(quota=new_value)
+        )
+        await session.commit()
+        # Update cache
+        if client is not None:
+            await client.set(key, json.dumps({'acc_id': acc_id, 'quota': new_value, 'type': 'Quota'}))
+        return new_value
 
 
 async def get_account_quota(acc_id: str):
@@ -220,19 +209,33 @@ async def get_account_quota(acc_id: str):
     
     async def fallback_from_db():
         async with PaymentSession() as session:
-            result = await session.execute(
-                select(AccountQuota).where(AccountQuota.account_id == acc_id)
+            now = datetime.utcnow()
+            
+            # 1. Try to find an active subscription first
+            sub_query = (
+                select(Subscription)
+                .where(
+                    Subscription.account_id == acc_id,
+                    Subscription.status == 1,
+                    Subscription.end_date > now,
+                )
+                .limit(1)
             )
-            record = result.scalar_one_or_none()
-            if not record:
-                return 0
-            return record.quota
+            sub_result = await session.execute(sub_query)
+            subscription = sub_result.scalar_one_or_none()
+            
+            if subscription:
+                return {'acc_id': acc_id, 'quota': 0, 'type': "Subscription"}
+            
+            # 2. Nếu không có subscription → fallback sang AccountQuota
+            acc_query = select(AccountQuota).where(AccountQuota.account_id == acc_id)
+            acc_result = await session.execute(acc_query)
+            record = acc_result.scalar_one_or_none()
+            return {'acc_id': acc_id, 'quota': record.quota if record else 0, 'type': "Quota"}
     
-    quota = await safe_redis_get(key, fallback_from_db)
-    return {
-        "account_id": acc_id,
-        "quota": quota,
-    }, "Quota"
+    result = await safe_redis_get(key, fallback_from_db)
+    
+    return result
 
 
 async def preload_daily_quotas():
@@ -265,7 +268,8 @@ async def preload_daily_quotas():
             return
         for (acc_id,) in accounts:
             try:
-                await client.set(f"quota:{acc_id}", str(trial_amount))
+                val_dict = {'acc_id': acc_id, 'quota': trial_amount, 'type': 'Quota'}
+                await client.set(f"quota:{acc_id}", json.dumps(val_dict))
             except Exception as e:
                 print(f"⚠️ Failed to set quota for {acc_id}: {e}")
     
@@ -286,26 +290,35 @@ async def sync_redis_to_db():
                 keys = await client.client.keys("quota:*")
             except Exception:
                 keys = None
-
+        
         if keys is None:
             # Fall back to cache.keys (in-memory fallback supports this)
             try:
                 keys = await client.keys("quota:*")
             except Exception:
                 keys = None
-
+        
         if not keys:
             await sync_redis_to_db_alternative()
             return
-
+        
         async with PaymentSession() as session:
             for key in keys:
                 # Decode key if it's bytes
                 if isinstance(key, bytes):
                     key = key.decode('utf-8')
-
+                
                 acc_id = key.split(":")[1]
                 quota_val = await client.get(key)
+                if isinstance(quota_val, str):
+                    quota_val = json.loads(quota_val)
+                quota_int = int(quota_val.get('quota', 0))
+                await session.execute(
+                    update(AccountQuota)
+                    .where(AccountQuota.account_id == acc_id)
+                    .values(quota=quota_int, last_updated=datetime.utcnow())
+                )
+                
                 if quota_val is not None:
                     await session.execute(
                         update(AccountQuota)
@@ -313,7 +326,7 @@ async def sync_redis_to_db():
                         .values(quota=int(quota_val), last_updated=datetime.utcnow())
                     )
             await session.commit()
-
+        
         print(f"[{datetime.utcnow().isoformat()}] Cache quotas synced to DB.")
     except Exception as e:
         print(f"⚠️ Failed to sync cache to DB: {e}, using alternative method")
