@@ -21,8 +21,8 @@ async def process_audio_endpoint(file: UploadFile, robot_model_id: str):
     return await process_audio(file, robot_model_id)
 
 @router.post('/process-text')
-async def process_text_endpoint(request: NLPRequest, robot_model_id: str):
-    return await process_text(request.text, robot_model_id)
+async def process_text_endpoint(request: NLPRequest, robot_model_id: str, serial: str):
+    return await process_text(request.text, robot_model_id, serial)
 
 @router.post("/tts")
 async def do_tts(input_text: NLPRequest, robot_model_id: str):

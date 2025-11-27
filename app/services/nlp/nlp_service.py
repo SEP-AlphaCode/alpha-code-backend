@@ -1,3 +1,5 @@
+import traceback
+
 from fastapi import HTTPException, UploadFile
 import google.generativeai as genai
 import os
@@ -171,7 +173,8 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
             }
         account_id = await get_account_from_serial(serial)
         quota_or_sub = await get_account_quota(account_id)
-        if quota_or_sub[1] == 'Quota' and quota_or_sub[0]['quota'] <= 0:
+        print(quota_or_sub)
+        if quota_or_sub['type'] == 'Quota' and quota_or_sub['quota'] <= 0:
             if lang == 'vi':
                 content = 'Bạn đã sử dụng hết dung lượng miễn phí cho ngày hôm nay. Vui lòng đăng ký gói để sử dụng thêm'
             else:
@@ -219,7 +222,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
         
         # cleanup JSON response
         cleaned = re.sub(r"^```(?:json)?|```$", "", text.strip(), flags=re.MULTILINE).strip()
-        if quota_or_sub[1] == 'Quota':
+        if quota_or_sub['type'] == 'Quota':
             await consume_quota(account_id, actual_total_tokens)
         # prompt already built including context; keep it for token usage debug
         try:
@@ -265,6 +268,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
             }
     
     except Exception as e:
+        traceback.print_exc()
         return {"error": f"Gemini generation failed: {e}"}
 
 
