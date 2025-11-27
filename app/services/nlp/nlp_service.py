@@ -195,13 +195,9 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
 
         prompt = await build_prompt(input_text, robot_model_id, context_text=context_text)
 
-        generation_config = genai.types.GenerationConfig(
-            max_output_tokens=max_output_tokens,
-        )
         response = await run_in_threadpool(
             model.generate_content,
             prompt,
-            generation_config=generation_config
         )
         
         text = response.text
