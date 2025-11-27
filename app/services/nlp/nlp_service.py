@@ -146,7 +146,7 @@ import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 
-async def process_text(input_text: str, robot_model_id: str, serial: str = '', max_output_tokens: int = 500):
+async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
     """
     Enhanced version with actual Gemini token usage tracking
     """
@@ -231,8 +231,6 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
                 "actual_input_tokens": actual_input_tokens,
                 "actual_output_tokens": actual_output_tokens,
                 "actual_total_tokens": actual_total_tokens,
-                "max_output_tokens": max_output_tokens,
-                "token_limit_respected": actual_output_tokens <= max_output_tokens,
                 "actual_prompt": prompt
             }
 
@@ -262,8 +260,6 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = '', m
                     "actual_input_tokens": actual_input_tokens,
                     "actual_output_tokens": actual_output_tokens,
                     "actual_total_tokens": actual_total_tokens,
-                    "max_output_tokens": max_output_tokens,
-                    "token_limit_respected": actual_output_tokens <= max_output_tokens
                 }
             }
     
