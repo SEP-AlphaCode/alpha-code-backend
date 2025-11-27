@@ -206,7 +206,7 @@ async def consume_quota(acc_id: str, amount: int = 1) -> int:
 async def get_account_quota(acc_id: str):
     """Get quota for an account from Redis, with DB fallback."""
     key = f"quota:{acc_id}"
-    
+    client = get_cache()
     async def fallback_from_db():
         async with PaymentSession() as session:
             now = datetime.utcnow()
@@ -225,13 +225,17 @@ async def get_account_quota(acc_id: str):
             subscription = sub_result.scalar_one_or_none()
             
             if subscription:
-                return {'acc_id': acc_id, 'quota': 0, 'type': "Subscription"}
+                res = {'acc_id': acc_id, 'quota': 0, 'type': "Subscription"}
+                await client.set(key, json.dumps(res))
+                return res
             
             # 2. Nếu không có subscription → fallback sang AccountQuota
             acc_query = select(AccountQuota).where(AccountQuota.account_id == acc_id)
             acc_result = await session.execute(acc_query)
             record = acc_result.scalar_one_or_none()
-            return {'acc_id': acc_id, 'quota': record.quota if record else 0, 'type': "Quota"}
+            res = {'acc_id': acc_id, 'quota': record.quota if record else 0, 'type': "Quota"}
+            await client.set(key, json.dumps(res))
+            return res
     
     result = await safe_redis_get(key, fallback_from_db)
     
