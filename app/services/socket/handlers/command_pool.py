@@ -68,6 +68,14 @@ async def notify_shutdown(serial: str):  # notify-shutdown
 async def parse_qr(img: bytes):  # parse-qr
     try:
         code = detect_qr_code(img)
+        if code is None:
+            return {
+                'type': 'talk',
+                'lang': 'vi',
+                'data': {
+                    'text': "Tôi không thấy QR code. Vui lòng thử lại"
+                }
+            }
         activities = await get_activity_from_qr(code)
         return activities
     except Exception as e:
