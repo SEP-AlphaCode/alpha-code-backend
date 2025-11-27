@@ -44,7 +44,7 @@ class InMemoryCache:
         del self._store[key]
         return None
     
-    async def set(self, key: str, value: str, ttl: Optional[int] = None):
+    async def set(self, key: str, value: str, ttl: Optional[int] = 30 * 60):
         expires_at = None
         if ttl and ttl > 0:
             expires_at = datetime.utcnow().timestamp() + ttl
@@ -150,7 +150,7 @@ async def safe_redis_get(key: str, fallback_fn):
 
 async def consume_quota(acc_id: str, amount: int = 1) -> int:
     """Consume quota for an account, with DB fallback if Redis fails."""
-    key = f"quota:{acc_id}"
+    key = f"quota::{acc_id}"
     rc = get_redis_lowlevel()
     client = get_cache()
 
@@ -160,7 +160,7 @@ async def consume_quota(acc_id: str, amount: int = 1) -> int:
             new_val = await rc.decrby(key, amount)
             return int(new_val)
         except Exception as e:
-            print(f"⚠️ Low-level Redis error while consuming quota: {e}")
+            print(f"⚠️ Low-level Redis error while consuming quota:: {e}")
 
     # Generic cache (aiocache / in-memory)
     if client is not None:
@@ -205,7 +205,7 @@ async def consume_quota(acc_id: str, amount: int = 1) -> int:
 
 async def get_account_quota(acc_id: str):
     """Get quota for an account from Redis, with DB fallback."""
-    key = f"quota:{acc_id}"
+    key = f"quota::{acc_id}"
     client = get_cache()
     async def fallback_from_db():
         async with PaymentSession() as session:
@@ -226,7 +226,7 @@ async def get_account_quota(acc_id: str):
             
             if subscription:
                 res = {'acc_id': acc_id, 'quota': 0, 'type': "Subscription"}
-                await client.set(key, json.dumps(res))
+                await client.set(key, json.dumps(res), 30 * 60)
                 return res
             
             # 2. Nếu không có subscription → fallback sang AccountQuota
@@ -234,7 +234,7 @@ async def get_account_quota(acc_id: str):
             acc_result = await session.execute(acc_query)
             record = acc_result.scalar_one_or_none()
             res = {'acc_id': acc_id, 'quota': record.quota if record else 0, 'type': "Quota"}
-            await client.set(key, json.dumps(res))
+            await client.set(key, json.dumps(res), 30 * 60)
             return res
     
     result = await safe_redis_get(key, fallback_from_db)
@@ -273,7 +273,7 @@ async def preload_daily_quotas():
         for (acc_id,) in accounts:
             try:
                 val_dict = {'acc_id': acc_id, 'quota': trial_amount, 'type': 'Quota'}
-                await client.set(f"quota:{acc_id}", json.dumps(val_dict))
+                await client.set(f"quota::{acc_id}", json.dumps(val_dict), 30 * 60)
             except Exception as e:
                 print(f"⚠️ Failed to set quota for {acc_id}: {e}")
     
@@ -291,14 +291,14 @@ async def sync_redis_to_db():
             return
         if hasattr(client, 'client') and getattr(client, 'client'):
             try:
-                keys = await client.client.keys("quota:*")
+                keys = await client.client.keys("quota::*")
             except Exception:
                 keys = None
         
         if keys is None:
             # Fall back to cache.keys (in-memory fallback supports this)
             try:
-                keys = await client.keys("quota:*")
+                keys = await client.keys("quota::*")
             except Exception:
                 keys = None
         
@@ -350,7 +350,7 @@ async def sync_redis_to_db_alternative():
                 client = get_cache()
                 if client is None:
                     continue
-                quota_val = await client.get(f"quota:{acc_id}")
+                quota_val = await client.get(f"quota::{acc_id}")
                 if quota_val is not None:
                     await session.execute(
                         update(AccountQuota)

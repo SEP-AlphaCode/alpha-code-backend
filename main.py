@@ -53,7 +53,7 @@ async def startup_event():
         scheduler.add_job(preload_daily_quotas, IntervalTrigger(hours=2))
         print('Add hourly sync jobs...')
         # Optional hourly DB sync
-        scheduler.add_job(sync_redis_to_db, IntervalTrigger(hours=1))
+        scheduler.add_job(sync_redis_to_db, IntervalTrigger(minutes=5))
         # Prune conversation context daily to bound vector store size
         try:
             from app.services.nlp.vector_context_service import get_conversation_context_service
