@@ -1,3 +1,5 @@
+import traceback
+
 from fastapi import HTTPException, UploadFile
 import google.generativeai as genai
 import os
@@ -41,15 +43,15 @@ def detect_lang(text: str) -> str:
     Detect language of a text snippet as 'en', 'vi', or 'none'.
     """
     if not text or not text.strip():
-        return "vi"
+        return "none"
     try:
         lang = detect(text)
         print(f"Detected language: {lang} for text: {text}")
         if lang in ("en", "vi"):
             return lang
-        return "vi"
+        return "none"
     except LangDetectException:
-        return "vi"
+        return "none"
 
 
 async def load_skills_text_async(robot_model_id: str) -> str:
@@ -144,7 +146,7 @@ import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 
-async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
+async def process_text(input_text: str, robot_model_id: str, serial: str = '', max_output_tokens: int = 500):
     """
     Enhanced version with actual Gemini token usage tracking
     """
@@ -161,9 +163,18 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
         )
     try:
         lang = detect_lang(input_text)
+        if lang == "none":
+            return {
+                'type': 'talk',
+                'lang': 'vi',
+                'data': {
+                    'text': 'Tôi không hiểu yêu cầu của bạn'
+                }
+            }
         account_id = await get_account_from_serial(serial)
         quota_or_sub = await get_account_quota(account_id)
-        if quota_or_sub[1] == 'Quota' and quota_or_sub[0]['quota'] <= 0:
+        print(quota_or_sub)
+        if quota_or_sub['type'] == 'Quota' and quota_or_sub['quota'] <= 0:
             if lang == 'vi':
                 content = 'Bạn đã sử dụng hết dung lượng miễn phí cho ngày hôm nay. Vui lòng đăng ký gói để sử dụng thêm'
             else:
@@ -186,7 +197,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
             context_text = None
 
         prompt = await build_prompt(input_text, robot_model_id, context_text=context_text)
-        
+
         response = await run_in_threadpool(
             model.generate_content,
             prompt,
@@ -211,7 +222,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
         
         # cleanup JSON response
         cleaned = re.sub(r"^```(?:json)?|```$", "", text.strip(), flags=re.MULTILINE).strip()
-        if quota_or_sub[1] == 'Quota':
+        if quota_or_sub['type'] == 'Quota':
             await consume_quota(account_id, actual_total_tokens)
         # prompt already built including context; keep it for token usage debug
         try:
@@ -220,6 +231,8 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
                 "actual_input_tokens": actual_input_tokens,
                 "actual_output_tokens": actual_output_tokens,
                 "actual_total_tokens": actual_total_tokens,
+                "max_output_tokens": max_output_tokens,
+                "token_limit_respected": actual_output_tokens <= max_output_tokens,
                 "actual_prompt": prompt
             }
 
@@ -249,10 +262,13 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
                     "actual_input_tokens": actual_input_tokens,
                     "actual_output_tokens": actual_output_tokens,
                     "actual_total_tokens": actual_total_tokens,
+                    "max_output_tokens": max_output_tokens,
+                    "token_limit_respected": actual_output_tokens <= max_output_tokens
                 }
             }
     
     except Exception as e:
+        traceback.print_exc()
         return {"error": f"Gemini generation failed: {e}"}
 
 
