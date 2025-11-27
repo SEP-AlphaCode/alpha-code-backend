@@ -26,6 +26,7 @@ from app.routers.chatbot_router import router as chatbot_router
 from app.services.socket.handlers.binary_handler import handle_binary_message
 from app.services.socket.connection_manager import connection_manager, signaling_manager
 from app.services.socket.handlers.text_handler import handle_text_message
+from app.routers.sematic_search import router as search_router
 # from app.services.music.durations import load_all_durations
 # from config.config import settings
 
@@ -105,6 +106,7 @@ app.include_router(marker_router, prefix="/marker", tags=["Marker"])
 app.include_router(object_router, prefix="/object", tags=["Object Detection"])
 app.include_router(robot_info_router, prefix="/robot", tags=["Robot Info"])
 app.include_router(chatbot_router, prefix="/chatbot", tags=["RAG Chatbot"])
+app.include_router(search_router, prefix="/search", tags=["Semantic search"])
 
 
 # Backward-compatible alias path for websocket without /websocket prefix

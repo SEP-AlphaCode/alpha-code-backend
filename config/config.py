@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()  # load .env file
 
+
 class Settings:
     TITLE = os.getenv("APP_TITLE", "My API")
     DESCRIPTION = os.getenv("APP_DESCRIPTION", "API description")
@@ -11,11 +12,11 @@ class Settings:
     CONTACT_EMAIL = os.getenv("APP_CONTACT_EMAIL", "")
     LICENSE_NAME = os.getenv("APP_LICENSE_NAME", "")
     LICENSE_URL = os.getenv("APP_LICENSE_URL", "")
-
+    
     REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
     REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
     REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", None)
-
+    
     # RAG Chatbot Configuration
     RAG_EMBEDDING_MODEL = os.getenv("RAG_EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
     RAG_EMBEDDING_DIMENSION = int(os.getenv("RAG_EMBEDDING_DIMENSION", 384))
@@ -43,6 +44,10 @@ class Settings:
     ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
     GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-exp")
+    
+    CHROMA_COMMAND_TENANT = os.getenv("CHROMA_COMMAND_TENANT", "alpha-code-commands")
+    CHROMA_COMMAND_DB = os.getenv("CHROMA_COMMAND_DB", "command_pool")
+    CHROMA_COMMAND_COLLECTION = os.getenv("CHROMA_COMMAND_COLLECTION", "alpha_mini_task")
+
 
 settings = Settings()
-

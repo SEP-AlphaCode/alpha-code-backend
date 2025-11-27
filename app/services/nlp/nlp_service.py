@@ -1,4 +1,5 @@
 import traceback
+from typing import List
 
 from fastapi import HTTPException, UploadFile
 import google.generativeai as genai
@@ -7,6 +8,7 @@ from starlette.concurrency import run_in_threadpool
 import json
 import re
 from .prompt_obj_detect import build_prompt_obj_detect
+from .semantic import classify_task, TaskPrediction
 from ..quota.quota_service import get_account_quota, consume_quota
 from ..stt.stt_service import transcribe_audio
 from .skills_loader import load_skills_text
@@ -64,26 +66,79 @@ async def load_robot_prompt(robot_model_id: str) -> str:
     return db_prompt or ""
 
 
-async def build_prompt(input_text: str, robot_model_id: str, context_text: str = None) -> str:
+def format_task_predictions(predictions: List[TaskPrediction]) -> str:
+    """
+    Format task predictions into a readable string for the prompt
+
+    Args:
+        predictions: List of TaskPrediction objects
+
+    Returns:
+        Formatted string describing each prediction
+    """
+    if not predictions:
+        return "No task predictions available. Please use 'talk' intent as fallback."
+    
+    lines = []
+    for i, pred in enumerate(predictions, 1):
+        confidence = (1.0 - pred.distance) * 100
+        
+        # Extract key metadata
+        task_type = pred.task_type
+        description = pred.metadata.get('description', 'No description')
+        response_template = pred.metadata.get('response_template', {})
+        
+        lines.append(f"{i}. Task: {task_type} (confidence: {confidence:.1f}%)")
+        lines.append(f"   Description: {description}")
+        lines.append(f"   Response template: {response_template}")
+        lines.append("")
+    
+    return "\n".join(lines)
+
+
+async def build_prompt(
+        input_text: str,
+        robot_model_id: str,
+        predictions: List[TaskPrediction],
+        context_text: str = None
+) -> str:
+    """
+    Build prompt with task predictions for LLM processing
+
+    Args:
+        input_text: User input text
+        robot_model_id: Robot model identifier
+        predictions: List of TaskPrediction from semantic search
+        context_text: Optional conversation history
+
+    Returns:
+        Complete prompt string ready for LLM
+    """
+    # Load custom prompt or use default
     db_prompt = await get_robot_prompt_by_id(robot_model_id)
-    skills_text = await load_skills_text(robot_model_id)
+    prompt_template = db_prompt or PROMPT_TEMPLATE
+    
+    # Escape special characters in input
     safe_text = input_text.replace('"', '\\"')
     
-    # fallback nếu DB không có prompt
-    prompt_template = db_prompt or PROMPT_TEMPLATE
-    base = (
+    # Format task predictions
+    predictions_text = format_task_predictions(predictions)
+    
+    # Build context block if provided
+    context_block = ""
+    if context_text:
+        context_block = f"\nConversation history:\n{context_text}\n"
+    skills = await load_skills_text_async(robot_model_id)
+    # Replace placeholders
+    prompt = (
         prompt_template
         .replace("$INPUT_TEXT", safe_text)
-        .replace("$SKILL_LIST", skills_text)
+        .replace("$TASK_PREDICTIONS", predictions_text)
+        .replace("$CONTEXT_BLOCK", context_block)
+        .replace("$SKILL_LIST", skills)
     )
-
-    if context_text:
-        # Prepend a short labeled conversation history block so the LLM has
-        # previous turns for context continuity.
-        context_block = f"Conversation history:\n{context_text}\n\n"
-        return context_block + base
-
-    return base
+    
+    return prompt
 
 
 async def process_audio(req: UploadFile, robot_model_id: str) -> dict:
@@ -105,7 +160,7 @@ async def process_audio(req: UploadFile, robot_model_id: str) -> dict:
         )
     
     # Build prompt from external template file for maintainability
-    prompt = await build_prompt(text_from_stt, robot_model_id)
+    prompt = await build_prompt(text_from_stt, robot_model_id, [])
     
     try:
         # gọi Gemini ở threadpool (async safe)
@@ -163,14 +218,15 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
         )
     try:
         lang = detect_lang(input_text)
-        if lang == "none":
-            return {
-                'type': 'talk',
-                'lang': 'vi',
-                'data': {
-                    'text': 'Tôi không hiểu yêu cầu của bạn'
-                }
-            }
+        # if lang == "none":
+        #     return {
+        #         'type': 'talk',
+        #         'lang': 'vi',
+        #         'data': {
+        #             'text': 'Tôi không hiểu yêu cầu của bạn'
+        #         }
+        #     }
+        search_result = classify_task(input_text, 3)
         account_id = await get_account_from_serial(serial)
         quota_or_sub = await get_account_quota(account_id)
         print(quota_or_sub)
@@ -196,8 +252,8 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
         except Exception:
             context_text = None
 
-        prompt = await build_prompt(input_text, robot_model_id, context_text=context_text)
-
+        prompt = await build_prompt(input_text, robot_model_id, context_text=context_text, predictions=search_result)
+        print('>>>>\n', prompt, '>>>>\n')
         response = await run_in_threadpool(
             model.generate_content,
             prompt,
@@ -231,7 +287,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
                 "actual_input_tokens": actual_input_tokens,
                 "actual_output_tokens": actual_output_tokens,
                 "actual_total_tokens": actual_total_tokens,
-                "actual_prompt": prompt
+                # "actual_prompt": prompt
             }
 
             # Persist conversation messages (user input + assistant reply) to vector DB
