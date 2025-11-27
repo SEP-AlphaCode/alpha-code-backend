@@ -18,5 +18,5 @@ from aiocache.serializers import JsonSerializer
 )
 async def get_account_from_serial(serial: str):
     async with RobotSession() as session:
-        result = await session.execute(select(Robot.account_id).where(Robot.serial_number == serial))
+        result = await session.execute(select(Robot.account_id).where(Robot.serial_number == serial, Robot.status == 1))
         return str(result.scalar_one_or_none())

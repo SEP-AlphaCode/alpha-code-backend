@@ -226,7 +226,10 @@ async def get_account_quota(acc_id: str):
             
             if subscription:
                 res = {'acc_id': acc_id, 'quota': 0, 'type': "Subscription"}
-                await client.set(key, json.dumps(res), 30 * 60)
+                try:
+                    await client.set(key, json.dumps(res), 30 * 60)
+                except:
+                    pass
                 return res
             
             # 2. Nếu không có subscription → fallback sang AccountQuota
@@ -234,7 +237,10 @@ async def get_account_quota(acc_id: str):
             acc_result = await session.execute(acc_query)
             record = acc_result.scalar_one_or_none()
             res = {'acc_id': acc_id, 'quota': record.quota if record else 0, 'type': "Quota"}
-            await client.set(key, json.dumps(res), 30 * 60)
+            try:
+                await client.set(key, json.dumps(res), 30 * 60)
+            except:
+                pass
             return res
     
     result = await safe_redis_get(key, fallback_from_db)
