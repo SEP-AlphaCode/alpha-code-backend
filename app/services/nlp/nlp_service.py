@@ -183,6 +183,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
                     'text': content
                 }
             }
+        search_result = TaskClassifier().classify_task(input_text, 3)
         # Fetch recent conversation context (per-robot) and build prompt including it
         try:
             ctx_service = get_conversation_context_service()
