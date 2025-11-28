@@ -8,7 +8,7 @@ from starlette.concurrency import run_in_threadpool
 import json
 import re
 from .prompt_obj_detect import build_prompt_obj_detect
-from .semantic import classify_task, TaskPrediction
+from app.services.semantic.semantic import TaskClassifier, TaskPrediction
 from ..quota.quota_service import get_account_quota, consume_quota
 from ..stt.stt_service import transcribe_audio
 from .skills_loader import load_skills_text
@@ -39,6 +39,7 @@ else:
     init_error = "Missing GEMINI_API_KEY or GEMINI_MODEL environment variables"
 
 DetectorFactory.seed = 0  # make detection deterministic
+
 
 def detect_lang(text: str) -> str:
     """
@@ -197,10 +198,6 @@ async def process_audio(req: UploadFile, robot_model_id: str) -> dict:
         raise HTTPException(status_code=500, detail=f"Gemini generation failed: {e}")
 
 
-import google.generativeai as genai
-from google.generativeai.types import HarmCategory, HarmBlockThreshold
-
-
 async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
     """
     Enhanced version with actual Gemini token usage tracking
@@ -226,7 +223,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
         #             'text': 'Tôi không hiểu yêu cầu của bạn'
         #         }
         #     }
-        search_result = classify_task(input_text, 3)
+        search_result = TaskClassifier().classify_task(input_text, 3)
         account_id = await get_account_from_serial(serial)
         quota_or_sub = await get_account_quota(account_id)
         print(quota_or_sub)
@@ -248,10 +245,10 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
             # recent is sorted newest-first; reverse to chronological order
             recent_chron = list(reversed(recent))
             # create a compact context text; include role label for clarity
-            context_text = "\n".join(f"{item['meta'].get('role','user')}: {item['text']}" for item in recent_chron)
+            context_text = "\n".join(f"{item['meta'].get('role', 'user')}: {item['text']}" for item in recent_chron)
         except Exception:
             context_text = None
-
+        
         prompt = await build_prompt(input_text, robot_model_id, context_text=context_text, predictions=search_result)
         print('>>>>\n', prompt, '>>>>\n')
         response = await run_in_threadpool(
@@ -289,7 +286,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
                 "actual_total_tokens": actual_total_tokens,
                 # "actual_prompt": prompt
             }
-
+            
             # Persist conversation messages (user input + assistant reply) to vector DB
             try:
                 ctx_svc = get_conversation_context_service()
@@ -307,7 +304,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
             except Exception:
                 # don't fail the response if saving context fails
                 pass
-
+            
             return parsed
         except Exception:
             return {

@@ -1,5 +1,7 @@
 import json
 import logging
+import traceback
+from pathlib import Path
 
 # from redis import asyncio as aioredis
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -7,6 +9,7 @@ from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
 from app.services.quota.quota_service import preload_daily_quotas, sync_redis_to_db
+from app.services.semantic.semantic import TaskClassifier
 from config.config import settings
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -74,6 +77,7 @@ async def startup_event():
         scheduler.start()
     except Exception as e:
         logging.error(f"Cannot schedule some operations")
+        
     try:
         logging.info("🚀 Checking ChromaDB knowledge base...")
         from scripts.init_knowledge_base import init_knowledge_base
@@ -82,10 +86,47 @@ async def startup_event():
         init_knowledge_base(auto_mode=True)
         logging.info("✅ ChromaDB ready")
         # Run every day at midnight
-        
     except Exception as e:
         logging.error(f"⚠️ ChromaDB initialization failed: {e}")
         logging.warning("⚠️ Chatbot will continue without knowledge base")
+        
+    try:
+        #initialize semantic DB
+        classifier = TaskClassifier()
+        json_path = Path(__file__).parent / "data" / "semantic" / "tasks.json"
+        
+        print("Adding data")
+        if not json_path.exists():
+            print(f"Tasks file not found: {json_path}")
+            
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            ids = []
+            documents = []
+            metadatas = []
+            
+            for task in data['tasks']:
+                ids.append(task['id'])
+                documents.append(task['document'])
+                metadata = {
+                    'type': task['metadata']['type'],
+                    'description': task['metadata']['description'],
+                    'response_template': json.dumps(task['metadata']['response_template'])
+                }
+                metadatas.append(metadata)
+            
+            # Add to collection
+            classifier.collection.add(
+                ids=ids,
+                documents=documents,
+                metadatas=metadatas
+            )
+            
+            print(f"Loaded {len(ids)} semantic tasks into ChromaDB")
+            
+    except Exception as e:
+        logging.error(f"Cannot initiate semantic database due to")
+        traceback.print_exc()
 
 
 app.add_middleware(

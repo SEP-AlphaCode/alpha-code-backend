@@ -1,0 +1,183 @@
+{
+  "tasks": [
+    {
+      "id": "greeting",
+      "document": "User is greeting the assistant with simple salutations like hello, hi, hey, good morning, good afternoon, good evening or their Vietnamese equivalents xin chào, chào, chào buổi sáng, chào buổi chiều, chào buổi tối. This is a friendly greeting without any additional requests or commands.",
+      "metadata": {
+        "type": "greeting",
+        "description": "Lời chào hỏi thông thường",
+        "response_template": {
+          "type": "greeting",
+          "lang": "$LANG",
+          "data": {
+            "text": "$RESPONSE_TEXT"
+          }
+        }
+      }
+    },
+    {
+      "id": "skill_helper",
+      "document": "User wants to execute, run, start, perform, or activate a specific skill or action. This includes commands like execute, run, start, do, perform, action, skill and their Vietnamese equivalents thực hiện, chạy, bắt đầu, làm, hành động, kỹ năng. The user is requesting to trigger a specific functionality.",
+      "metadata": {
+        "type": "skill_helper",
+        "description": "Thực thi một kỹ năng cụ thể từ danh sách",
+        "response_template": {
+          "type": "skill_helper",
+          "lang": "$LANG",
+          "data": {
+            "code": "$SKILL_ID"
+          }
+        }
+      }
+    },
+    {
+      "id": "qr_code",
+      "document": "User wants to scan or read a QR code. This includes requests about QR codes, scanning QR, reading QR codes, or their Vietnamese equivalents mã qr, quét mã qr, đọc mã qr, mã vạch, scan code. The user is asking the assistant to process a QR code.",
+      "metadata": {
+        "type": "qr_code",
+        "description": "Yêu cầu quét mã QR",
+        "response_template": {
+          "type": "qr_code",
+          "lang": "$LANG",
+          "data": {
+            "text": "$QR_MESSAGE"
+          }
+        },
+        "default_messages": {
+          "en": "Please show the QR code in front of me to take a picture. Now I will take the picture.",
+          "vi": "Vui lòng đưa mã QR ra trước mặt tôi để chụp ảnh. Bây giờ tôi sẽ chụp ảnh."
+        }
+      }
+    },
+    {
+      "id": "capture_osmo_card",
+      "document": "User wants to scan or read an Osmo card. This includes requests about Osmo cards, scanning cards, reading cards, or their Vietnamese equivalents thẻ osmo, thẻ, quét thẻ, đọc thẻ, thẻ bài. The user is asking the assistant to process an Osmo card placed under its feet.",
+      "metadata": {
+        "type": "capture_osmo_card",
+        "description": "Yêu cầu quét thẻ Osmo",
+        "response_template": {
+          "type": "capture_osmo_card",
+          "lang": "$LANG",
+          "data": {
+            "text": "$OSMO_MESSAGE"
+          }
+        },
+        "default_messages": {
+          "en": "Please place the OSMO card under my feet in my view. Now I will bend down to scan it.",
+          "vi": "Vui lòng đặt thẻ OSMO dưới chân tôi trong tầm nhìn của tôi. Bây giờ tôi sẽ cúi xuống để quét thẻ."
+        }
+      }
+    },
+    {
+      "id": "extended_action",
+      "document": "User wants the assistant to perform physical movements or actions. This includes commands for walking, moving, turning, going, stepping, or specific actions like bowing, nodding, shaking head, tilting head, handshaking, waving, or push-ups. Includes Vietnamese equivalents đi, di chuyển, rẽ, quay, bước, hành động, đi tới, đi lui, quay trái, quay phải, cúi chào, gật đầu, lắc đầu, nghiêng đầu, bắt tay, vẫy tay, hít đất.",
+      "metadata": {
+        "type": "extended_action",
+        "description": "Thực hiện các hành động vận động",
+        "response_template": {
+          "type": "extended_action",
+          "lang": "$LANG",
+          "data": {
+            "actions": [
+              {
+                "code": "$ACTION_CODE",
+                "step": "$STEP_COUNT"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "object_detect_start",
+      "document": "User wants the assistant to identify, recognize, or detect objects in its view. This includes questions like what is this, what do you see, recognize this, identify this, detect object, see anything or Vietnamese equivalents đây là gì, bạn thấy gì, nhận diện cái này, nhận biết vật này, phát hiện vật thể, có thấy gì không, vật này là gì. The user is asking for object recognition.",
+      "metadata": {
+        "type": "object_detect_start",
+        "description": "Yêu cầu nhận diện vật thể",
+        "response_template": {
+          "type": "object_detect_start",
+          "lang": "$LANG",
+          "data": {
+            "text": "$DETECTION_MESSAGE"
+          }
+        }
+      }
+    },
+    {
+      "id": "face_recognize",
+      "document": "User wants the assistant to recognize or identify them through face recognition. This includes questions like who am I, do you know me, recognize me, know my face, face recognition or Vietnamese equivalents tôi là ai, bạn có biết tôi không, nhận diện tôi, biết mặt tôi không, nhận diện khuôn mặt, bạn thấy mặt tôi không. The user is asking for facial recognition.",
+      "metadata": {
+        "type": "face_recognize",
+        "description": "Yêu cầu nhận diện khuôn mặt",
+        "response_template": {
+          "type": "face_recognize",
+          "lang": "$LANG",
+          "data": {}
+        }
+      }
+    },
+    {
+      "id": "face_register",
+      "document": "User wants to register or save their face in the system for future recognition. This includes commands like register face, save my face, remember me, add my face, train face or Vietnamese equivalents đăng ký khuôn mặt, lưu mặt tôi, nhớ tôi, thêm khuôn mặt, huấn luyện khuôn mặt. The user is asking to enroll their face in the recognition system.",
+      "metadata": {
+        "type": "face_register",
+        "description": "Yêu cầu đăng ký khuôn mặt mới",
+        "response_template": {
+          "type": "face_register",
+          "lang": "$LANG",
+          "data": {
+            "name": "$USER_NAME"
+          }
+        }
+      }
+    },
+    {
+      "id": "smart_home_on",
+      "document": "User wants to turn on a smart home device. This includes commands like turn on led1, bật đèn, turn on lamp, bật led, switch on light or Vietnamese equivalents bật led1, bật đèn, mở đèn, turn on thiết bị. The user is asking to activate or power on a device in their smart home system.",
+      "metadata": {
+        "type": "smart_home",
+        "description": "Yêu cầu bật thiết bị nhà thông minh",
+        "response_template": {
+          "type": "smart_home",
+          "lang": "$LANG",
+          "data": {
+            "id": "$ESP_ID",
+            "name": "$DEVICE_NAME",
+            "message": "on"
+          }
+        }
+      }
+    },
+    {
+      "id": "smart_home_off",
+      "document": "User wants to turn off a smart home device. This includes commands like turn off led1, tắt đèn, turn off lamp, tắt led, switch off light or Vietnamese equivalents tắt led1, tắt đèn, turn off thiết bị. The user is asking to deactivate or power off a device in their smart home system.",
+      "metadata": {
+        "type": "smart_home",
+        "description": "Yêu cầu tắt thiết bị nhà thông minh",
+        "response_template": {
+          "type": "smart_home",
+          "lang": "$LANG",
+          "data": {
+            "id": "$ESP_ID",
+            "name": "$DEVICE_NAME",
+            "message": "off"
+          }
+        }
+      }
+    },
+    {
+      "id": "picture",
+      "document": "User wants to generate videos from a picture.",
+      "metadata": {
+        "type": "generate_video",
+        "description": "Tạo video",
+        "response_template": {
+          "type": "generate_video",
+          "lang": "$LANG",
+          "data": {
+          }
+        }
+      }
+    }
+  ]
+}
