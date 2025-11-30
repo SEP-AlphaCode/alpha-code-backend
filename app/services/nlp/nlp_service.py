@@ -1,4 +1,5 @@
 import traceback
+from typing import List
 
 from fastapi import HTTPException, UploadFile
 import google.generativeai as genai
@@ -66,25 +67,62 @@ async def load_robot_prompt(robot_model_id: str) -> str:
     return db_prompt or ""
 
 
-async def build_prompt(input_text: str, robot_model_id: str, context_text: str = None) -> str:
+def format_task_predictions(predictions: List[TaskPrediction]) -> str:
+    """
+    Format task predictions into a readable string for the prompt
+
+    Args:
+        predictions: List of TaskPrediction objects
+
+    Returns:
+        Formatted string describing each prediction
+    """
+    if not predictions:
+        return "No task predictions available. Please use 'talk' intent as fallback."
+    
+    lines = []
+    for i, pred in enumerate(predictions, 1):
+        confidence = (1.0 - pred.distance) * 100
+        
+        # Extract key metadata
+        task_type = pred.task_type
+        description = pred.metadata.get('description', 'No description')
+        response_template = pred.metadata.get('response_template', {})
+        
+        lines.append(f"{i}. Task: {task_type} (confidence: {confidence:.1f}%)")
+        lines.append(f"   Description: {description}")
+        lines.append(f"   Response template: {response_template}")
+        lines.append("")
+    
+    return "\n".join(lines)
+
+
+async def build_prompt(
+        input_text: str,
+        robot_model_id: str,
+        predictions: List[TaskPrediction],
+        context_text: str = None
+) -> str:
     db_prompt = await get_robot_prompt_by_id(robot_model_id)
     skills_text = await load_skills_text(robot_model_id)
     safe_text = input_text.replace('"', '\\"')
-    
+    predictions_text = format_task_predictions(predictions)
     # fallback nếu DB không có prompt
     prompt_template = db_prompt or PROMPT_TEMPLATE
     base = (
         prompt_template
         .replace("$INPUT_TEXT", safe_text)
+        .replace("$TASK_PREDICTIONS", predictions_text)
+        .replace("$CONTEXT_BLOCK", context_text)
         .replace("$SKILL_LIST", skills_text)
     )
-
+    
     if context_text:
         # Prepend a short labeled conversation history block so the LLM has
         # previous turns for context continuity.
         context_block = f"Conversation history:\n{context_text}\n\n"
         return context_block + base
-
+    
     return base
 
 
@@ -161,19 +199,10 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
         )
     try:
         lang = detect_lang(input_text)
-        if lang == "none":
-            return {
-                'type': 'talk',
-                'lang': 'vi',
-                'data': {
-                    'text': 'Tôi không hiểu yêu cầu của bạn'
-                }
-            }
         account_id = await get_account_from_serial(serial)
         quota_or_sub = await get_account_quota(account_id)
-        print(quota_or_sub)
         if quota_or_sub['type'] == 'Quota' and quota_or_sub['quota'] <= 0:
-            if lang == 'vi':
+            if lang == 'vi' or lang is None:
                 content = 'Bạn đã sử dụng hết dung lượng miễn phí cho ngày hôm nay. Vui lòng đăng ký gói để sử dụng thêm'
             else:
                 content = 'You have used up all your free data for today. Please subscribe to a plan to use more.'
@@ -196,7 +225,6 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
             context_text = None
         
         prompt = await build_prompt(input_text, robot_model_id, context_text=context_text, predictions=search_result)
-        print('>>>>\n', prompt, '>>>>\n')
         response = await run_in_threadpool(
             model.generate_content,
             prompt,
@@ -230,7 +258,6 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
                 "actual_input_tokens": actual_input_tokens,
                 "actual_output_tokens": actual_output_tokens,
                 "actual_total_tokens": actual_total_tokens,
-                "actual_prompt": prompt
             }
             
             # Persist conversation messages (user input + assistant reply) to vector DB
@@ -253,6 +280,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
             
             return parsed
         except Exception:
+            traceback.print_exc()
             return {
                 "error": f"Gemini returned invalid JSON: {text}",
                 "_token_usage": {

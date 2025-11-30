@@ -1,6 +1,7 @@
 # services/quota_manager.py
 
 import asyncio
+import traceback
 from datetime import datetime
 from typing import Optional
 import json
@@ -317,7 +318,7 @@ async def sync_redis_to_db():
                 # Decode key if it's bytes
                 if isinstance(key, bytes):
                     key = key.decode('utf-8')
-                
+                print(">>>>>>>>>>>>>>>>\n", "Key: ", key)
                 acc_id = key.split(":")[1]
                 quota_val = await client.get(key)
                 if isinstance(quota_val, str):
@@ -339,6 +340,7 @@ async def sync_redis_to_db():
         
         print(f"[{datetime.utcnow().isoformat()}] Cache quotas synced to DB.")
     except Exception as e:
+        traceback.print_exc()
         print(f"⚠️ Failed to sync cache to DB: {e}, using alternative method")
         await sync_redis_to_db_alternative()
 
