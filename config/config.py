@@ -43,6 +43,10 @@ class Settings:
     ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
     GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-exp")
+    
+    CHROMA_COMMAND_TENANT = os.getenv("CHROMA_COMMAND_TENANT", "alpha-code-commands")
+    CHROMA_COMMAND_DB = os.getenv("CHROMA_COMMAND_DB", "command_pool")
+    CHROMA_COMMAND_COLLECTION = os.getenv("CHROMA_COMMAND_COLLECTION", "alpha_mini_task")
 
 settings = Settings()
 
