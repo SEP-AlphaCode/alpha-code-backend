@@ -75,6 +75,7 @@ async def startup_event():
             logging.warning(f"Could not schedule prune job: {e}")
         scheduler.start()
     except Exception as e:
+        traceback.print_exc()
         logging.error(f"Cannot schedule some operations")
         
     try:
