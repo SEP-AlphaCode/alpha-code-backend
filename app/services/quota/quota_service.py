@@ -288,14 +288,15 @@ async def preload_daily_quotas():
 
 
 async def sync_redis_to_db():
-    """Sync all live Redis quotas back to DB (optional hourly job)."""
+    """Sync all live Redis quotas back to DB (runs every 5 minutes)."""
     try:
         client = get_cache()
-        # If the underlying client exposes a .client with direct redis access use it for keys
-        keys = None
         if client is None:
             print("⚠️ Cache client not available; skipping sync")
             return
+        
+        # Get Redis keys
+        keys = None
         if hasattr(client, 'client') and getattr(client, 'client'):
             try:
                 keys = await client.client.keys("quota::*")
@@ -303,71 +304,52 @@ async def sync_redis_to_db():
                 keys = None
         
         if keys is None:
-            # Fall back to cache.keys (in-memory fallback supports this)
             try:
                 keys = await client.keys("quota::*")
             except Exception:
-                keys = None
+                print("⚠️ Failed to fetch keys from cache; skipping sync")
+                return
         
         if not keys:
-            await sync_redis_to_db_alternative()
+            print("No quota keys found in cache")
             return
         
         async with PaymentSession() as session:
+            updates = []
+            
             for key in keys:
-                # Decode key if it's bytes
-                if isinstance(key, bytes):
-                    key = key.decode('utf-8')
-                print(">>>>>>>>>>>>>>>>\n", "Key: ", key)
-                acc_id = key.split(":")[1]
-                quota_val = await client.get(key)
-                if isinstance(quota_val, str):
-                    quota_val = json.loads(quota_val)
-                quota_int = int(quota_val.get('quota', 0))
-                await session.execute(
-                    update(AccountQuota)
-                    .where(AccountQuota.account_id == acc_id)
-                    .values(quota=quota_int, last_updated=datetime.utcnow())
-                )
-                
-                if quota_val is not None:
-                    await session.execute(
-                        update(AccountQuota)
-                        .where(AccountQuota.account_id == acc_id)
-                        .values(quota=int(quota_val), last_updated=datetime.utcnow())
-                    )
-            await session.commit()
-        
-        print(f"[{datetime.utcnow().isoformat()}] Cache quotas synced to DB.")
+                try:
+                    # Decode key if it's bytes
+                    if isinstance(key, bytes):
+                        key = key.decode('utf-8')
+                    
+                    acc_id = key.split("::")[1]
+                    quota_val = await client.get(key)
+                    
+                    if isinstance(quota_val, str):
+                        quota_val = json.loads(quota_val)
+                    
+                    # Only sync type "Quota"
+                    if quota_val.get('type') != 'Quota':
+                        continue
+                    
+                    quota_int = int(quota_val.get('quota', 0))
+                    updates.append({
+                        'account_id': acc_id,
+                        'quota': quota_int,
+                        'last_updated': datetime.utcnow()
+                    })
+                except Exception as e:
+                    print(f"⚠️ Failed to process key {key}: {e}")
+            
+            if updates:
+                await session.execute(update(AccountQuota), updates)
+                await session.commit()
+                print(f"[{datetime.utcnow().isoformat()}] Synced {len(updates)} quotas to DB.")
+            else:
+                print(f"[{datetime.utcnow().isoformat()}] No Quota-type entries to sync.")
+    
     except Exception as e:
         traceback.print_exc()
-        print(f"⚠️ Failed to sync cache to DB: {e}, using alternative method")
-        await sync_redis_to_db_alternative()
-
-
-# Alternative sync method if direct access to keys doesn't work
-async def sync_redis_to_db_alternative():
-    """Alternative sync method using DB as the source of truth for account IDs."""
-    async with PaymentSession() as session:
-        # Get all account IDs from DB
-        accounts_result = await session.execute(select(AccountQuota.account_id))
-        accounts = accounts_result.all()
-        
-        for (acc_id,) in accounts:
-            try:
-                client = get_cache()
-                if client is None:
-                    continue
-                quota_val = await client.get(f"quota::{acc_id}")
-                if quota_val is not None:
-                    await session.execute(
-                        update(AccountQuota)
-                        .where(AccountQuota.account_id == acc_id)
-                        .values(quota=int(quota_val), last_updated=datetime.utcnow())
-                    )
-            except Exception as e:
-                print(f"⚠️ Failed to sync quota for {acc_id}: {e}")
-        
-        await session.commit()
-    
-    print(f"[{datetime.utcnow().isoformat()}] Redis quotas synced to DB (alternative method).")
+        print(f"⚠️ Failed to sync cache to DB: {e}")
+        # Just log and move on - will retry in 5 minutes
