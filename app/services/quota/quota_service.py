@@ -344,7 +344,6 @@ async def sync_redis_to_db():
             
             if updates:
                 await session.execute(update(AccountQuota), updates)
-                await session.commit()
                 print(f"[{datetime.utcnow().isoformat()}] Synced {len(updates)} quotas to DB.")
             else:
                 print(f"[{datetime.utcnow().isoformat()}] No Quota-type entries to sync.")
