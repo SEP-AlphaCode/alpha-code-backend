@@ -48,6 +48,9 @@ $CONTEXT_BLOCK
 
 Skills:
 $SKILL_LIST
+
+Devices:
+$DEVICE_LIST
 """
 
 

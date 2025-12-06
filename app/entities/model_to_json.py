@@ -61,3 +61,23 @@ def skill_to_dict(skill):
         "last_updated": to_serializable(skill.last_updated),
         "created_date": to_serializable(skill.created_date),
     }
+
+
+def esp32_to_dict(esp32):
+    """Chuyển đổi đối tượng ESP32 sang dictionary"""
+    if esp32 is None:
+        return None
+    
+    return {
+        "id": to_serializable(esp32.id),
+        "account_id": to_serializable(esp32.account_id),
+        "firmware_version": esp32.firmware_version,
+        "metadata": esp32.metadata,
+        "name": esp32.name,
+        "status": esp32.status,
+        "topic_pub": esp32.topic_pub,
+        "topic_sub": esp32.topic_sub,
+        "message": esp32.message,
+        "created_at": to_serializable(esp32.created_at),
+        "last_updated": to_serializable(esp32.last_updated),
+    }

@@ -335,7 +335,7 @@ async def sync_redis_to_db():
                     
                     quota_int = int(quota_val.get('quota', 0))
                     updates.append({
-                        'account_id': acc_id,
+                        'id': acc_id,
                         'quota': quota_int,
                         'last_updated': datetime.utcnow()
                     })
