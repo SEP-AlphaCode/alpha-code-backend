@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 from app.services.audio.audio_service import convert_audio_to_wav_and_upload
 from app.services.music.planner import build_activity_json
-from app.services.music.durations import load_all_durations
 from fastapi import APIRouter, UploadFile, File, HTTPException, Body, Query
 
 router = APIRouter()

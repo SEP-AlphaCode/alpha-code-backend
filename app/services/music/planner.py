@@ -17,7 +17,7 @@ import numpy as np
 #     EXPRESSION_DURATIONS_MS,
 # )
 from app.services.music.durations import (
-    load_all_durations,
+    load_all_durations, load_all_durations_with_exclusion,
 )
 
 # DANCE_DURATIONS = {k: v/1000.0 for k, v in DANCE_DURATIONS_MS.items()}
@@ -247,7 +247,7 @@ def fetch_audio(url: str) -> bytes:
 
 
 async def build_activity_json(music_name: str, music_url: str, music_duration: float, robot_model_id: str) -> dict:
-    durations = await load_all_durations(robot_model_id)
+    durations = await load_all_durations_with_exclusion(robot_model_id)
     planner = MusicActivityPlanner(durations)
     beats: List[float] = []
     energies: List[float] = []

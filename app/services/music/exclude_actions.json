@@ -1,0 +1,33 @@
+[
+    {
+        "modelId": "6e4e14b3-b073-4491-ab2a-2bf315b3259f",
+        "excludePattern": [
+            "007",
+            "012",
+            "013",
+            "027",
+            "016",
+            "024"
+        ]
+    },
+    {
+        "modelId": "4787414a-e5f6-46de-83b9-5516d5445d0c",
+        "excludePattern": [
+            "004",
+            "005",
+            "006",
+            "022",
+            "023",
+            "025",
+            "026",
+            "029",
+            "030",
+            "Drive_*",
+            "act_cute_avatar",
+            "action_003",
+            "balance",
+            "current",
+            "custom_009"
+        ]
+    }
+]
