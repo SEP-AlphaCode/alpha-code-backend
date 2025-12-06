@@ -186,6 +186,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
     """
     Enhanced version with actual Gemini token usage tracking
     """
+    print('>>>', input_text)
     if model is None:
         raise HTTPException(
             status_code=500,
@@ -212,7 +213,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
                     'text': content
                 }
             }
-        search_result = TaskClassifier().classify_task(input_text, 3)
+        search_result = TaskClassifier().classify_task(input_text, 5)
         # Fetch recent conversation context (per-robot) and build prompt including it
         try:
             ctx_service = get_conversation_context_service()
@@ -225,6 +226,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
             context_text = None
         
         prompt = await build_prompt(input_text, robot_model_id, context_text=context_text, predictions=search_result)
+        print('Prompt:', prompt)
         response = await run_in_threadpool(
             model.generate_content,
             prompt,
