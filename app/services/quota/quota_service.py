@@ -2,13 +2,17 @@
 
 import asyncio
 import traceback
+import uuid
 from datetime import datetime
 from typing import Optional
 import json
+
+from sqlalchemy.dialects.postgresql import insert
+
 from app.entities.payment_service.subscription import Subscription
 from app.entities.payment_service.token_rule import TokenRule
 from config.config import settings
-from sqlalchemy import select, update
+from sqlalchemy import select, update, case
 from app.entities.payment_service.account_quota import AccountQuota
 from app.entities.payment_service.database_payment import AsyncSessionLocal as PaymentSession
 
@@ -154,53 +158,100 @@ async def consume_quota(acc_id: str, amount: int = 1) -> int:
     key = f"quota::{acc_id}"
     rc = get_redis_lowlevel()
     client = get_cache()
-
+    
+    # Low-level Redis (raw Redis client)
     if rc is not None:
         try:
-            # low-level redis: handle as before
-            new_val = await rc.decrby(key, amount)
-            return int(new_val)
+            # Get current value
+            val_str = await rc.get(key)
+            if val_str is None:
+                # Key doesn't exist, fallback to DB
+                raise Exception("Key not found in Redis")
+            
+            # Parse JSON
+            if isinstance(val_str, bytes):
+                val_str = val_str.decode('utf-8')
+            val_dict = json.loads(val_str)
+            
+            # Calculate new quota
+            current_quota = val_dict.get('quota', 0)
+            new_quota = max(current_quota - amount, 0)
+            
+            # Update the dict
+            val_dict['quota'] = new_quota
+            
+            # Save back to Redis
+            await rc.set(key, json.dumps(val_dict))
+            return new_quota
+        
         except Exception as e:
-            print(f"⚠️ Low-level Redis error while consuming quota:: {e}")
-
+            print(f"⚠️ Low-level Redis error while consuming quota: {e}")
+    
     # Generic cache (aiocache / in-memory)
     if client is not None:
         try:
             val_dict = await client.get(key)
             if val_dict is None:
                 raise Exception("Key not found in cache")
-
+            
             if isinstance(val_dict, str):
                 val_dict = json.loads(val_dict)
-
+            
             current_quota = val_dict.get('quota', 0)
             new_quota = max(current_quota - amount, 0)
             val_dict['quota'] = new_quota
-
+            
             # Save back to cache
             await client.set(key, json.dumps(val_dict))
             return new_quota
         except Exception as e:
+            traceback.print_exc()
             print(f"⚠️ Cache unavailable while consuming quota for {acc_id}: {e}")
-
+    
     # Fallback DB update
     async with PaymentSession() as session:
+        # Convert acc_id to UUID if needed
+        from uuid import UUID
+        account_id = UUID(acc_id) if isinstance(acc_id, str) else acc_id
+        
         result = await session.execute(
-            select(AccountQuota).where(AccountQuota.account_id == acc_id)
+            select(AccountQuota)
+            .where(
+                AccountQuota.account_id == account_id,
+                AccountQuota.status == 1  # Only consume from active quota
+            )
         )
         record = result.scalar_one_or_none()
         if not record:
             return 0
+        
         new_value = max(record.quota - amount, 0)
         await session.execute(
             update(AccountQuota)
-            .where(AccountQuota.account_id == acc_id)
-            .values(quota=new_value)
+            .where(AccountQuota.id == record.id)  # Use primary key for safety
+            .values(quota=new_value, last_updated=datetime.utcnow())
         )
         await session.commit()
-        # Update cache
-        if client is not None:
-            await client.set(key, json.dumps({'acc_id': acc_id, 'quota': new_value, 'type': 'Quota'}))
+        
+        # Update cache with new value
+        cache_value = {
+            'acc_id': acc_id,
+            'quota': new_value,
+            'type': 'Quota',
+            'last_updated': datetime.utcnow().isoformat()
+        }
+        
+        if rc is not None:
+            try:
+                await rc.set(key, json.dumps(cache_value))
+            except Exception:
+                pass
+        elif client is not None:
+            try:
+                await client.set(key, json.dumps(cache_value))
+            except Exception:
+                pass
+        
         return new_value
 
 
@@ -208,6 +259,7 @@ async def get_account_quota(acc_id: str):
     """Get quota for an account from Redis, with DB fallback."""
     key = f"quota::{acc_id}"
     client = get_cache()
+    
     async def fallback_from_db():
         async with PaymentSession() as session:
             now = datetime.utcnow()
@@ -315,7 +367,8 @@ async def sync_redis_to_db():
             return
         
         async with PaymentSession() as session:
-            updates = []
+            # Dictionary to store account_id -> quota mapping
+            quota_data = {}
             
             for key in keys:
                 try:
@@ -334,19 +387,70 @@ async def sync_redis_to_db():
                         continue
                     
                     quota_int = int(quota_val.get('quota', 0))
-                    updates.append({
-                        'id': acc_id,
-                        'quota': quota_int,
-                        'last_updated': datetime.utcnow()
-                    })
+                    quota_data[acc_id] = quota_int
                 except Exception as e:
                     print(f"⚠️ Failed to process key {key}: {e}")
             
-            if updates:
-                await session.execute(update(AccountQuota), updates)
-                print(f"[{datetime.utcnow().isoformat()}] Synced {len(updates)} quotas to DB.")
-            else:
+            if not quota_data:
                 print(f"[{datetime.utcnow().isoformat()}] No Quota-type entries to sync.")
+                return
+                
+                # Get current timestamp
+            current_time = datetime.utcnow()
+            
+            # Prepare data for bulk operation
+            account_ids = []
+            quotas = []
+            for account_id_str, quota in quota_data.items():
+                account_id = uuid.UUID(account_id_str) if isinstance(account_id_str, str) else account_id_str
+                account_ids.append(account_id)
+                quotas.append(quota)
+            
+            # First, update existing records with status = 1
+            update_stmt = (
+                update(AccountQuota)
+                .where(
+                    AccountQuota.account_id.in_(account_ids),
+                    AccountQuota.status == 1
+                )
+                .values(
+                    quota=case(
+                        *[(AccountQuota.account_id == account_id, quota)
+                          for account_id, quota in zip(account_ids, quotas)],
+                        else_=AccountQuota.quota
+                    ),
+                    last_updated=current_time
+                )
+                .returning(AccountQuota.account_id)
+            )
+            
+            result = await session.execute(update_stmt)
+            updated_account_ids = [row[0] for row in result]
+            
+            # Determine which accounts need new records inserted
+            # (accounts that were NOT updated because no status=1 record exists)
+            accounts_to_insert = []
+            for account_id, quota in zip(account_ids, quotas):
+                if account_id not in updated_account_ids:
+                    accounts_to_insert.append({
+                        'id': uuid.uuid4(),
+                        'account_id': account_id,
+                        'quota': quota,
+                        'status': 1,
+                        'created_date': current_time,
+                        'last_updated': current_time
+                    })
+            
+            # Insert new records for accounts without status=1 record
+            if accounts_to_insert:
+                await session.execute(
+                    insert(AccountQuota),
+                    accounts_to_insert
+                )
+            
+            await session.commit()
+            print(
+                f"[{datetime.utcnow().isoformat()}] Updated {len(updated_account_ids)} and inserted {len(accounts_to_insert)} quotas to DB.")
     
     except Exception as e:
         traceback.print_exc()
