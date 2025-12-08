@@ -1,5 +1,5 @@
 import traceback
-from typing import List
+from typing import List, Optional, Dict, Any
 
 from fastapi import HTTPException, UploadFile
 import google.generativeai as genai
@@ -19,6 +19,7 @@ from langdetect import detect, DetectorFactory
 from langdetect.lang_detect_exception import LangDetectException
 from ...repositories.account_quota_repository import get_account_from_serial
 from .vector_context_service import get_conversation_context_service
+from ...repositories.esp32_repository import get_esp
 
 # =========================
 # Config Gemini
@@ -97,11 +98,55 @@ def format_task_predictions(predictions: List[TaskPrediction]) -> str:
     return "\n".join(lines)
 
 
+def format_esp32_text(esp32_dict: Optional[Dict[str, Any]]) -> str:
+    """
+    Chuyển đổi dictionary ESP32 thành text với định dạng:
+    ESP ID: {id}
+    DEVICE LIST: {metadata}
+
+    Args:
+        esp32_dict: Dictionary từ hàm esp32_to_dict()
+
+    Returns:
+        Chuỗi text được định dạng
+    """
+    if esp32_dict is None:
+        return "No ESP32 data available"
+    
+    # Lấy ID
+    esp_id = esp32_dict.get("id", "Unknown")
+    
+    # Lấy metadata và định dạng JSON
+    metadata = esp32_dict.get("metadata")
+    
+    if metadata is None:
+        metadata_str = "No metadata"
+    else:
+        # Định dạng JSON đẹp với indent
+        try:
+            if isinstance(metadata, str):
+                # Nếu metadata là string, cố gắng parse nó
+                metadata_parsed = json.loads(metadata)
+                metadata_str = json.dumps(metadata_parsed, indent=2, ensure_ascii=False)
+            else:
+                # Nếu metadata đã là dict/list
+                metadata_str = json.dumps(metadata, indent=2, ensure_ascii=False)
+        except (json.JSONDecodeError, TypeError):
+            # Nếu không thể định dạng JSON, dùng string representation
+            metadata_str = str(metadata)
+    
+    # Tạo text với định dạng yêu cầu
+    text = f"ESP ID: {esp_id}\n"
+    text += f"DEVICE LIST: {metadata_str}"
+    
+    return text
+
 async def build_prompt(
         input_text: str,
         robot_model_id: str,
         predictions: List[TaskPrediction],
-        context_text: str = None
+        context_text: str = None,
+        device_text: str = ""
 ) -> str:
     db_prompt = await get_robot_prompt_by_id(robot_model_id)
     skills_text = await load_skills_text(robot_model_id)
@@ -115,6 +160,7 @@ async def build_prompt(
         .replace("$TASK_PREDICTIONS", predictions_text)
         .replace("$CONTEXT_BLOCK", context_text)
         .replace("$SKILL_LIST", skills_text)
+        .replace("$DEVICE_LIST", device_text)
     )
     
     if context_text:
@@ -182,6 +228,7 @@ async def process_audio(req: UploadFile, robot_model_id: str) -> dict:
         raise HTTPException(status_code=500, detail=f"Gemini generation failed: {e}")
 
 
+
 async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
     """
     Enhanced version with actual Gemini token usage tracking
@@ -202,6 +249,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
         lang = detect_lang(input_text)
         account_id = await get_account_from_serial(serial)
         quota_or_sub = await get_account_quota(account_id)
+        
         if quota_or_sub['type'] == 'Quota' and quota_or_sub['quota'] <= 0:
             if lang == 'vi' or lang is None:
                 content = 'Bạn đã sử dụng hết dung lượng miễn phí cho ngày hôm nay. Vui lòng đăng ký gói để sử dụng thêm'
@@ -214,6 +262,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
                 }
             }
         search_result = TaskClassifier().classify_task(input_text, 5)
+        esp = await get_esp(account_id)
         # Fetch recent conversation context (per-robot) and build prompt including it
         try:
             ctx_service = get_conversation_context_service()
@@ -225,7 +274,8 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
         except Exception:
             context_text = None
         
-        prompt = await build_prompt(input_text, robot_model_id, context_text=context_text, predictions=search_result)
+        prompt = await build_prompt(input_text, robot_model_id, context_text=context_text, predictions=search_result,
+                                    device_text=format_esp32_text(esp))
         print('Prompt:', prompt)
         response = await run_in_threadpool(
             model.generate_content,
