@@ -28,7 +28,17 @@ async def detect_object(img: bytes, lang: str):  # detect-object
     try:
         obj = detect_closest_objects_from_bytes(img)
         if len(obj.closest_objects) == 0:
-            return {}
+            if lang == 'en':
+                content = "I couldn't see anything"
+            else:
+                content = "Tôi không thấy gì cả"
+            return {
+                'type': 'talk',
+                'lang': lang,
+                'data': {
+                    'text': content
+                }
+            }
         label = obj.closest_objects[0].label
         rs = await process_obj_detect(label, lang)
         return rs
