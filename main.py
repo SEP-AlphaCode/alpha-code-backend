@@ -26,6 +26,7 @@ from app.routers.marker_router import router as marker_router
 from app.routers.object_detect import router as object_router
 from app.routers.robot_info_router import router as robot_info_router
 from app.routers.chatbot_router import router as chatbot_router
+from app.routers.video_router import router as video_router
 from app.services.socket.handlers.binary_handler import handle_binary_message
 from app.services.socket.connection_manager import connection_manager, signaling_manager
 from app.services.socket.handlers.text_handler import handle_text_message
@@ -147,6 +148,7 @@ app.include_router(marker_router, prefix="/marker", tags=["Marker"])
 app.include_router(object_router, prefix="/object", tags=["Object Detection"])
 app.include_router(robot_info_router, prefix="/robot", tags=["Robot Info"])
 app.include_router(chatbot_router, prefix="/chatbot", tags=["RAG Chatbot"])
+app.include_router(video_router, prefix="/video", tags=["Video Generation"])
 
 
 # Backward-compatible alias path for websocket without /websocket prefix

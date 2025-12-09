@@ -37,6 +37,7 @@ transformers
 aiocache==0.12.3
 redis==6.4.0
 ujson
+replicate
 
 # RAG Chatbot Dependencies
 chromadb>=0.5.11
