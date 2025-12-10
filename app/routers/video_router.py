@@ -1,6 +1,10 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 from typing import Optional
+import uuid
 from app.services.video.video_service import generate_video_from_image
+from app.services.video.video_capture_service import upload_image_to_s3
+from app.repositories.robot_repository import get_robot_by_serial
+from app.repositories.video_capture_repository import create_video_capture
 
 router = APIRouter()
 
@@ -78,4 +82,188 @@ async def health_check():
         "status": "healthy",
         "message": "Video generation service is configured properly"
     }
+
+
+@router.post("/capture/test")
+async def test_video_capture(
+    file: UploadFile = File(..., description="Image file to upload and create video capture record"),
+    serial_number: str = Form(..., description="Robot serial number"),
+    description: Optional[str] = Form(
+        default=None,
+        description="Description for video generation (optional)"
+    )
+):
+    """
+    Test endpoint for video capture flow (parse-video command simulation)
+
+    **Flow:**
+    1. Validate robot exists by serial number
+    2. Upload image to S3
+    3. Create video_capture record in database
+
+    **Parameters:**
+    - file: Image file (JPG, PNG, etc.)
+    - serial_number: Robot serial number (must exist and be active)
+    - description: Optional description for video generation
+
+    **Response:**
+    - success: Boolean
+    - message: Status message
+    - data: Contains video_capture_id, image_url, account_id
+    """
+    try:
+        # Validate file type
+        if not file.content_type or not file.content_type.startswith("image/"):
+            raise HTTPException(
+                status_code=400,
+                detail="Only image files are accepted (JPG, PNG, etc.)"
+            )
+
+        # Step 1: Get robot by serial number
+        robot = await get_robot_by_serial(serial_number)
+
+        if not robot:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Robot with serial number '{serial_number}' not found or inactive"
+            )
+
+        account_id = robot.account_id
+
+        # Step 2: Upload image to S3
+        image_bytes = await file.read()
+        image_url = await upload_image_to_s3(image_bytes)
+
+        if not image_url:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to upload image to S3"
+            )
+
+        # Step 3: Create video_capture record
+        final_description = description or "Hãy biến bức ảnh này thành video sinh động"
+        video_capture = await create_video_capture(
+            image_url=image_url,
+            account_id=account_id,
+            description=final_description
+        )
+
+        if not video_capture:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to create video_capture record in database"
+            )
+
+        return {
+            "success": True,
+            "message": "Video capture created successfully",
+            "data": {
+                "video_capture_id": str(video_capture.id),
+                "image_url": image_url,
+                "account_id": str(account_id),
+                "description": final_description,
+                "is_created": video_capture.is_created,
+                "status": video_capture.status,
+                "created_date": video_capture.created_date.isoformat()
+            }
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error in video capture: {str(e)}"
+        )
+
+
+@router.post("/capture/by-account")
+async def test_video_capture_by_account(
+    file: UploadFile = File(..., description="Image file to upload and create video capture record"),
+    account_id: str = Form(..., description="Account ID (UUID)"),
+    description: Optional[str] = Form(
+        default=None,
+        description="Description for video generation (optional)"
+    )
+):
+    """
+    Test endpoint for video capture flow with direct account_id (no robot needed)
+
+    **Flow:**
+    1. Upload image to S3
+    2. Create video_capture record in database with provided account_id
+
+    **Parameters:**
+    - file: Image file (JPG, PNG, etc.)
+    - account_id: Account UUID
+    - description: Optional description for video generation
+
+    **Response:**
+    - success: Boolean
+    - message: Status message
+    - data: Contains video_capture_id, image_url, account_id
+    """
+    try:
+        # Validate file type
+        if not file.content_type or not file.content_type.startswith("image/"):
+            raise HTTPException(
+                status_code=400,
+                detail="Only image files are accepted (JPG, PNG, etc.)"
+            )
+
+        # Parse account_id as UUID
+        try:
+            parsed_account_id = uuid.UUID(account_id)
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid account_id format. Must be a valid UUID."
+            )
+
+        # Step 1: Upload image to S3
+        image_bytes = await file.read()
+        image_url = await upload_image_to_s3(image_bytes)
+
+        if not image_url:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to upload image to S3"
+            )
+
+        # Step 2: Create video_capture record
+        final_description = description or "Hãy biến bức ảnh này thành video sinh động"
+        video_capture = await create_video_capture(
+            image_url=image_url,
+            account_id=parsed_account_id,
+            description=final_description
+        )
+
+        if not video_capture:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to create video_capture record in database"
+            )
+
+        return {
+            "success": True,
+            "message": "Video capture created successfully",
+            "data": {
+                "video_capture_id": str(video_capture.id),
+                "image_url": image_url,
+                "account_id": str(parsed_account_id),
+                "description": final_description,
+                "is_created": video_capture.is_created,
+                "status": video_capture.status,
+                "created_date": video_capture.created_date.isoformat()
+            }
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error in video capture: {str(e)}"
+        )
+
 

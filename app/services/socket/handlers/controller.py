@@ -1,7 +1,7 @@
 from app.models.proto.robot_command_pb2 import RobotRequest
 from app.models.stt import ASRData
 from app.services.socket.handlers.command_pool import process_speech, detect_object, parse_osmo, notify_shutdown, \
-    parse_qr, process_text, handle_coding_block_status
+    parse_qr, process_text, handle_coding_block_status, parse_video
 
 
 async def handle_command(req: RobotRequest, serial: str, model_id: str):
@@ -40,7 +40,11 @@ async def handle_command(req: RobotRequest, serial: str, model_id: str):
             st = (st == 'true')
             await handle_coding_block_status(bool(st))
             return {}
-            
+
+        elif command_type == 'parse-video':
+            lang = req.params.get('lang', 'vi')
+            return await parse_video(req.image, serial, lang)
+
         else:
             return {"error": f"Unknown command type: {command_type}"}
     

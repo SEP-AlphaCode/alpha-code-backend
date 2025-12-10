@@ -3,9 +3,7 @@ import logging
 import traceback
 from pathlib import Path
 
-# from redis import asyncio as aioredis
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
 from app.services.quota.quota_service import preload_daily_quotas, sync_redis_to_db
