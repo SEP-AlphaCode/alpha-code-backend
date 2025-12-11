@@ -167,15 +167,14 @@
     },
     {
       "id": "picture",
-      "document": "User wants to generate videos from a picture.",
+      "document": "User wants to generate videos from a picture. This includes commands like make video, generate video, create video from picture, animate picture, or their Vietnamese equivalents tạo video, làm video, sinh video từ ảnh, tạo video từ ảnh, làm video từ hình ảnh. The user is asking the assistant to process an image and generate a video based on it.",
       "metadata": {
-        "type": "generate_video",
-        "description": "Tạo video",
+        "type": "video_capture",
+        "description": "Tạo video từ ảnh",
         "response_template": {
           "type": "generate_video",
           "lang": "$LANG",
-          "data": {
-          }
+          "data": {}
         }
       }
     }
