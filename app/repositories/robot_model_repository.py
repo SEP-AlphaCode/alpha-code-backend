@@ -63,29 +63,10 @@ $DEVICE_LIST
         serializer=JsonSerializer(),
         )
 async def get_robot_prompt_by_id(robot_model_id: str) -> Optional[str]:
-    """
-    Load custom prompt template from database for specific robot model
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(RobotModel.robot_prompt).where(RobotModel.id == robot_model_id)
+        )
+        row = result.first()
+        return row[0] if row else None
 
-    Args:
-        robot_model_id: Robot model identifier
-
-    Returns:
-        Custom prompt template string or None if not found
-    """
-    # TODO: Implement actual database query
-    # Example:
-    # async with db.session() as session:
-    #     result = await session.execute(
-    #         select(RobotModel.prompt_template)
-    #         .where(RobotModel.id == robot_model_id)
-    #     )
-    #     return result.scalar_one_or_none()
-    
-    return PROMPT_TEMPLATE  # Fallback to default PROMPT_TEMPLATE
-# async def get_robot_prompt_by_id(robot_model_id: str) -> Optional[str]:
-#     async with AsyncSessionLocal() as session:
-#         result = await session.execute(
-#             select(RobotModel.robot_prompt).where(RobotModel.id == robot_model_id)
-#         )
-#         row = result.first()
-#         return row[0] if row else None

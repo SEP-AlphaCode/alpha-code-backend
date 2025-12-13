@@ -151,13 +151,11 @@ async def build_prompt(
     db_prompt = await get_robot_prompt_by_id(robot_model_id)
     skills_text = await load_skills_text(robot_model_id)
     safe_text = input_text.replace('"', '\\"')
-    predictions_text = format_task_predictions(predictions)
     # fallback nếu DB không có prompt
     prompt_template = db_prompt or PROMPT_TEMPLATE
     base = (
         prompt_template
         .replace("$INPUT_TEXT", safe_text)
-        .replace("$TASK_PREDICTIONS", predictions_text)
         .replace("$CONTEXT_BLOCK", context_text)
         .replace("$SKILL_LIST", skills_text)
         .replace("$DEVICE_LIST", device_text)
@@ -233,7 +231,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
     """
     Enhanced version with actual Gemini token usage tracking
     """
-    print('>>>', input_text)
+    print('\n>>>', input_text, '\n')
     if model is None:
         raise HTTPException(
             status_code=500,
@@ -261,7 +259,6 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
                     'text': content
                 }
             }
-        search_result = TaskClassifier().classify_task(input_text, 5)
         esp = await get_esp(account_id)
         # Fetch recent conversation context (per-robot) and build prompt including it
         try:
@@ -274,7 +271,7 @@ async def process_text(input_text: str, robot_model_id: str, serial: str = ''):
         except Exception:
             context_text = None
         
-        prompt = await build_prompt(input_text, robot_model_id, context_text=context_text, predictions=search_result,
+        prompt = await build_prompt(input_text, robot_model_id, context_text=context_text, predictions=[],
                                     device_text=format_esp32_text(esp))
         print('Prompt:', prompt)
         response = await run_in_threadpool(
