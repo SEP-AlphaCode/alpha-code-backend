@@ -11,18 +11,7 @@ except Exception:
     librosa = None
 import numpy as np
 
-# from .durations import (
-#     DANCE_DURATIONS_MS,
-#     ACTION_DURATIONS_MS,
-#     EXPRESSION_DURATIONS_MS,
-# )
-from app.services.music.durations import (
-    load_all_durations, load_all_durations_with_exclusion,
-)
-
-# DANCE_DURATIONS = {k: v/1000.0 for k, v in DANCE_DURATIONS_MS.items()}
-# ACTION_DURATIONS = {k: v/1000.0 for k, v in ACTION_DURATIONS_MS.items()}
-# EXPRESSION_DURATIONS = {k: v/1000.0 for k, v in EXPRESSION_DURATIONS_MS.items()}
+from app.services.music.durations import load_all_durations_with_exclusion
 
 @dataclass
 class PlannedSegment:
@@ -41,11 +30,26 @@ class MusicActivityPlanner:
         self.actions = _normalize(durations.get("action", {}))
         self.expressions = _normalize(durations.get("expression", {}))
 
+        # Store type information (1: weak, 2: medium, 3: strong)
+        self.dance_types = durations.get("dance_types", {})
+        self.action_types = durations.get("action_types", {})
+
         if not any([self.dances, self.actions, self.expressions]):
             raise ValueError("No duration data available for this robot model")
-        # self.dances = DANCE_DURATIONS
-        # self.actions = ACTION_DURATIONS
-        # self.expressions = EXPRESSION_DURATIONS
+
+        # Organize actions/dances by intensity type
+        self.dances_by_type = {1: [], 2: [], 3: []}  # weak, medium, strong
+        self.actions_by_type = {1: [], 2: [], 3: []}
+
+        for code, duration in self.dances.items():
+            intensity = self.dance_types.get(code, 2)  # default medium
+            self.dances_by_type[intensity].append((code, duration))
+
+        for code, duration in self.actions.items():
+            intensity = self.action_types.get(code, 2)  # default medium
+            self.actions_by_type[intensity].append((code, duration))
+
+        # Keep original cycle lists for backward compatibility
         self._dance_cycle = list(self.dances.items())
         self._action_cycle = list(self.actions.items())
         self._expr_cycle = list(self.expressions.items())
@@ -94,29 +98,78 @@ class MusicActivityPlanner:
             rng.shuffle(expr_pool)
         d_idx = a_idx = e_idx = 0
 
-        def next_dance() -> tuple[str, float]:
+        def get_intensity_type(energy: float) -> int:
+            """Map energy level to intensity type: 1=weak, 2=medium, 3=strong"""
+            if energy < 0.4:
+                return 1  # weak
+            elif energy < 0.7:
+                return 2  # medium
+            else:
+                return 3  # strong
+
+        def next_dance(energy: float = 0.5) -> tuple[str, float]:
+            """Select dance based on energy level"""
             if len(dance_pool) == 0:
                 return '', 0
             nonlocal d_idx
-            if not dance_pool:
-                return self._next_dance()
-            if rng.random() < 0.30:
-                return rng.choice(dance_pool)
-            item = dance_pool[d_idx]
-            d_idx = (d_idx + 1) % len(dance_pool)
-            return item
 
-        def next_action() -> tuple[str, float]:
+            # Determine desired intensity
+            desired_type = get_intensity_type(energy)
+
+            # Try to find a dance matching the intensity
+            suitable_dances = self.dances_by_type.get(desired_type, [])
+
+            # Fallback to adjacent intensities if none available
+            if not suitable_dances:
+                for fallback_type in [desired_type + 1, desired_type - 1, 2]:
+                    if 1 <= fallback_type <= 3:
+                        suitable_dances = self.dances_by_type.get(fallback_type, [])
+                        if suitable_dances:
+                            break
+
+            # If still no suitable dances, use general pool
+            if not suitable_dances:
+                suitable_dances = dance_pool
+
+            # Add randomness: 30% random selection, 70% sequential
+            if rng.random() < 0.30:
+                return rng.choice(suitable_dances)
+            else:
+                item = suitable_dances[d_idx % len(suitable_dances)]
+                d_idx = (d_idx + 1) % len(suitable_dances)
+                return item
+
+        def next_action(energy: float = 0.5) -> tuple[str, float]:
+            """Select action based on energy level"""
             if len(action_pool) == 0:
                 return '', 0
             nonlocal a_idx
-            if not action_pool:
-                return self._next_action()
+
+            # Determine desired intensity
+            desired_type = get_intensity_type(energy)
+
+            # Try to find an action matching the intensity
+            suitable_actions = self.actions_by_type.get(desired_type, [])
+
+            # Fallback to adjacent intensities if none available
+            if not suitable_actions:
+                for fallback_type in [desired_type + 1, desired_type - 1, 2]:
+                    if 1 <= fallback_type <= 3:
+                        suitable_actions = self.actions_by_type.get(fallback_type, [])
+                        if suitable_actions:
+                            break
+
+            # If still no suitable actions, use general pool
+            if not suitable_actions:
+                suitable_actions = action_pool
+
+            # Add randomness: 30% random selection, 70% sequential
             if rng.random() < 0.30:
-                return rng.choice(action_pool)
-            item = action_pool[a_idx]
-            a_idx = (a_idx + 1) % len(action_pool)
-            return item
+                return rng.choice(suitable_actions)
+            else:
+                item = suitable_actions[a_idx % len(suitable_actions)]
+                a_idx = (a_idx + 1) % len(suitable_actions)
+                return item
 
         def next_expression() -> tuple[str, float]:
             if len(expr_pool) == 0:
@@ -145,13 +198,13 @@ class MusicActivityPlanner:
                 step = slice_dur + rng.uniform(0.1, 0.3)
                 t_expr += step
 
-        def fill_action_chain(a: float, b: float):
+        def fill_action_chain(a: float, b: float, energy: float = 0.5):
             if len(action_pool) == 0:
                 return
             t = a
             safety = 0.05
             while t < b - 0.4:
-                aid, adur = next_action()
+                aid, adur = next_action(energy)
                 max_allow = max(0.6, (b - t) - safety)
                 if max_allow <= 0.6:
                     break
@@ -175,11 +228,11 @@ class MusicActivityPlanner:
             dur = max(0.4, end - start)
             action_bias = 0.5 if high else 0.65
             if rng.random() < action_bias:
-                aid, _ = next_action()
+                aid, _ = next_action(window_energy)
                 segments.append(PlannedSegment(aid, start, dur, 'action'))
                 fill_expression_chain(start, end)
             else:
-                did, _ = next_dance()
+                did, _ = next_dance(window_energy)
                 segments.append(PlannedSegment(did, start, dur, 'dance'))
                 fill_expression_chain(start, end)
             i = end_idx
@@ -194,7 +247,7 @@ class MusicActivityPlanner:
             # Fill entire gap before closing with actions + expressions (no idle)
             last_end = max((s.start_time + s.duration) for s in segments) if segments else 0.0
             if last_end < close_start - 0.05:
-                fill_action_chain(last_end, close_start)
+                fill_action_chain(last_end, close_start, 0.5)  # medium energy for fill
                 fill_expression_chain(last_end, close_start)
             segments.append(PlannedSegment(close_id, close_start, close_len, 'action'))
             fill_expression_chain(close_start, music_duration)
@@ -229,7 +282,7 @@ def detect_beats_and_energy(audio_bytes: bytes, sr: int = 22050) -> tuple[List[f
     try:
         y, sr = librosa.load(io.BytesIO(audio_bytes), sr=sr, mono=True)
         onset_env = librosa.onset.onset_strength(y=y, sr=sr)
-        tempo, beat_frames = librosa.beat.beat_track(y=y, sr=sr, onset_envelope=onset_env, trim=False)
+        _, beat_frames = librosa.beat.beat_track(y=y, sr=sr, onset_envelope=onset_env, trim=False)
         beat_times = librosa.frames_to_time(beat_frames, sr=sr)
         energies: List[float] = []
         for j in range(len(beat_frames)-1):
@@ -246,21 +299,68 @@ def fetch_audio(url: str) -> bytes:
     return r.content
 
 
-async def build_activity_json(music_name: str, music_url: str, music_duration: float, robot_model_id: str) -> dict:
+async def build_activity_json(
+    music_name: str,
+    music_url: str,
+    music_duration: float,
+    robot_model_id: str,
+    task_id: Optional[str] = None
+) -> dict:
+    """
+    Build activity JSON for music with optional progress tracking.
+
+    Args:
+        music_name: Name of the music
+        music_url: URL to the music file
+        music_duration: Duration in seconds
+        robot_model_id: Robot model ID
+        task_id: Optional task ID for progress tracking
+    """
+    from app.services.music.progress_tracker import progress_tracker
+
+    # Load durations
+    if task_id:
+        await progress_tracker.update_progress(task_id, 10, "loading", "Loading robot configuration...")
+
     durations = await load_all_durations_with_exclusion(robot_model_id)
     planner = MusicActivityPlanner(durations)
+
+    # Fetch and analyze audio
     beats: List[float] = []
     energies: List[float] = []
     seed = None
+
     try:
+        if task_id:
+            await progress_tracker.update_progress(task_id, 20, "downloading", "Downloading music file...")
+
         audio_bytes = fetch_audio(music_url)
+
+        if task_id:
+            await progress_tracker.update_progress(task_id, 40, "analyzing", "Analyzing beats and energy...")
+
         beats, energies = detect_beats_and_energy(audio_bytes)
         import hashlib
         h = hashlib.sha1(audio_bytes[:100000]).hexdigest()
         seed = int(h[:8], 16)
-    except Exception:
+    except Exception as e:
+        if task_id:
+            await progress_tracker.update_progress(
+                task_id, 40, "warning",
+                f"Audio analysis failed, using defaults: {str(e)}"
+            )
         beats, energies = [], []
+
+    # Generate plan
+    if task_id:
+        await progress_tracker.update_progress(task_id, 60, "planning", "Generating dance choreography...")
+
     plan = planner.plan(music_duration, beats, energies, seed)
+
+    # Build activity JSON
+    if task_id:
+        await progress_tracker.update_progress(task_id, 80, "building", "Building activity data...")
+
     activity_actions = []
     golden = 0.618033988749895
     def gen_color(idx: int, atype: str):
@@ -273,7 +373,6 @@ async def build_activity_json(music_name: str, music_url: str, music_duration: f
         return {'a': 0, 'r': int(r*255), 'g': int(g*255), 'b': int(b*255)}
 
     for idx, seg in enumerate(plan):
-        # atype = 'expression' if seg.action_id in EXPRESSION_DURATIONS else 'dance'
         atype = 'expression' if seg.action_id in planner.expressions else 'dance'
 
         activity_actions.append({
@@ -283,7 +382,11 @@ async def build_activity_json(music_name: str, music_url: str, music_duration: f
             'action_type': atype,
             'color': gen_color(idx, atype)
         })
-    return {
+
+    if task_id:
+        await progress_tracker.update_progress(task_id, 95, "finalizing", "Finalizing activity...")
+
+    result = {
         'type': 'dance_with_music',
         'data': {
             'music_info': {
@@ -296,5 +399,9 @@ async def build_activity_json(music_name: str, music_url: str, music_duration: f
             },
             'robot_model_id': robot_model_id
         }
-
     }
+
+    if task_id:
+        await progress_tracker.update_progress(task_id, 100, "completed", "Activity generated successfully!")
+
+    return result

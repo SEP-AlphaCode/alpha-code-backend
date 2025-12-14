@@ -47,3 +47,21 @@ async def load_action_durations(robot_model_id: str) -> dict[str, int]:
         result = await session.execute(select(Action.code, Action.duration)
                                        .where(Action.robot_model_id == robot_model_id))
         return {code: int(duration or 0) for code, duration in result.all()}
+
+
+async def load_action_with_types(robot_model_id: str) -> dict[str, dict]:
+    """Load action durations (ms) and types from action table.
+    Returns: {code: {'duration': ms, 'type': 1|2|3}}
+    """
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(Action.code, Action.duration, Action.type)
+            .where(Action.robot_model_id == robot_model_id)
+        )
+        return {
+            code: {
+                'duration': int(duration or 0),
+                'type': int(action_type or 2)  # default to medium if not set
+            }
+            for code, duration, action_type in result.all()
+        }

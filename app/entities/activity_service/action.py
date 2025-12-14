@@ -14,6 +14,7 @@ class Action(Base):
     name = Column(String(255), nullable=False)
     description = Column(String(255), nullable=True)
     duration = Column(Integer, nullable=False)
+    type = Column(Integer, nullable=True)  # 1: weak, 2: medium, 3: strong
     status = Column(Integer, nullable=False)
     icon = Column(String(255), nullable=True)
     last_updated = Column(DateTime(timezone=True), nullable=True, onupdate=func.now())

@@ -47,3 +47,21 @@ async def load_dance_durations(robot_model_id: str) -> dict[str, float]:
         result = await session.execute(select(Dance.code, Dance.duration)
                                        .where(Dance.robot_model_id == robot_model_id))
         return {code: float(duration or 0) for code, duration in result.all()}
+
+
+async def load_dance_with_types(robot_model_id: str) -> dict[str, dict]:
+    """Load dance durations (ms) and types from dance table.
+    Returns: {code: {'duration': ms, 'type': 1|2|3}}
+    """
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(Dance.code, Dance.duration, Dance.type)
+            .where(Dance.robot_model_id == robot_model_id)
+        )
+        return {
+            code: {
+                'duration': float(duration or 0),
+                'type': int(dance_type or 2)  # default to medium if not set
+            }
+            for code, duration, dance_type in result.all()
+        }

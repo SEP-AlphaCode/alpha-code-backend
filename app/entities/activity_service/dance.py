@@ -14,6 +14,7 @@ class Dance(Base):
     code = Column(String(100), nullable=False, unique=True)
     name = Column(String(255), nullable=False)
     description = Column(String(255), nullable=True)
+    type = Column(Integer, nullable=True)  # 1: weak, 2: medium, 3: strong
     status = Column(Integer, nullable=False)
     last_updated = Column(DateTime(timezone=True), nullable=True ,onupdate=func.now())
     created_date = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
