@@ -4,13 +4,12 @@ All values are in milliseconds (ms) as provided. The planner will convert to sec
 """
 # durations.py
 
-from typing import Dict
-from app.repositories.dance_repository import load_dance_durations
-from app.repositories.action_repository import load_action_durations
+from typing import Dict, Set
+from app.repositories.dance_repository import load_dance_durations, load_dance_with_types
+from app.repositories.action_repository import load_action_durations, load_action_with_types
 from app.repositories.expression_repository import load_expression_durations
 import json
 import os
-from typing import Dict, List, Set
 import fnmatch
 
 # Biến lưu trữ pattern
@@ -59,20 +58,32 @@ DANCE_DURATIONS_MS: Dict[str, int] = {}
 ACTION_DURATIONS_MS: Dict[str, int] = {}
 EXPRESSION_DURATIONS_MS: Dict[str, int] = {}
 
+# Biến global để cache type info
+DANCE_TYPES: Dict[str, int] = {}  # {code: type (1|2|3)}
+ACTION_TYPES: Dict[str, int] = {}  # {code: type (1|2|3)}
+
 
 async def load_all_durations_with_exclusion(robot_model_id: str) -> Dict[str, Dict[str, int]]:
     """Load toàn bộ durations từ DB cho một robot model cụ thể."""
     global DANCE_DURATIONS_MS, ACTION_DURATIONS_MS, EXPRESSION_DURATIONS_MS
-    
+    global DANCE_TYPES, ACTION_TYPES
+
     # Đảm bảo đã load patterns
     if not EXCLUDE_PATTERNS:
         load_exclude_patterns()
     
-    # ⚙️ Gọi 3 hàm async lấy dữ liệu
-    DANCE_DURATIONS_MS = await load_dance_durations(robot_model_id)
-    ACTION_DURATIONS_MS = await load_action_durations(robot_model_id)
+    # ⚙️ Gọi hàm async lấy dữ liệu với type
+    dance_with_types = await load_dance_with_types(robot_model_id)
+    action_with_types = await load_action_with_types(robot_model_id)
     EXPRESSION_DURATIONS_MS = await load_expression_durations(robot_model_id)
     
+    # Tách duration và type
+    DANCE_DURATIONS_MS = {code: data['duration'] for code, data in dance_with_types.items()}
+    DANCE_TYPES = {code: data['type'] for code, data in dance_with_types.items()}
+
+    ACTION_DURATIONS_MS = {code: data['duration'] for code, data in action_with_types.items()}
+    ACTION_TYPES = {code: data['type'] for code, data in action_with_types.items()}
+
     # Lọc action durations dựa trên pattern
     if robot_model_id in EXCLUDE_PATTERNS:
         original_count = len(ACTION_DURATIONS_MS)
@@ -81,8 +92,13 @@ async def load_all_durations_with_exclusion(robot_model_id: str) -> Dict[str, Di
             key: value for key, value in ACTION_DURATIONS_MS.items()
             if not should_exclude_action(robot_model_id, key)
         }
+        filtered_types = {
+            key: value for key, value in ACTION_TYPES.items()
+            if not should_exclude_action(robot_model_id, key)
+        }
         ACTION_DURATIONS_MS = filtered_actions
-        
+        ACTION_TYPES = filtered_types
+
         excluded_count = original_count - len(ACTION_DURATIONS_MS)
         if excluded_count > 0:
             print(f" - Excluded {excluded_count} actions based on patterns")
@@ -96,6 +112,8 @@ async def load_all_durations_with_exclusion(robot_model_id: str) -> Dict[str, Di
         "dance": DANCE_DURATIONS_MS or {},
         "action": ACTION_DURATIONS_MS or {},
         "expression": EXPRESSION_DURATIONS_MS or {},
+        "dance_types": DANCE_TYPES or {},
+        "action_types": ACTION_TYPES or {},
     }
 
 async def load_all_durations(robot_model_id: str) -> Dict[str, Dict[str, int]]:
